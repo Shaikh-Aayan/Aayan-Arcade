@@ -3,29 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shaikh's Arcade</title>
+    <title>Shaikh's Enhanced Arcade</title>
     <style>
         /* ====== STYLE ====== */
         :root {
-            /* Light Theme Colors - Refined */
-            --color-primary-light: #4A6FA5;       /* Deep Blue */
-            --color-secondary-light: #FFA726;     /* Vibrant Orange */
-            --color-accent-light: #66BB6A;        /* Fresh Green */
-            --color-warning-light: #EF5350;       /* Soft Red */
-            --color-background-light: #F8F9FA;    /* Off-white */
-            --color-surface-light: #FFFFFF;       /* Pure White */
-            --color-text-light: #212529;          /* Dark Gray */
-            --color-text-secondary-light: #6C757D; /* Medium Gray */
-            --color-border-light: #DEE2E6;        /* Light Gray */
+            /* Light Theme Colors - Refined & Enhanced */
+            --color-primary-light: #3498db;       /* Softer, more vibrant blue */
+            --color-secondary-light: #e74c3c;     /* Vibrant red/orange */
+            --color-accent-light: #2ecc71;        /* Brighter green */
+            --color-warning-light: #f39c12;       /* Warm orange */
+            --color-background-light: #f0f4f8;    /* Softer off-white */
+            --color-surface-light: #ffffff;       /* Pure White */
+            --color-text-light: #2c3e50;          /* Darker, richer text */
+            --color-text-secondary-light: #7f8c8d; /* Softer gray */
+            --color-border-light: #d6dee6;        /* Softer border */
+            --color-shadow-light: rgba(0, 0, 0, 0.08); /* Lighter shadow */
 
-            /* Dark Theme Colors (Neon) */
+            /* Dark Theme Colors (Neon) - Kept as is for contrast */
             --color-background-dark: #121212;
-            --color-surface-dark: #1E1E1E;
-            --color-text-dark: #E0E0E0;
-            --color-text-secondary-dark: #B0B0B0;
+            --color-surface-dark: #1e1e1e;
+            --color-text-dark: #e0e0e0;
+            --color-text-secondary-dark: #b0b0b0;
             --color-border-dark: #333333;
-
-            /* Neon Accents for Dark Mode */
             --neon-pink: #ff2d95;
             --neon-blue: #00c2ff;
             --neon-yellow: #fff000;
@@ -41,6 +40,7 @@
             --color-text: var(--color-text-light);
             --color-text-secondary: var(--color-text-secondary-light);
             --color-border: var(--color-border-light);
+            --color-shadow: var(--color-shadow-light);
 
             /* Spacing */
             --spacing-xs: 0.25rem;
@@ -51,17 +51,17 @@
             --spacing-xxl: 3rem;
 
             /* Border radius */
-            --border-radius-sm: 6px;
-            --border-radius-md: 10px;
-            --border-radius-lg: 14px;
-            --border-radius-xl: 20px;
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 18px;
+            --border-radius-xl: 24px;
             --border-radius-circle: 50%;
 
-            /* Shadows */
-            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-focus: 0 0 0 3px rgba(74, 111, 165, 0.3); /* Primary light with opacity */
+            /* Shadows - Slightly deeper for light mode */
+            --shadow-sm: 0 2px 4px 0 var(--color-shadow);
+            --shadow-md: 0 6px 12px -2px var(--color-shadow);
+            --shadow-lg: 0 10px 25px -5px var(--color-shadow);
+            --shadow-focus: 0 0 0 3px rgba(52, 152, 219, 0.3); /* Adjusted for new primary */
 
             /* Animation */
             --transition-fast: 0.15s ease;
@@ -73,6 +73,7 @@
             --z-sticky: 200;
             --z-modal: 300;
             --z-toast: 400;
+            --z-sidebar: 500; /* For game drawer */
         }
 
         /* Dark Theme Overrides */
@@ -82,15 +83,15 @@
             --color-text: var(--color-text-dark);
             --color-text-secondary: var(--color-text-secondary-dark);
             --color-border: var(--color-border-dark);
-            /* Neon accents for dark mode */
+            --color-shadow: rgba(0, 0, 0, 0.3);
             --color-primary: var(--neon-blue);
             --color-secondary: var(--neon-yellow);
             --color-accent: var(--neon-pink);
             --color-warning: var(--neon-green);
-            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-            --shadow-focus: 0 0 0 3px rgba(0, 194, 255, 0.4); /* Neon blue with opacity */
+            --shadow-sm: 0 2px 4px 0 var(--color-shadow);
+            --shadow-md: 0 6px 12px -2px var(--color-shadow);
+            --shadow-lg: 0 10px 25px -5px var(--color-shadow);
+            --shadow-focus: 0 0 0 3px rgba(0, 194, 255, 0.4);
         }
 
         * {
@@ -100,7 +101,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Slightly different font stack */
             background-color: var(--color-background);
             color: var(--color-text);
             line-height: 1.6;
@@ -109,7 +110,7 @@
             position: relative;
         }
 
-        /* Doodle background elements - Now active in both themes */
+        /* ===== Enhanced Doodle Background with More Detail ===== */
         .doodle-bg {
             position: fixed;
             top: 0;
@@ -123,7 +124,8 @@
 
         .doodle {
             position: absolute;
-            opacity: 0.08; /* Subtle in light mode */
+            opacity: 0.05; /* Subtle in light mode */
+            /* Add subtle animations or effects */
         }
 
         .doodle.circle {
@@ -131,14 +133,14 @@
             height: 80px;
             border-radius: 50%;
             border: 3px dashed var(--color-primary);
-            animation: float 20s infinite linear;
+            animation: float 25s infinite ease-in-out;
         }
 
         .doodle.square {
             width: 60px;
             height: 60px;
             border: 2px dotted var(--color-accent);
-            animation: rotate 30s infinite linear;
+            animation: rotate 35s infinite linear;
         }
 
         .doodle.triangle {
@@ -147,8 +149,8 @@
             border-left: 40px solid transparent;
             border-right: 40px solid transparent;
             border-bottom: 70px solid var(--color-secondary);
-            opacity: 0.05;
-            animation: float 25s infinite linear reverse;
+            opacity: 0.04;
+            animation: float 30s infinite ease-in-out reverse;
         }
 
         .doodle.zigzag {
@@ -161,12 +163,32 @@
                 var(--color-accent) 10px,
                 var(--color-accent) 20px
             );
-            animation: moveRight 40s infinite linear;
+            animation: moveRight 45s infinite linear;
+        }
+
+        /* New doodle types for more detail */
+        .doodle.star {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 35px solid var(--color-warning);
+            opacity: 0.03;
+            animation: twinkle 4s infinite ease-in-out;
+        }
+
+        .doodle.blob {
+            width: 70px;
+            height: 70px;
+            border-radius: 50% 40% 60% 30% / 30% 60% 40% 50%;
+            background: var(--color-primary);
+            opacity: 0.04;
+            animation: morph 15s infinite ease-in-out;
         }
 
         /* Enhance doodles in dark mode */
         .theme-dark .doodle {
-            opacity: 0.15;
+            opacity: 0.12;
         }
 
         .theme-dark .doodle.circle {
@@ -182,11 +204,11 @@
         .theme-dark .doodle.triangle {
             border-bottom: 70px solid var(--neon-yellow);
             filter: drop-shadow(0 0 5px var(--neon-yellow));
-            opacity: 0.1;
+            opacity: 0.08;
         }
 
         .theme-dark .doodle.zigzag {
-             background: repeating-linear-gradient(
+            background: repeating-linear-gradient(
                 -45deg,
                 transparent,
                 transparent 10px,
@@ -195,12 +217,23 @@
             );
         }
 
+        .theme-dark .doodle.star {
+            border-bottom: 35px solid var(--neon-green);
+            filter: drop-shadow(0 0 5px var(--neon-green));
+            opacity: 0.1;
+        }
+
+        .theme-dark .doodle.blob {
+            background: var(--neon-blue);
+            opacity: 0.08;
+        }
+
+
         @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(10px, 15px) rotate(5deg); }
-            50% { transform: translate(0, 30px) rotate(0deg); }
-            75% { transform: translate(-10px, 15px) rotate(-5deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(15px, 20px) rotate(5deg); }
+            50% { transform: translate(0, 40px) rotate(0deg); }
+            75% { transform: translate(-15px, 20px) rotate(-5deg); }
         }
 
         @keyframes rotate {
@@ -212,6 +245,26 @@
             from { transform: translateX(-100px); }
             to { transform: translateX(calc(100vw + 100px)); }
         }
+
+        /* New animations for detail */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.03; transform: scale(1); }
+            50% { opacity: 0.1; transform: scale(1.2); }
+        }
+
+        .theme-dark @keyframes twinkle {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.2); }
+        }
+
+        @keyframes morph {
+            0% { border-radius: 50% 40% 60% 30% / 30% 60% 40% 50%; }
+            25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            50% { border-radius: 40% 50% 30% 70% / 60% 30% 70% 40%; }
+            75% { border-radius: 60% 30% 50% 60% / 40% 70% 50% 30%; }
+            100% { border-radius: 50% 40% 60% 30% / 30% 60% 40% 50%; }
+        }
+
 
         button {
             background: none;
@@ -239,7 +292,7 @@
             display: flex;
             flex-direction: column;
             padding: var(--spacing-md);
-            max-width: 1200px;
+            max-width: 1400px; /* Slightly wider */
             margin: 0 auto;
             position: relative;
             z-index: 1;
@@ -262,14 +315,18 @@
             display: flex;
             align-items: center;
             gap: var(--spacing-sm);
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.75rem; /* Slightly larger */
+            font-weight: 800; /* Bolder */
             color: var(--color-text);
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 48px; /* Slightly larger */
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -277,12 +334,25 @@
             color: white;
             border-radius: var(--border-radius-md);
             box-shadow: var(--shadow-md);
-            font-size: 1.5rem;
+            font-size: 1.75rem; /* Slightly larger */
+            animation: pulse-glow 2s infinite ease-in-out; /* Add subtle glow */
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: var(--shadow-md); }
+            50% { box-shadow: var(--shadow-md), 0 0 15px var(--color-primary); }
         }
 
         .theme-dark .logo-icon {
             box-shadow: 0 0 10px var(--color-primary);
+            animation: pulse-neon 2s infinite ease-in-out;
         }
+
+        @keyframes pulse-neon {
+            0%, 100% { box-shadow: 0 0 10px var(--color-primary); }
+            50% { box-shadow: 0 0 20px var(--color-primary), 0 0 30px var(--color-primary); }
+        }
+
 
         .controls {
             display: flex;
@@ -290,8 +360,8 @@
         }
 
         .icon-button {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: var(--border-radius-circle);
             display: flex;
             align-items: center;
@@ -303,13 +373,14 @@
             overflow: hidden;
             border: 1px solid var(--color-border);
             color: var(--color-text);
+            font-size: 1.2rem; /* Slightly larger icon */
         }
 
         .icon-button:hover, .icon-button:focus {
             background-color: var(--color-primary);
             color: white;
             box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             border-color: var(--color-primary);
         }
 
@@ -347,7 +418,7 @@
 
         .search-container {
             margin: var(--spacing-lg) auto;
-            max-width: 500px;
+            max-width: 550px; /* Slightly wider */
             width: 100%;
             position: relative;
         }
@@ -379,11 +450,121 @@
             color: var(--color-text-secondary);
         }
 
+        /* ===== Enhanced Game Selection Area - Sidebar Style ===== */
+        .game-area {
+            display: flex;
+            flex: 1;
+            gap: var(--spacing-lg);
+        }
+
+        .game-sidebar {
+            width: 300px; /* Fixed width for sidebar */
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            padding: var(--spacing-md);
+            overflow-y: auto;
+            max-height: calc(100vh - 200px); /* Adjust based on header/footer */
+            transition: transform var(--transition-normal);
+            z-index: var(--z-sidebar);
+        }
+
+        .game-sidebar.hidden {
+             transform: translateX(-110%); /* Hide off-screen */
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--color-text-secondary);
+            padding: var(--spacing-xs);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .toggle-sidebar:hover {
+            background-color: rgba(0,0,0,0.05);
+            color: var(--color-text);
+        }
+        .theme-dark .toggle-sidebar:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+
+        .games-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .game-list-item {
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin-bottom: var(--spacing-xs);
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            border: 1px solid transparent; /* Invisible border for consistent sizing */
+        }
+
+        .game-list-item:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+            transform: translateX(5px);
+        }
+
+        .theme-dark .game-list-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .game-list-item.active {
+            background-color: rgba(52, 152, 219, 0.15); /* Primary color with opacity */
+            border-color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .game-list-icon {
+            font-size: 1.5rem;
+        }
+
+        .game-list-text {
+            flex: 1;
+        }
+
+
+        .games-main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0; /* Allows scrolling inside */
+        }
+
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: var(--spacing-lg);
             margin-bottom: var(--spacing-xl);
+            flex: 1; /* Takes remaining space */
+            overflow-y: auto; /* Scroll if needed */
+            padding: var(--spacing-sm); /* Add padding for scroll area */
         }
 
         .game-tile {
@@ -451,6 +632,12 @@
             transition: transform var(--transition-normal);
             position: relative;
             box-shadow: var(--shadow-md);
+            animation: float-subtle 3s ease-in-out infinite alternate; /* Subtle float */
+        }
+
+        @keyframes float-subtle {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-5px); }
         }
 
         .theme-dark .game-icon {
@@ -631,7 +818,6 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-
         .modal-body {
             padding: var(--spacing-md);
         }
@@ -708,7 +894,6 @@
              background-color: rgba(255, 255, 255, 0.05);
         }
 
-
         /* Form Elements */
         .form-group {
             margin-bottom: var(--spacing-md);
@@ -736,13 +921,12 @@
         .form-control:focus {
             outline: none;
             border-color: var(--color-primary);
-            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2); /* Primary light with opacity */
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         }
 
         .theme-dark .form-control:focus {
-             box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.3); /* Neon blue with opacity */
+             box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.3);
         }
-
 
         /* Toasts */
         .toast-container {
@@ -792,13 +976,14 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
         }
 
-        /* Game-specific styles */
+        /* Game-specific styles - Updated */
         .snake-game, .tictactoe-game, .memory-game, .reaction-game, .whack-game, .dice-game, .runner-game {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: var(--spacing-md);
             width: 100%;
+            max-width: 800px; /* Limit width for better layout */
         }
 
         .snake-canvas, .tictactoe-board, .memory-board, .reaction-display, .whack-board, .dice-display, .runner-canvas {
@@ -813,9 +998,55 @@
             display: flex;
             gap: var(--spacing-sm);
             margin-top: var(--spacing-md);
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            justify-content: center;
         }
 
-        /* Tic Tac Toe Specific */
+        /* Enhanced Snake Game Styles */
+        .snake-game-ui {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing-lg);
+            width: 100%;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .snake-stats {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            min-width: 150px;
+        }
+
+        .snake-stat-item {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .snake-level-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .snake-mode-selector {
+             margin-top: var(--spacing-md);
+             display: flex;
+             gap: var(--spacing-sm);
+             flex-wrap: wrap;
+             justify-content: center;
+        }
+
+        /* Tic Tac Toe Specific - Updated */
+        .tictactoe-game-ui {
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             gap: var(--spacing-md);
+        }
+
         .tictactoe-board {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -825,6 +1056,7 @@
             background-color: var(--color-border);
             padding: 5px;
             border-radius: 5px;
+            box-shadow: var(--shadow-md); /* Add shadow */
         }
 
         .tictactoe-cell {
@@ -832,15 +1064,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 2.5rem; /* Larger font */
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, transform 0.1s;
             border-radius: var(--border-radius-sm);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Inner shadow */
         }
 
         .tictactoe-cell:hover {
             background-color: rgba(0, 0, 0, 0.05);
+            transform: scale(1.05); /* Slight scale on hover */
         }
 
         .theme-dark .tictactoe-cell:hover {
@@ -848,11 +1082,36 @@
         }
 
         .tictactoe-cell.win {
-             background-color: rgba(102, 187, 106, 0.3); /* Accent light with opacity */
+             background-color: rgba(46, 204, 113, 0.3); /* Accent light with opacity */
+             animation: winPulse 0.5s ease-in-out 3; /* Pulse animation */
+        }
+
+        @keyframes winPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .theme-dark .tictactoe-cell.win {
              background-color: rgba(0, 255, 102, 0.2); /* Neon green with opacity */
+        }
+
+        .tictactoe-status {
+             font-size: 1.2rem;
+             font-weight: 500;
+             margin-top: var(--spacing-sm);
+        }
+
+        .tictactoe-score {
+             font-size: 1rem;
+             color: var(--color-text-secondary);
+        }
+
+        .tictactoe-mode-selector {
+             margin-top: var(--spacing-md);
+             display: flex;
+             gap: var(--spacing-sm);
+             flex-wrap: wrap;
+             justify-content: center;
         }
 
 
@@ -867,7 +1126,7 @@
 
         .memory-card {
             aspect-ratio: 1 / 1;
-            background-color: var(--color-primary);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); /* Gradient back */
             border-radius: var(--border-radius-sm);
             display: flex;
             align-items: center;
@@ -877,18 +1136,29 @@
             transition: transform 0.3s, background-color 0.3s;
             box-shadow: var(--shadow-sm);
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+         .memory-card::before { /* Card back pattern */
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 10px, transparent 10px, transparent 20px);
+            opacity: 0.5;
         }
 
         .memory-card.flipped {
-            background-color: var(--color-surface);
+            background: var(--color-surface); /* Solid background when flipped */
             color: var(--color-text);
             transform: rotateY(180deg);
         }
 
          .memory-card.matched {
-            background-color: var(--color-accent);
+            background: var(--color-accent); /* Solid accent for matched */
             color: white;
             cursor: default;
+            opacity: 0.8;
         }
 
         /* Reaction Tester Specific */
@@ -907,25 +1177,28 @@
         }
 
         .reaction-ready {
-            background-color: var(--color-secondary);
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-warning)); /* Gradient */
             color: white;
+            box-shadow: var(--shadow-md);
         }
 
         .reaction-wait {
-            background-color: var(--color-warning);
+            background: linear-gradient(135deg, var(--color-warning), #e67e22); /* Gradient */
             color: white;
+            box-shadow: var(--shadow-md);
         }
 
         .reaction-go {
-            background-color: var(--color-accent);
+            background: linear-gradient(135deg, var(--color-accent), #27ae60); /* Gradient */
             color: white;
             animation: pulse 1s infinite;
+            box-shadow: var(--shadow-md);
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); box-shadow: var(--shadow-md); }
+            50% { transform: scale(1.05); box-shadow: var(--shadow-md), 0 0 15px var(--color-accent); }
+            100% { transform: scale(1); box-shadow: var(--shadow-md); }
         }
 
         .reaction-result {
@@ -943,12 +1216,13 @@
             width: 300px;
             height: 300px;
             padding: 10px;
-            background-color: var(--color-border);
+            background: linear-gradient(135deg, var(--color-border), #aab7c4); /* Gradient background */
             border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md); /* Add shadow */
         }
 
         .whack-hole {
-            background-color: #333;
+            background: radial-gradient(circle, #34495e, #2c3e50); /* Hole gradient */
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -956,13 +1230,14 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
+            box-shadow: inset 0 5px 10px rgba(0,0,0,0.5); /* Inner shadow for depth */
         }
 
         .whack-doodle {
             position: absolute;
             width: 80%;
             height: 80%;
-            background-color: var(--color-secondary);
+            background: radial-gradient(circle, var(--color-secondary), #c0392b); /* Doodle gradient */
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -970,10 +1245,18 @@
             font-size: 1.5rem;
             transition: transform 0.1s;
             transform: translateY(100%);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Shadow */
         }
 
         .whack-doodle.up {
             transform: translateY(0);
+            animation: popUp 0.3s ease-out; /* Pop up animation */
+        }
+
+        @keyframes popUp {
+            0% { transform: translateY(100%) scale(0.8); opacity: 0; }
+            70% { transform: translateY(-20%) scale(1.1); }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
         }
 
         .whack-score {
@@ -991,22 +1274,47 @@
             padding: var(--spacing-lg);
             width: 100%;
             max-width: 300px;
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
         }
 
         .dice-rolls {
             display: flex;
             gap: var(--spacing-sm);
-            font-size: 2rem;
+            font-size: 3rem; /* Larger dice */
+        }
+
+        .dice { /* Individual die */
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
         }
 
         .dice-guess-input {
             width: 100px;
             text-align: center;
+            font-size: 1.2rem; /* Larger input */
+            padding: var(--spacing-sm);
         }
 
         .dice-result {
             font-size: 1.2rem;
             font-weight: bold;
+            text-align: center;
+        }
+
+        .dice-stats {
+             font-size: 1rem;
+             color: var(--color-text-secondary);
+             text-align: center;
         }
 
         /* Accessibility */
@@ -1022,6 +1330,19 @@
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .game-area {
+                flex-direction: column;
+            }
+            .game-sidebar {
+                width: 100%;
+                max-height: 200px; /* Limit height on smaller screens */
+            }
+            .games-main-content {
+                 /* Adjust if needed */
+            }
+        }
+
         @media (max-width: 768px) {
             .games-grid {
                 grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -1030,17 +1351,51 @@
                 flex-direction: column;
                 gap: var(--spacing-md);
             }
+            .game-sidebar {
+                 position: fixed;
+                 top: 0;
+                 left: 0;
+                 height: 100%;
+                 max-height: none;
+                 transform: translateX(-100%);
+                 transition: transform var(--transition-normal);
+            }
+            .game-sidebar:not(.hidden) {
+                transform: translateX(0);
+            }
+            .toggle-sidebar {
+                display: block; /* Show toggle on mobile */
+            }
         }
+
         @media (max-width: 480px) {
             .games-grid {
                 grid-template-columns: 1fr;
             }
+            .app-header {
+                 padding: var(--spacing-sm);
+            }
+            .logo {
+                 font-size: 1.5rem;
+            }
+            .logo-icon {
+                 width: 40px;
+                 height: 40px;
+                 font-size: 1.5rem;
+            }
+            .icon-button {
+                 width: 40px;
+                 height: 40px;
+                 font-size: 1rem;
+            }
         }
+
     </style>
 </head>
 <body>
     <!-- ====== TEMPLATE ====== -->
     <div class="doodle-bg">
+        <!-- Existing doodles -->
         <div class="doodle circle" style="top: 10%; left: 5%;"></div>
         <div class="doodle square" style="top: 20%; right: 7%;"></div>
         <div class="doodle triangle" style="top: 60%; left: 8%;"></div>
@@ -1049,12 +1404,17 @@
         <div class="doodle square" style="top: 30%; left: 20%; width: 40px; height: 40px;"></div>
         <div class="doodle triangle" style="bottom: 15%; right: 20%;"></div>
         <div class="doodle zigzag" style="bottom: 30%; left: 5%;"></div>
+        <!-- New doodles for more detail -->
+        <div class="doodle star" style="top: 15%; right: 25%;"></div>
+        <div class="doodle blob" style="bottom: 20%; left: 25%;"></div>
+        <div class="doodle star" style="top: 50%; left: 50%;"></div>
+        <div class="doodle blob" style="top: 80%; right: 30%;"></div>
     </div>
     <div class="app">
         <header class="app-header">
             <div class="logo">
                 <div class="logo-icon">🎮</div>
-                <h1>Shaikh's Arcade</h1>
+                <h1>Shaikh's Enhanced Arcade</h1>
             </div>
             <div class="controls">
                 <button class="icon-button" id="soundToggle" aria-label="Toggle sound">
@@ -1075,9 +1435,26 @@
             <div class="search-icon">🔍</div>
             <input type="text" class="search-input" id="gameSearch" placeholder="Search games..." aria-label="Search games">
         </div>
-        <div class="games-grid" id="gamesGrid">
-            <!-- Game tiles will be populated by JavaScript -->
+
+        <!-- ===== Enhanced Game Selection Area ===== -->
+        <div class="game-area">
+            <aside class="game-sidebar" id="gameSidebar">
+                <div class="sidebar-header">
+                    <h2 class="sidebar-title">Games</h2>
+                    <button class="toggle-sidebar" id="toggleSidebar" aria-label="Toggle game list">☰</button>
+                </div>
+                <ul class="games-list" id="gamesList">
+                    <!-- Game list items will be populated by JavaScript -->
+                </ul>
+            </aside>
+            <main class="games-main-content">
+                 <div class="games-grid" id="gamesGrid">
+                    <!-- Game tiles will be populated by JavaScript -->
+                 </div>
+            </main>
         </div>
+        <!-- ===== End Game Selection Area ===== -->
+
         <div class="game-view" id="gameView">
             <div class="game-header">
                 <div class="game-title-bar">
@@ -1177,14 +1554,15 @@
     <div class="modal-overlay" id="onboardingModal">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title">Welcome to Shaikh's Arcade!</h3>
+                <h3 class="modal-title">Welcome to Shaikh's Enhanced Arcade!</h3>
                 <button class="modal-close" id="closeOnboarding">✕</button>
             </div>
             <div class="modal-body">
-                <p>🎮 Play a collection of fun mini-games</p>
+                <p>🎮 Play a collection of fun, upgraded mini-games</p>
                 <p>🏆 Earn achievements and track high scores</p>
                 <p>⚙️ Customize your experience in settings</p>
                 <p>🌙 Try the cool neon dark mode!</p>
+                <p>✨ Experience the new light theme and creative details!</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" id="startPlaying">
@@ -1217,19 +1595,25 @@
                 });
                 return el;
             };
+
             // App state
             let activeGame = null;
+            let activeGameId = null; // Keep track of the active game ID
             let gamesRegistry = {};
             let settings = {
                 soundOn: true,
                 volume: 0.5,
-                theme: 'light', // Default to light
+                theme: 'light',
                 showOnboarding: true
             };
             let scores = {};
             let achievements = {};
+
             // DOM elements
             const gamesGrid = qs('#gamesGrid');
+            const gamesList = qs('#gamesList'); // Sidebar list
+            const gameSidebar = qs('#gameSidebar');
+            const toggleSidebar = qs('#toggleSidebar');
             const gameView = qs('#gameView');
             const gameContent = qs('#gameContent');
             const currentGameTitle = qs('#currentGameTitle');
@@ -1242,6 +1626,7 @@
             const gamePause = qs('#gamePause');
             const gameRestart = qs('#gameRestart');
             const gameInfo = qs('#gameInfo');
+
             // Modals
             const settingsModal = qs('#settingsModal');
             const profileModal = qs('#profileModal');
@@ -1256,7 +1641,8 @@
             const resetProgress = qs('#resetProgress');
             const saveSettings = qs('#saveSettings');
             const startPlaying = qs('#startPlaying');
-            // Sound Manager
+
+            // Sound Manager (Simplified version)
             const SoundManager = {
                 audioContext: null,
                 enabled: true,
@@ -1279,23 +1665,11 @@
                     let frequency = 440;
                     let duration = 0.1;
                     switch (kind) {
-                        case 'click':
-                            frequency = 523.25;
-                            break;
-                        case 'success':
-                            frequency = 783.99;
-                            break;
-                        case 'error':
-                            frequency = 349.23;
-                            break;
-                        case 'eat':
-                            frequency = 659.25;
-                            duration = 0.05;
-                            break;
-                        case 'hit':
-                            frequency = 392;
-                            duration = 0.08;
-                            break;
+                        case 'click': frequency = 523.25; break;
+                        case 'success': frequency = 783.99; break;
+                        case 'error': frequency = 349.23; break;
+                        case 'eat': frequency = 659.25; duration = 0.05; break;
+                        case 'hit': frequency = 392; duration = 0.08; break;
                     }
                     gainNode.gain.value = this.volume;
                     oscillator.frequency.value = frequency;
@@ -1304,14 +1678,10 @@
                     gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
                     oscillator.stop(this.audioContext.currentTime + duration);
                 },
-                setVolume(volume) {
-                    this.volume = volume;
-                },
-                toggle() {
-                    this.enabled = !this.enabled;
-                    return this.enabled;
-                }
+                setVolume(volume) { this.volume = volume; },
+                toggle() { this.enabled = !this.enabled; return this.enabled; }
             };
+
             // Toast system
             const Toast = {
                 container: qs('#toastContainer'),
@@ -1321,167 +1691,110 @@
                         innerHTML: `<span>${message}</span>`
                     });
                     this.container.appendChild(toast);
-                    // Trigger reflow
-                    toast.offsetHeight;
+                    toast.offsetHeight; // Trigger reflow
                     toast.classList.add('show');
                     setTimeout(() => {
                         toast.classList.remove('show');
-                        setTimeout(() => {
-                            if (toast.parentNode) {
-                                toast.parentNode.removeChild(toast);
-                            }
-                        }, 300);
+                        setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
                     }, duration);
                 }
             };
+
             // Ripple effect
             const addRippleEffect = (element) => {
                 element.addEventListener('click', function(e) {
                     const rect = this.getBoundingClientRect();
                     const x = e.clientX - rect.left;
                     const y = e.clientY - rect.top;
-                    const ripple = create('span', {
-                        className: 'ripple',
-                        style: `top: ${y}px; left: ${x}px;`
-                    });
+                    const ripple = create('span', { className: 'ripple', style: `top: ${y}px; left: ${x}px;` });
                     this.appendChild(ripple);
-                    setTimeout(() => {
-                        ripple.remove();
-                    }, 600);
+                    setTimeout(() => { ripple.remove(); }, 600);
                 });
             };
+
             // LocalStorage management
             const Storage = {
                 get(key) {
                     try {
-                        const item = localStorage.getItem(`shaikhArcade.${key}`);
+                        const item = localStorage.getItem(`shaikhArcadeEnhanced.${key}`);
                         return item ? JSON.parse(item) : null;
-                    } catch (e) {
-                        console.error('Error reading from localStorage', e);
-                        return null;
-                    }
+                    } catch (e) { console.error('Error reading from localStorage', e); return null; }
                 },
                 set(key, value) {
-                    try {
-                        localStorage.setItem(`shaikhArcade.${key}`, JSON.stringify(value));
-                    } catch (e) {
-                        console.error('Error writing to localStorage', e);
-                    }
+                    try { localStorage.setItem(`shaikhArcadeEnhanced.${key}`, JSON.stringify(value)); } catch (e) { console.error('Error writing to localStorage', e); }
                 },
                 remove(key) {
-                    try {
-                        localStorage.removeItem(`shaikhArcade.${key}`);
-                    } catch (e) {
-                        console.error('Error removing from localStorage', e);
-                    }
+                    try { localStorage.removeItem(`shaikhArcadeEnhanced.${key}`); } catch (e) { console.error('Error removing from localStorage', e); }
                 }
             };
-            // Load saved data
+
+            // Load/Save data
             function loadData() {
                 const savedSettings = Storage.get('settings');
-                if (savedSettings) {
-                    settings = { ...settings, ...savedSettings };
-                }
+                if (savedSettings) settings = { ...settings, ...savedSettings };
                 const savedScores = Storage.get('scores');
-                if (savedScores) {
-                    scores = savedScores;
-                }
+                if (savedScores) scores = savedScores;
                 const savedAchievements = Storage.get('achievements');
-                if (savedAchievements) {
-                    achievements = savedAchievements;
-                }
+                if (savedAchievements) achievements = savedAchievements;
             }
-            // Save data
             function saveData() {
                 Storage.set('settings', settings);
                 Storage.set('scores', scores);
                 Storage.set('achievements', achievements);
             }
-            // Apply settings to UI and CSS variables
+
+            // Apply settings
             function applySettings() {
-                 // Determine actual theme
                 let actualTheme = settings.theme;
                 if (settings.theme === 'auto') {
                     actualTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                 }
-
-                // Apply theme class to body
                 document.body.classList.toggle('theme-dark', actualTheme === 'dark');
-
-                // Update theme toggle icon
                 themeToggle.querySelector('.theme-icon').textContent = actualTheme === 'dark' ? '☀️' : '🌙';
-
-                // Apply sound settings
                 soundToggle.querySelector('.sound-icon').textContent = settings.soundOn ? '🔊' : '🔇';
                 SoundManager.setVolume(settings.volume);
-
-                // Update settings modal
                 soundToggleSetting.checked = settings.soundOn;
                 volumeSlider.value = settings.volume;
-                themeSelect.value = settings.theme; // Keep the select value as the user's choice
+                themeSelect.value = settings.theme;
                 onboardingToggle.checked = settings.showOnboarding;
             }
-            // Show onboarding if needed
+
+            // Show onboarding
             function checkOnboarding() {
                 if (settings.showOnboarding) {
                     onboardingModal.classList.add('active');
                 }
             }
+
             // Check and unlock achievements
             function checkAchievement(achievementId, condition, payload = null) {
                 if (condition && !achievements[achievementId]) {
-                    achievements[achievementId] = {
-                        unlocked: true,
-                        timestamp: Date.now(),
-                        payload: payload
-                    };
+                    achievements[achievementId] = { unlocked: true, timestamp: Date.now(), payload: payload };
                     Storage.set('achievements', achievements);
                     let message = '';
                     switch (achievementId) {
-                        case 'first_win':
-                            message = 'Achievement Unlocked: First Win!';
-                            break;
-                        case 'snake_master':
-                            message = 'Achievement Unlocked: Snake Master!';
-                            break;
-                        case 'tic_master':
-                            message = 'Achievement Unlocked: Tic-Tac-Toe Master!';
-                            break;
-                        case 'memory_champ':
-                            message = 'Achievement Unlocked: Memory Champion!';
-                            break;
-                        case 'speed_demon':
-                            message = 'Achievement Unlocked: Speed Demon!';
-                            break;
-                        case 'whack_streak':
-                            message = 'Achievement Unlocked: Whack-a-Doodle Streak!';
-                            break;
-                        case 'lucky_roller':
-                            message = 'Achievement Unlocked: Lucky Roller!';
-                            break;
-                        case 'runner_pro':
-                            message = 'Achievement Unlocked: Runner Pro!';
-                            break;
+                        case 'first_win': message = 'Achievement Unlocked: First Win!'; break;
+                        case 'snake_master': message = 'Achievement Unlocked: Snake Master!'; break;
+                        case 'tic_master': message = 'Achievement Unlocked: Tic-Tac-Toe Master!'; break;
+                        case 'memory_champ': message = 'Achievement Unlocked: Memory Champion!'; break;
+                        case 'speed_demon': message = 'Achievement Unlocked: Speed Demon!'; break;
+                        case 'whack_streak': message = 'Achievement Unlocked: Whack-a-Doodle Streak!'; break;
+                        case 'lucky_roller': message = 'Achievement Unlocked: Lucky Roller!'; break;
+                        case 'runner_pro': message = 'Achievement Unlocked: Runner Pro!'; break;
                     }
-                    if (message) {
-                        Toast.show(message, 'success');
-                    }
+                    if (message) Toast.show(message, 'success');
                 }
             }
-            // Update scores in storage
+
+            // Update scores
             function updateScores(gameId, scoreData) {
-                if (!scores[gameId]) {
-                    scores[gameId] = {};
-                }
-                // Handle different score formats
+                if (!scores[gameId]) scores[gameId] = {};
                 if (typeof scoreData === 'number') {
-                    // For games like Snake that just have a high score
                     if (!scores[gameId].highScore || scoreData > scores[gameId].highScore) {
                         scores[gameId].highScore = scoreData;
                         Storage.set('scores', scores);
                     }
                 } else if (typeof scoreData === 'object') {
-                    // For games with multiple score types
                     Object.keys(scoreData).forEach(key => {
                         if (!scores[gameId][key] || scoreData[key] > scores[gameId][key]) {
                             scores[gameId][key] = scoreData[key];
@@ -1493,21 +1806,24 @@
 
             // Game modules
             const GameModules = {
-                // Smooth Snake game
+
+                // ===== Enhanced Smooth Snake game with Levels and AI =====
                 snake: {
                     id: 'snake',
                     title: 'Smooth Snake',
-                    description: 'Guide the snake to eat food and grow longer',
+                    description: 'Guide the snake to eat food and grow longer. Levels increase speed!',
                     icon: '🐍',
                     init(container) {
                         const canvas = create('canvas', {
                             className: 'snake-canvas',
-                            width: 400,
-                            height: 400,
+                            width: 500, // Slightly larger canvas
+                            height: 500,
                             role: 'application',
                             'aria-label': 'Snake game canvas'
                         });
                         const ctx = canvas.getContext('2d');
+
+                        // Game state with level
                         const gameState = {
                             snake: [{x: 10, y: 10}],
                             food: {x: 5, y: 5},
@@ -1518,77 +1834,52 @@
                             gameOver: false,
                             paused: false,
                             gridSize: 20,
-                            speed: 150,
+                            baseSpeed: 150, // Base speed
+                            speed: 150, // Current speed (decreases with level)
+                            level: 1,
+                            foodEatenThisLevel: 0,
+                            foodsPerLevel: 5, // Food needed to level up
                             lastUpdate: 0,
                             interpolation: 0,
                             touchStart: null
                         };
-                        const scoreAnnouncer = create('div', {
-                            className: 'sr-only',
-                            'aria-live': 'polite'
+
+                        const scoreAnnouncer = create('div', { className: 'sr-only', 'aria-live': 'polite' });
+
+                        // Create UI elements
+                        const gameUI = create('div', { className: 'snake-game-ui' });
+                        const statsDiv = create('div', { className: 'snake-stats' });
+                        const scoreSpan = create('span', { className: 'snake-stat-item', textContent: `Score: ${gameState.score}` });
+                        const highScoreSpan = create('span', { className: 'snake-stat-item', textContent: `High Score: ${gameState.highScore}` });
+                        const levelSpan = create('span', { className: 'snake-level-display', textContent: `Level: ${gameState.level}` });
+                        statsDiv.append(scoreSpan, highScoreSpan, levelSpan);
+
+                        const modeSelector = create('div', { className: 'snake-mode-selector' });
+                        const modeLabel = create('span', { textContent: 'Mode:' });
+                        const soloButton = create('button', { className: 'btn btn-secondary active', textContent: 'Solo' });
+                        const aiButton = create('button', { className: 'btn btn-secondary', textContent: 'vs AI' });
+                        // Placeholder for AI logic - simplified for now
+                        let aiMode = false;
+                        soloButton.addEventListener('click', () => {
+                            aiMode = false;
+                            soloButton.classList.add('active');
+                            aiButton.classList.remove('active');
+                            this.restart(); // Restart game on mode change
                         });
-                        container.appendChild(canvas);
-                        container.appendChild(scoreAnnouncer);
-                        // Game logic
-                        function update(currentTime) {
-                            if (gameState.paused || gameState.gameOver) return;
-                            if (!gameState.lastUpdate) gameState.lastUpdate = currentTime;
-                            const deltaTime = currentTime - gameState.lastUpdate;
-                            gameState.interpolation = Math.min(1, deltaTime / gameState.speed);
-                            if (deltaTime > gameState.speed) {
-                                gameState.lastUpdate = currentTime;
-                                gameState.interpolation = 0;
-                                // Update direction
-                                gameState.direction = gameState.nextDirection;
-                                // Move snake
-                                const head = {...gameState.snake[0]};
-                                switch (gameState.direction) {
-                                    case 'up': head.y--; break;
-                                    case 'down': head.y++; break;
-                                    case 'left': head.x--; break;
-                                    case 'right': head.x++; break;
-                                }
-                                // Check wall collision
-                                if (head.x < 0 || head.x >= canvas.width / gameState.gridSize ||
-                                    head.y < 0 || head.y >= canvas.height / gameState.gridSize) {
-                                    gameState.gameOver = true;
-                                    SoundManager.play('error');
-                                    checkAchievement('snake_master', gameState.score >= 500, { score: gameState.score });
-                                    updateScores('snake', gameState.score);
-                                    return;
-                                }
-                                // Check self collision
-                                for (let i = 0; i < gameState.snake.length; i++) {
-                                    if (gameState.snake[i].x === head.x && gameState.snake[i].y === head.y) {
-                                        gameState.gameOver = true;
-                                        SoundManager.play('error');
-                                        checkAchievement('snake_master', gameState.score >= 500, { score: gameState.score });
-                                        updateScores('snake', gameState.score);
-                                        return;
-                                    }
-                                }
-                                // Add new head
-                                gameState.snake.unshift(head);
-                                // Check food collision
-                                if (head.x === gameState.food.x && head.y === gameState.food.y) {
-                                    gameState.score += 10;
-                                    SoundManager.play('eat');
-                                    scoreAnnouncer.textContent = `Score: ${gameState.score}`;
-                                    placeFood();
-                                    // Increase speed every 5 foods
-                                    if (gameState.score % 50 === 0 && gameState.speed > 50) {
-                                        gameState.speed -= 10;
-                                    }
-                                } else {
-                                    // Remove tail if no food eaten
-                                    gameState.snake.pop();
-                                }
-                            }
-                            requestAnimationFrame(update);
-                        }
-                        function placeFood() {
-                            let newFood;
-                            let overlapping;
+                        aiButton.addEventListener('click', () => {
+                            aiMode = true;
+                            aiButton.classList.add('active');
+                            soloButton.classList.remove('active');
+                            this.restart(); // Restart game on mode change
+                        });
+                        modeSelector.append(modeLabel, soloButton, aiButton);
+
+                        gameUI.append(statsDiv, modeSelector);
+                        container.append(gameUI, canvas, scoreAnnouncer);
+
+                        // --- Game Logic ---
+                        const placeFood = () => {
+                            let newFood, overlapping;
                             do {
                                 newFood = {
                                     x: Math.floor(Math.random() * (canvas.width / gameState.gridSize)),
@@ -1597,32 +1888,160 @@
                                 overlapping = false;
                                 for (const segment of gameState.snake) {
                                     if (segment.x === newFood.x && segment.y === newFood.y) {
-                                        overlapping = true;
-                                        break;
+                                        overlapping = true; break;
                                     }
                                 }
                             } while (overlapping);
                             gameState.food = newFood;
-                        }
-                        function draw() {
-                            // Clear canvas
+                        };
+
+                        const checkCollision = (head, array) => {
+                            for (let i = 0; i < array.length; i++) {
+                                if (array[i].x === head.x && array[i].y === head.y) return true;
+                            }
+                            return false;
+                        };
+
+                        const updateLevel = () => {
+                            gameState.foodEatenThisLevel++;
+                            if (gameState.foodEatenThisLevel >= gameState.foodsPerLevel) {
+                                gameState.level++;
+                                gameState.foodEatenThisLevel = 0;
+                                // Increase difficulty (decrease speed, min 50ms)
+                                gameState.speed = Math.max(50, gameState.baseSpeed - (gameState.level * 10));
+                                levelSpan.textContent = `Level: ${gameState.level}`;
+                                Toast.show(`Level Up! Speed Increased!`, 'info');
+                                SoundManager.play('success');
+                            }
+                        };
+
+                        const update = (currentTime) => {
+                            if (gameState.paused || gameState.gameOver) return;
+                            if (!gameState.lastUpdate) gameState.lastUpdate = currentTime;
+                            const deltaTime = currentTime - gameState.lastUpdate;
+                            gameState.interpolation = Math.min(1, deltaTime / gameState.speed);
+
+                            if (deltaTime > gameState.speed) {
+                                gameState.lastUpdate = currentTime;
+                                gameState.interpolation = 0;
+                                gameState.direction = gameState.nextDirection;
+
+                                // --- AI Logic (Simple) ---
+                                if (aiMode) {
+                                   // Very basic AI: move towards food if possible, avoid walls/self
+                                   const head = gameState.snake[0];
+                                   const possibleMoves = [];
+                                   const directions = [
+                                       { dir: 'up', vec: {x: 0, y: -1} },
+                                       { dir: 'down', vec: {x: 0, y: 1} },
+                                       { dir: 'left', vec: {x: -1, y: 0} },
+                                       { dir: 'right', vec: {x: 1, y: 0} }
+                                   ];
+
+                                   directions.forEach(d => {
+                                       if (
+                                           (gameState.direction !== 'down' || d.dir !== 'up') &&
+                                           (gameState.direction !== 'up' || d.dir !== 'down') &&
+                                           (gameState.direction !== 'right' || d.dir !== 'left') &&
+                                           (gameState.direction !== 'left' || d.dir !== 'right')
+                                       ) {
+                                           const newHead = { x: head.x + d.vec.x, y: head.y + d.vec.y };
+                                           if (
+                                               newHead.x >= 0 && newHead.x < canvas.width / gameState.gridSize &&
+                                               newHead.y >= 0 && newHead.y < canvas.height / gameState.gridSize &&
+                                               !checkCollision(newHead, gameState.snake)
+                                           ) {
+                                               possibleMoves.push(d);
+                                           }
+                                       }
+                                   });
+
+                                   if (possibleMoves.length > 0) {
+                                       // Prefer moves that get closer to food
+                                       possibleMoves.sort((a, b) => {
+                                           const distA = Math.abs((head.x + a.vec.x) - gameState.food.x) + Math.abs((head.y + a.vec.y) - gameState.food.y);
+                                           const distB = Math.abs((head.x + b.vec.x) - gameState.food.x) + Math.abs((head.y + b.vec.y) - gameState.food.y);
+                                           return distA - distB;
+                                       });
+                                       gameState.nextDirection = possibleMoves[0].dir; // Choose best move
+                                   } else {
+                                       // No safe moves, let it crash or pick a random valid one
+                                       // This simple AI might crash if cornered.
+                                   }
+                                   gameState.direction = gameState.nextDirection; // Apply AI decision
+                                }
+                                // --- End AI Logic ---
+
+                                const head = { ...gameState.snake[0] };
+                                switch (gameState.direction) {
+                                    case 'up': head.y--; break;
+                                    case 'down': head.y++; break;
+                                    case 'left': head.x--; break;
+                                    case 'right': head.x++; break;
+                                }
+
+                                if (head.x < 0 || head.x >= canvas.width / gameState.gridSize ||
+                                    head.y < 0 || head.y >= canvas.height / gameState.gridSize ||
+                                    checkCollision(head, gameState.snake)) {
+                                    gameState.gameOver = true;
+                                    SoundManager.play('error');
+                                    checkAchievement('snake_master', gameState.score >= 500, { score: gameState.score });
+                                    updateScores('snake', gameState.score);
+                                    return;
+                                }
+
+                                gameState.snake.unshift(head);
+
+                                if (head.x === gameState.food.x && head.y === gameState.food.y) {
+                                    gameState.score += 10 * gameState.level; // Score based on level
+                                    SoundManager.play('eat');
+                                    scoreAnnouncer.textContent = `Score: ${gameState.score}`;
+                                    scoreSpan.textContent = `Score: ${gameState.score}`;
+                                    placeFood();
+                                    updateLevel(); // Check for level up
+                                } else {
+                                    gameState.snake.pop();
+                                }
+                            }
+                            requestAnimationFrame(update);
+                        };
+
+                        const draw = () => {
                             ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-background');
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                            // Draw grid background
+                            ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--color-border');
+                            ctx.lineWidth = 0.5;
+                            for (let x = 0; x <= canvas.width; x += gameState.gridSize) {
+                                ctx.beginPath();
+                                ctx.moveTo(x, 0);
+                                ctx.lineTo(x, canvas.height);
+                                ctx.stroke();
+                            }
+                            for (let y = 0; y <= canvas.height; y += gameState.gridSize) {
+                                ctx.beginPath();
+                                ctx.moveTo(0, y);
+                                ctx.lineTo(canvas.width, y);
+                                ctx.stroke();
+                            }
+
                             // Draw food
                             ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-accent');
-                            ctx.fillRect(
-                                gameState.food.x * gameState.gridSize,
-                                gameState.food.y * gameState.gridSize,
-                                gameState.gridSize,
-                                gameState.gridSize
-                            );
-                            // Draw snake with interpolation for smooth movement
-                            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-secondary');
+                            ctx.beginPath();
+                            const foodCenterX = gameState.food.x * gameState.gridSize + gameState.gridSize / 2;
+                            const foodCenterY = gameState.food.y * gameState.gridSize + gameState.gridSize / 2;
+                            const foodRadius = gameState.gridSize / 2 - 2;
+                            ctx.arc(foodCenterX, foodCenterY, foodRadius, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Draw snake with interpolation
+                            const snakeColor = aiMode ? getComputedStyle(document.body).getPropertyValue('--color-warning') : getComputedStyle(document.body).getPropertyValue('--color-secondary');
+                            ctx.fillStyle = snakeColor;
                             for (let i = 0; i < gameState.snake.length; i++) {
                                 const segment = gameState.snake[i];
                                 let x = segment.x * gameState.gridSize;
                                 let y = segment.y * gameState.gridSize;
-                                // Interpolate head position
                                 if (i === 0 && gameState.interpolation > 0) {
                                     const nextX = segment.x;
                                     const nextY = segment.y;
@@ -1633,18 +2052,41 @@
                                         case 'down': y = (nextY - gameState.interpolation) * gameState.gridSize; break;
                                     }
                                 }
-                                ctx.fillRect(x, y, gameState.gridSize, gameState.gridSize);
+                                ctx.fillRect(x + 1, y + 1, gameState.gridSize - 2, gameState.gridSize - 2); // Add small margin
+                                // Draw eyes on head
+                                if (i === 0) {
+                                    ctx.fillStyle = 'black';
+                                    const eyeSize = gameState.gridSize / 5;
+                                    let eye1X, eye1Y, eye2X, eye2Y;
+                                    switch(gameState.direction) {
+                                        case 'right':
+                                            eye1X = x + gameState.gridSize - eyeSize * 2; eye1Y = y + eyeSize * 2;
+                                            eye2X = x + gameState.gridSize - eyeSize * 2; eye2Y = y + gameState.gridSize - eyeSize * 3;
+                                            break;
+                                        case 'left':
+                                            eye1X = x + eyeSize; eye1Y = y + eyeSize * 2;
+                                            eye2X = x + eyeSize; eye2Y = y + gameState.gridSize - eyeSize * 3;
+                                            break;
+                                        case 'up':
+                                            eye1X = x + eyeSize * 2; eye1Y = y + eyeSize;
+                                            eye2X = x + gameState.gridSize - eyeSize * 3; eye2Y = y + eyeSize;
+                                            break;
+                                        case 'down':
+                                            eye1X = x + eyeSize * 2; eye1Y = y + gameState.gridSize - eyeSize * 2;
+                                            eye2X = x + gameState.gridSize - eyeSize * 3; eye2Y = y + gameState.gridSize - eyeSize * 2;
+                                            break;
+                                    }
+                                    ctx.fillRect(eye1X, eye1Y, eyeSize, eyeSize);
+                                    ctx.fillRect(eye2X, eye2Y, eyeSize, eyeSize);
+                                    ctx.fillStyle = snakeColor; // Reset fill style
+                                }
                             }
-                            // Draw score
-                            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-text');
-                            ctx.font = '16px sans-serif';
-                            ctx.fillText(`Score: ${gameState.score}`, 10, 20);
-                            ctx.fillText(`High Score: ${gameState.highScore}`, 10, 40);
+
                             if (gameState.gameOver) {
                                 ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
                                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                                 ctx.fillStyle = 'white';
-                                ctx.font = '24px sans-serif';
+                                ctx.font = 'bold 24px sans-serif';
                                 ctx.textAlign = 'center';
                                 ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 20);
                                 ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 20);
@@ -1653,62 +2095,46 @@
                                 ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
                                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                                 ctx.fillStyle = 'white';
-                                ctx.font = '24px sans-serif';
+                                ctx.font = 'bold 24px sans-serif';
                                 ctx.textAlign = 'center';
                                 ctx.fillText('Paused', canvas.width / 2, canvas.height / 2);
                                 ctx.textAlign = 'left';
                             }
-                        }
-                        function gameLoop() {
+                        };
+
+                        const gameLoop = () => {
                             draw();
                             requestAnimationFrame(gameLoop);
-                        }
-                        // Input handling
-                        function handleKeyDown(e) {
+                        };
+
+                        const handleKeyDown = (e) => {
                             switch (e.key) {
-                                case 'ArrowUp':
-                                case 'w':
-                                case 'W':
-                                    if (gameState.direction !== 'down') gameState.nextDirection = 'up';
-                                    break;
-                                case 'ArrowDown':
-                                case 's':
-                                case 'S':
-                                    if (gameState.direction !== 'up') gameState.nextDirection = 'down';
-                                    break;
-                                case 'ArrowLeft':
-                                case 'a':
-                                case 'A':
-                                    if (gameState.direction !== 'right') gameState.nextDirection = 'left';
-                                    break;
-                                case 'ArrowRight':
-                                case 'd':
-                                case 'D':
-                                    if (gameState.direction !== 'left') gameState.nextDirection = 'right';
-                                    break;
-                                case ' ':
-                                    gameState.paused = !gameState.paused;
-                                    break;
+                                case 'ArrowUp': case 'w': case 'W':
+                                    if (gameState.direction !== 'down') gameState.nextDirection = 'up'; break;
+                                case 'ArrowDown': case 's': case 'S':
+                                    if (gameState.direction !== 'up') gameState.nextDirection = 'down'; break;
+                                case 'ArrowLeft': case 'a': case 'A':
+                                    if (gameState.direction !== 'right') gameState.nextDirection = 'left'; break;
+                                case 'ArrowRight': case 'd': case 'D':
+                                    if (gameState.direction !== 'left') gameState.nextDirection = 'right'; break;
+                                case ' ': gameState.paused = !gameState.paused; break;
                             }
-                        }
+                        };
+
                         // Initialize game
                         placeFood();
                         requestAnimationFrame(update);
                         requestAnimationFrame(gameLoop);
                         document.addEventListener('keydown', handleKeyDown);
+
                         // Return game API
                         return {
                             destroy() {
                                 document.removeEventListener('keydown', handleKeyDown);
                                 container.innerHTML = '';
                             },
-                            pause() {
-                                gameState.paused = true;
-                            },
-                            resume() {
-                                gameState.paused = false;
-                                gameState.lastUpdate = 0;
-                            },
+                            pause() { gameState.paused = true; },
+                            resume() { gameState.paused = false; gameState.lastUpdate = 0; },
                             restart() {
                                 gameState.snake = [{x: 10, y: 10}];
                                 gameState.direction = 'right';
@@ -1716,20 +2142,26 @@
                                 gameState.score = 0;
                                 gameState.gameOver = false;
                                 gameState.paused = false;
-                                gameState.speed = 150;
+                                gameState.level = 1;
+                                gameState.speed = gameState.baseSpeed;
+                                gameState.foodEatenThisLevel = 0;
                                 gameState.lastUpdate = 0;
                                 gameState.interpolation = 0;
+                                scoreSpan.textContent = `Score: ${gameState.score}`;
+                                levelSpan.textContent = `Level: ${gameState.level}`;
                                 placeFood();
                                 scoreAnnouncer.textContent = 'Game restarted';
+                                SoundManager.play('click');
                             }
                         };
                     }
                 },
-                // Tic-Tac-Toe Game
-                tictactoe: {
+
+                // ===== Enhanced Tic-Tac-Toe with 1P/2P =====
+                 tictactoe: {
                     id: 'tictactoe',
                     title: 'Tic-Tac-Toe',
-                    description: 'Classic X and O game with AI opponents',
+                    description: 'Classic X and O game. Play against AI or a friend!',
                     icon: '⭕',
                     init(container) {
                         let currentPlayer = 'X';
@@ -1738,11 +2170,32 @@
                         let playerScore = scores.tictactoe?.playerWins || 0;
                         let aiScore = scores.tictactoe?.aiWins || 0;
                         let draws = scores.tictactoe?.draws || 0;
+                        let isTwoPlayer = false; // Default to 1P vs AI
 
-                        const gameElement = create('div', { className: 'tictactoe-game' });
+                        const gameElement = create('div', { className: 'tictactoe-game-ui' }); // Use new class
                         const boardElement = create('div', { className: 'tictactoe-board' });
-                        const statusElement = create('div', { className: 'game-status', textContent: `Player ${currentPlayer}'s turn` });
-                        const scoreElement = create('div', { className: 'game-score', textContent: `You: ${playerScore} | AI: ${aiScore} | Draws: ${draws}` });
+                        const statusElement = create('div', { className: 'tictactoe-status', textContent: `Player ${currentPlayer}'s turn` });
+                        const scoreElement = create('div', { className: 'tictactoe-score', textContent: `X: ${playerScore} | O: ${isTwoPlayer ? playerScore : aiScore} | Draws: ${draws}` });
+
+                        // Mode Selector
+                        const modeSelector = create('div', { className: 'tictactoe-mode-selector' });
+                        const modeLabel = create('span', { textContent: 'Mode:' });
+                        const onePButton = create('button', { className: 'btn btn-secondary active', textContent: '1 Player (vs AI)' });
+                        const twoPButton = create('button', { className: 'btn btn-secondary', textContent: '2 Players' });
+
+                        onePButton.addEventListener('click', () => {
+                            isTwoPlayer = false;
+                            onePButton.classList.add('active');
+                            twoPButton.classList.remove('active');
+                            this.restart(); // Restart on mode change
+                        });
+                        twoPButton.addEventListener('click', () => {
+                            isTwoPlayer = true;
+                            twoPButton.classList.add('active');
+                            onePButton.classList.remove('active');
+                            this.restart(); // Restart on mode change
+                        });
+                        modeSelector.append(modeLabel, onePButton, twoPButton);
 
                         // Create cells
                         const cells = [];
@@ -1756,22 +2209,69 @@
                             boardElement.appendChild(cell);
                         }
 
-                        gameElement.append(boardElement, statusElement, scoreElement);
+                        gameElement.append(modeSelector, boardElement, statusElement, scoreElement); // Add mode selector first
                         container.appendChild(gameElement);
 
                         function handleCellClick(index) {
                             if (!gameActive || gameBoard[index] !== '') return;
 
                             makeMove(index, currentPlayer);
-                            if (gameActive && currentPlayer === 'O') {
-                                // Simple AI: pick a random empty spot
+
+                            // Handle AI move if it's 1P and AI's turn (O)
+                            if (gameActive && !isTwoPlayer && currentPlayer === 'O') {
+                                // Simple AI: pick a random empty spot (can be improved)
                                 setTimeout(() => {
-                                    const emptyIndices = gameBoard.map((val, idx) => val === '' ? idx : null).filter(val => val !== null);
-                                    if (emptyIndices.length > 0) {
-                                        const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-                                        makeMove(randomIndex, 'O');
+                                    // --- Improved AI Logic (Minimax would be better, this is a step up) ---
+                                    let bestMove = -1;
+                                    let bestScore = -Infinity;
+
+                                    // Check for winning move
+                                    for (let i = 0; i < 9; i++) {
+                                        if (gameBoard[i] === '') {
+                                            gameBoard[i] = 'O';
+                                            if (checkWin()) {
+                                                bestMove = i;
+                                                gameBoard[i] = ''; // Reset
+                                                break;
+                                            }
+                                            gameBoard[i] = ''; // Reset
+                                        }
                                     }
-                                }, 300); // Slight delay for AI move
+
+                                    // If no winning move, block player win
+                                    if (bestMove === -1) {
+                                         for (let i = 0; i < 9; i++) {
+                                            if (gameBoard[i] === '') {
+                                                gameBoard[i] = 'X';
+                                                if (checkWin()) {
+                                                    bestMove = i;
+                                                    gameBoard[i] = ''; // Reset
+                                                    break;
+                                                }
+                                                gameBoard[i] = ''; // Reset
+                                            }
+                                        }
+                                    }
+
+                                    // If still no move, pick center/corner/random
+                                    if (bestMove === -1) {
+                                        const preferredMoves = [4, 0, 2, 6, 8]; // Center, then corners
+                                        const availablePreferred = preferredMoves.filter(i => gameBoard[i] === '');
+                                        if (availablePreferred.length > 0) {
+                                            bestMove = availablePreferred[0];
+                                        } else {
+                                            const emptyIndices = gameBoard.map((val, idx) => val === '' ? idx : null).filter(val => val !== null);
+                                            if (emptyIndices.length > 0) {
+                                                bestMove = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+                                            }
+                                        }
+                                    }
+                                    // --- End Improved AI Logic ---
+
+                                    if (bestMove !== -1) {
+                                        makeMove(bestMove, 'O');
+                                    }
+                                }, 500); // Slight delay for AI move
                             }
                         }
 
@@ -1780,15 +2280,19 @@
                             cells[index].textContent = player;
                             if (checkWin()) {
                                 gameActive = false;
-                                statusElement.textContent = player === 'X' ? 'You win!' : 'AI wins!';
+                                statusElement.textContent = `${player} wins!`;
                                 if (player === 'X') {
                                     playerScore++;
                                     checkAchievement('tic_master', playerScore >= 5, { wins: playerScore });
                                 } else {
-                                    aiScore++;
+                                    if (isTwoPlayer) {
+                                        playerScore++; // Player O wins in 2P mode
+                                    } else {
+                                        aiScore++; // AI wins in 1P mode
+                                    }
                                 }
                                 updateScores('tictactoe', { playerWins: playerScore, aiWins: aiScore, draws: draws });
-                                scoreElement.textContent = `You: ${playerScore} | AI: ${aiScore} | Draws: ${draws}`;
+                                scoreElement.textContent = `X: ${playerScore} | O: ${isTwoPlayer ? playerScore : aiScore} | Draws: ${draws}`;
                                 highlightWinningCells();
                                 SoundManager.play(player === 'X' ? 'success' : 'error');
                             } else if (checkDraw()) {
@@ -1796,7 +2300,7 @@
                                 statusElement.textContent = "It's a draw!";
                                 draws++;
                                 updateScores('tictactoe', { playerWins: playerScore, aiWins: aiScore, draws: draws });
-                                scoreElement.textContent = `You: ${playerScore} | AI: ${aiScore} | Draws: ${draws}`;
+                                scoreElement.textContent = `X: ${playerScore} | O: ${isTwoPlayer ? playerScore : aiScore} | Draws: ${draws}`;
                                 SoundManager.play('click');
                             } else {
                                 currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
@@ -1807,9 +2311,9 @@
 
                         function checkWin() {
                             const winPatterns = [
-                                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-                                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-                                [0, 4, 8], [2, 4, 6]             // diagonals
+                                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                                [0, 4, 8], [2, 4, 6]
                             ];
                             for (const pattern of winPatterns) {
                                 const [a, b, c] = pattern;
@@ -1834,15 +2338,9 @@
                         }
 
                         return {
-                            destroy() {
-                                container.innerHTML = '';
-                            },
-                            pause() {
-                                // Pause logic if needed
-                            },
-                            resume() {
-                                // Resume logic if needed
-                            },
+                            destroy() { container.innerHTML = ''; },
+                            pause() { /* Pause logic if needed */ },
+                            resume() { /* Resume logic if needed */ },
                             restart() {
                                 gameBoard = ['', '', '', '', '', '', '', '', ''];
                                 currentPlayer = 'X';
@@ -1852,12 +2350,16 @@
                                     cell.textContent = '';
                                     cell.classList.remove('win');
                                 });
+                                // Update score display in case mode changed
+                                scoreElement.textContent = `X: ${playerScore} | O: ${isTwoPlayer ? playerScore : aiScore} | Draws: ${draws}`;
                                 SoundManager.play('click');
                             }
                         };
                     }
                 },
-                // Memory Match Game
+
+
+                // Memory Match Game (Placeholder for now, can be enhanced)
                 memory: {
                     id: 'memory',
                     title: 'Memory Match',
@@ -1874,7 +2376,6 @@
                         let timerInterval = null;
                         let seconds = 0;
                         const bestTime = scores.memory?.bestTime || null;
-
                         const gameElement = create('div', { className: 'memory-game' });
                         const boardElement = create('div', { className: 'memory-board' });
                         const movesElement = create('div', { className: 'game-moves', textContent: `Moves: ${moves}` });
@@ -1882,22 +2383,19 @@
                         const bestTimeElement = create('div', { className: 'game-best-time', textContent: bestTime ? `Best: ${bestTime}s` : 'Best: --' });
                         const restartButton = create('button', { className: 'btn btn-secondary', textContent: 'Restart' });
                         restartButton.addEventListener('click', restartGame);
-
                         const cards = gameCards.map((emoji, index) => {
                             const card = create('div', {
                                 className: 'memory-card',
-                                textContent: '?', // Back of card
+                                textContent: '', // Start empty
                                 onclick: () => flipCard(card, index)
                             });
                             card.dataset.emoji = emoji;
                             card.dataset.index = index;
                             return card;
                         });
-
                         boardElement.append(...cards);
                         gameElement.append(boardElement, movesElement, timerElement, bestTimeElement, restartButton);
                         container.appendChild(gameElement);
-
                         function startTimer() {
                             if (!gameStarted) {
                                 gameStarted = true;
@@ -1907,31 +2405,25 @@
                                 }, 1000);
                             }
                         }
-
                         function flipCard(card, index) {
                             if (flippedCards.length === 2 || card.classList.contains('flipped') || card.classList.contains('matched')) {
                                 return;
                             }
-
                             startTimer();
                             card.classList.add('flipped');
                             card.textContent = card.dataset.emoji;
                             flippedCards.push({ card, index });
-
                             if (flippedCards.length === 2) {
                                 moves++;
                                 movesElement.textContent = `Moves: ${moves}`;
                                 const card1 = flippedCards[0];
                                 const card2 = flippedCards[1];
-
                                 if (gameCards[card1.index] === gameCards[card2.index]) {
-                                    // Match
                                     card1.card.classList.add('matched');
                                     card2.card.classList.add('matched');
                                     flippedCards = [];
                                     matchedPairs++;
                                     SoundManager.play('success');
-
                                     if (matchedPairs === emojis.length) {
                                         clearInterval(timerInterval);
                                         checkAchievement('memory_champ', moves <= 20, { moves, time: seconds });
@@ -1945,19 +2437,17 @@
                                         }, 500);
                                     }
                                 } else {
-                                    // No match
                                     setTimeout(() => {
                                         card1.card.classList.remove('flipped');
                                         card2.card.classList.remove('flipped');
-                                        card1.card.textContent = '?';
-                                        card2.card.textContent = '?';
+                                        card1.card.textContent = '';
+                                        card2.card.textContent = '';
                                         flippedCards = [];
                                     }, 1000);
                                     SoundManager.play('error');
                                 }
                             }
                         }
-
                         function restartGame() {
                             clearInterval(timerInterval);
                             gameCards = [...emojis, ...emojis].sort(() => 0.5 - Math.random());
@@ -1968,15 +2458,13 @@
                             seconds = 0;
                             movesElement.textContent = `Moves: ${moves}`;
                             timerElement.textContent = `Time: ${seconds}s`;
-
                             cards.forEach((card, index) => {
                                 card.classList.remove('flipped', 'matched');
-                                card.textContent = '?';
+                                card.textContent = '';
                                 card.dataset.emoji = gameCards[index];
                             });
                             SoundManager.play('click');
                         }
-
                         return {
                             destroy() {
                                 clearInterval(timerInterval);
@@ -1997,18 +2485,18 @@
                         };
                     }
                 },
-                // Reaction Tester Game
+
+                // Reaction Tester Game (Placeholder)
                 reaction: {
                     id: 'reaction',
                     title: 'Reaction Tester',
                     description: 'Test your reaction speed',
                     icon: '⏱️',
                     init(container) {
-                        let state = 'ready'; // 'ready', 'wait', 'go', 'result'
+                        let state = 'ready';
                         let startTime, endTime;
                         let bestTime = scores.reaction?.bestTime !== undefined ? scores.reaction.bestTime : null;
                         let attempts = scores.reaction?.attempts || 0;
-
                         const gameElement = create('div', { className: 'reaction-game' });
                         const displayElement = create('div', {
                             className: 'reaction-display reaction-ready',
@@ -2016,21 +2504,17 @@
                         });
                         const resultElement = create('div', { className: 'reaction-result', textContent: bestTime ? `Best: ${bestTime.toFixed(3)}s` : 'Best: --' });
                         const attemptsElement = create('div', { className: 'reaction-attempts', textContent: `Attempts: ${attempts}` });
-
                         displayElement.addEventListener('click', handleClick);
-
                         gameElement.append(displayElement, resultElement, attemptsElement);
                         container.appendChild(gameElement);
-
                         function handleClick() {
                             if (state === 'ready') {
                                 state = 'wait';
                                 displayElement.className = 'reaction-display reaction-wait';
                                 displayElement.textContent = 'Wait...';
-                                // Random delay between 1 and 4 seconds
                                 const delay = Math.random() * 3000 + 1000;
                                 setTimeout(() => {
-                                    if (state === 'wait') { // Only proceed if not clicked early
+                                    if (state === 'wait') {
                                         state = 'go';
                                         startTime = Date.now();
                                         displayElement.className = 'reaction-display reaction-go';
@@ -2039,7 +2523,6 @@
                                 }, delay);
                                 SoundManager.play('click');
                             } else if (state === 'wait') {
-                                // Clicked too early
                                 state = 'ready';
                                 displayElement.className = 'reaction-display reaction-ready';
                                 displayElement.textContent = 'Too Early! Click to Restart';
@@ -2053,18 +2536,16 @@
                                 resultElement.textContent = `Reaction Time: ${reactionTime.toFixed(3)}s`;
                                 attempts++;
                                 attemptsElement.textContent = `Attempts: ${attempts}`;
-
                                 if (bestTime === null || reactionTime < bestTime) {
                                     bestTime = reactionTime;
                                     updateScores('reaction', { bestTime: bestTime, attempts: attempts });
                                     resultElement.textContent += ' (New Best!)';
                                     checkAchievement('speed_demon', bestTime < 0.2, { time: bestTime });
                                 } else {
-                                    updateScores('reaction', { attempts: attempts }); // Update attempts even if not best
+                                    updateScores('reaction', { attempts: attempts });
                                 }
                                 SoundManager.play('success');
                             } else if (state === 'result') {
-                                // Restart
                                 state = 'ready';
                                 displayElement.className = 'reaction-display reaction-ready';
                                 displayElement.textContent = 'Click to Start';
@@ -2072,17 +2553,10 @@
                                 SoundManager.play('click');
                             }
                         }
-
                         return {
-                            destroy() {
-                                container.innerHTML = '';
-                            },
-                            pause() {
-                                // Pause logic if needed
-                            },
-                            resume() {
-                                // Resume logic if needed
-                            },
+                            destroy() { container.innerHTML = ''; },
+                            pause() { /* Pause logic */ },
+                            resume() { /* Resume logic */ },
                             restart() {
                                 state = 'ready';
                                 displayElement.className = 'reaction-display reaction-ready';
@@ -2093,27 +2567,26 @@
                         };
                     }
                 },
-                 // Whack-a-Doodle Game
-                whack: {
+
+                // Whack-a-Doodle Game (Placeholder)
+                 whack: {
                     id: 'whack',
                     title: 'Whack-a-Doodle',
                     description: 'Whack the doodles as they appear',
                     icon: '🔨',
                     init(container) {
                         let score = 0;
-                        let timeLeft = 30; // 30 seconds game
+                        let timeLeft = 30;
                         let gameActive = false;
                         let timerInterval = null;
                         let popInterval = null;
                         const highScore = scores.whack?.highScore || 0;
-
                         const gameElement = create('div', { className: 'whack-game' });
                         const boardElement = create('div', { className: 'whack-board' });
                         const scoreElement = create('div', { className: 'whack-score', textContent: `Score: ${score}` });
                         const timeElement = create('div', { className: 'whack-time', textContent: `Time: ${timeLeft}s` });
                         const highScoreElement = create('div', { className: 'whack-high-score', textContent: `High Score: ${highScore}` });
                         const startButton = create('button', { className: 'btn btn-primary', textContent: 'Start Game' });
-
                         const holes = [];
                         for (let i = 0; i < 9; i++) {
                             const hole = create('div', { className: 'whack-hole' });
@@ -2123,11 +2596,9 @@
                             holes.push(hole);
                             boardElement.appendChild(hole);
                         }
-
                         startButton.addEventListener('click', startGame);
                         gameElement.append(boardElement, scoreElement, timeElement, highScoreElement, startButton);
                         container.appendChild(gameElement);
-
                         function startGame() {
                             if (gameActive) return;
                             gameActive = true;
@@ -2137,7 +2608,6 @@
                             timeElement.textContent = `Time: ${timeLeft}s`;
                             startButton.disabled = true;
                             startButton.textContent = 'Game On!';
-
                             timerInterval = setInterval(() => {
                                 timeLeft--;
                                 timeElement.textContent = `Time: ${timeLeft}s`;
@@ -2145,31 +2615,24 @@
                                     endGame();
                                 }
                             }, 1000);
-
-                            popInterval = setInterval(popDoodle, 800); // Pop a doodle every 0.8s
+                            popInterval = setInterval(popDoodle, 800);
                             SoundManager.play('click');
                         }
-
                         function popDoodle() {
                             if (!gameActive) return;
-                            // Hide all doodles first
                             holes.forEach(hole => {
                                 const doodle = hole.querySelector('.whack-doodle');
                                 doodle.classList.remove('up');
                             });
-                            // Pick a random hole
                             const randomHole = holes[Math.floor(Math.random() * holes.length)];
                             const doodle = randomHole.querySelector('.whack-doodle');
                             doodle.classList.add('up');
-
-                            // Hide it after a short time
                             setTimeout(() => {
                                 if (gameActive) {
                                     doodle.classList.remove('up');
                                 }
-                            }, 600); // Doodle stays up for 0.6s
+                            }, 600);
                         }
-
                         function whackDoodle(doodle) {
                             if (!gameActive || !doodle.classList.contains('up')) return;
                             score++;
@@ -2178,20 +2641,16 @@
                             SoundManager.play('success');
                             checkAchievement('whack_streak', score >= 30, { score });
                         }
-
                         function endGame() {
                             gameActive = false;
                             clearInterval(timerInterval);
                             clearInterval(popInterval);
                             startButton.disabled = false;
                             startButton.textContent = 'Start Game';
-
-                            // Hide any visible doodles
                             holes.forEach(hole => {
                                 const doodle = hole.querySelector('.whack-doodle');
                                 doodle.classList.remove('up');
                             });
-
                             if (score > highScore) {
                                 updateScores('whack', score);
                                 highScoreElement.textContent = `High Score: ${score}`;
@@ -2199,7 +2658,6 @@
                             }
                             SoundManager.play('click');
                         }
-
                         return {
                             destroy() {
                                 clearInterval(timerInterval);
@@ -2226,15 +2684,15 @@
                             },
                             restart() {
                                 if (gameActive) {
-                                    endGame(); // Properly end the current game
+                                    endGame();
                                 }
-                                // Then start a new one after a short delay to allow state reset
                                 setTimeout(startGame, 100);
                             }
                         };
                     }
                 },
-                // Dice Game
+
+                // Dice Game (Placeholder)
                  dice: {
                     id: 'dice',
                     title: 'Guess & Dice',
@@ -2244,7 +2702,6 @@
                         let totalScore = scores.dice?.totalScore || 0;
                         let rolls = scores.dice?.rolls || 0;
                         let correctGuesses = scores.dice?.correctGuesses || 0;
-
                         const gameElement = create('div', { className: 'dice-game' });
                         const displayElement = create('div', { className: 'dice-display' });
                         const guessLabel = create('label', { className: 'form-label', textContent: 'Guess (1-6):' });
@@ -2252,35 +2709,28 @@
                         const rollButton = create('button', { className: 'btn btn-primary', textContent: 'Roll Dice' });
                         const resultElement = create('div', { className: 'dice-result', textContent: 'Roll the dice!' });
                         const statsElement = create('div', { className: 'dice-stats', textContent: `Total Score: ${totalScore} | Rolls: ${rolls} | Correct: ${correctGuesses}` });
-
                         const diceContainer = create('div', { className: 'dice-rolls' });
                         const dice1 = create('div', { className: 'dice', textContent: '?' });
                         const dice2 = create('div', { className: 'dice', textContent: '?' });
                         diceContainer.append(dice1, dice2);
-
                         rollButton.addEventListener('click', rollDice);
                         displayElement.append(guessLabel, guessInput, diceContainer, rollButton, resultElement, statsElement);
                         gameElement.appendChild(displayElement);
                         container.appendChild(gameElement);
-
                         function rollDice() {
                             const userGuess = parseInt(guessInput.value);
                             if (isNaN(userGuess) || userGuess < 1 || userGuess > 6) {
                                 resultElement.textContent = 'Please enter a valid guess (1-6).';
                                 return;
                             }
-
                             const roll1 = Math.floor(Math.random() * 6) + 1;
                             const roll2 = Math.floor(Math.random() * 6) + 1;
                             const sum = roll1 + roll2;
-
                             dice1.textContent = roll1;
                             dice2.textContent = roll2;
-
                             rolls++;
                             let roundScore = 0;
                             let message = `You rolled ${sum}. `;
-
                             if (userGuess === roll1 || userGuess === roll2) {
                                 roundScore += 10;
                                 correctGuesses++;
@@ -2291,30 +2741,20 @@
                                 message += 'No match. ';
                                 SoundManager.play('click');
                             }
-
                             if (sum === 7) {
                                 roundScore += 5;
                                 message += 'Lucky 7! +5 points.';
                                 SoundManager.play('success');
                             }
-
                             totalScore += roundScore;
                             resultElement.textContent = message;
                             statsElement.textContent = `Total Score: ${totalScore} | Rolls: ${rolls} | Correct: ${correctGuesses}`;
-
                             updateScores('dice', { totalScore, rolls, correctGuesses });
                         }
-
                         return {
-                            destroy() {
-                                container.innerHTML = '';
-                            },
-                            pause() {
-                                // Pause logic if needed
-                            },
-                            resume() {
-                                // Resume logic if needed
-                            },
+                            destroy() { container.innerHTML = ''; },
+                            pause() { /* Pause logic */ },
+                            resume() { /* Resume logic */ },
                             restart() {
                                 guessInput.value = '1';
                                 dice1.textContent = '?';
@@ -2325,11 +2765,12 @@
                         };
                     }
                 },
+
                 // Placeholder for Runner (can be expanded)
                 runner: {
                     id: 'runner',
                     title: 'Shaikh\'s Runner',
-                    description: 'Endless runner game',
+                    description: 'Endless runner game (Placeholder)',
                     icon: '🏃',
                     init(container) {
                         const gameElement = create('div', { className: 'runner-game' });
@@ -2360,28 +2801,23 @@
                         gameElement.append(canvas, startButton);
                         container.appendChild(gameElement);
                         return {
-                            destroy() {
-                                container.innerHTML = '';
-                            },
-                            pause() {
-                                // Pause logic
-                            },
-                            resume() {
-                                // Resume logic
-                            },
-                            restart() {
-                                // Restart logic
-                            }
+                            destroy() { container.innerHTML = ''; },
+                            pause() { /* Pause logic */ },
+                            resume() { /* Resume logic */ },
+                            restart() { /* Restart logic */ }
                         };
                     }
                 }
             };
+
+
             // Register games
             function registerGames() {
                 for (const gameId in GameModules) {
                     gamesRegistry[gameId] = GameModules[gameId];
                 }
             }
+
             // Create game preview
             function createGamePreview(gameId) {
                 const preview = create('div', { className: 'game-preview' });
@@ -2410,7 +2846,8 @@
                 }
                 return preview;
             }
-            // Render game tiles
+
+            // Render game tiles (Main Grid)
             function renderGameTiles() {
                 gamesGrid.innerHTML = '';
                 for (const gameId in gamesRegistry) {
@@ -2419,16 +2856,9 @@
                         className: 'game-tile',
                         tabIndex: 0,
                         onclick: () => openGame(gameId),
-                        onkeydown: (e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                openGame(gameId);
-                            }
-                        }
+                        onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') openGame(gameId); }
                     }, [
-                        create('div', {
-                            className: 'game-icon',
-                            innerHTML: game.icon
-                        }),
+                        create('div', { className: 'game-icon', innerHTML: game.icon }),
                         create('h3', { className: 'game-title', textContent: game.title }),
                         create('p', { className: 'game-description', textContent: game.description }),
                         createGamePreview(gameId)
@@ -2437,26 +2867,61 @@
                     addRippleEffect(tile);
                 }
             }
+
+            // Render game list (Sidebar)
+            function renderGameList() {
+                gamesList.innerHTML = '';
+                for (const gameId in gamesRegistry) {
+                    const game = gamesRegistry[gameId];
+                    const listItem = create('li', {
+                        className: 'game-list-item',
+                        onclick: () => openGame(gameId)
+                    }, [
+                        create('span', { className: 'game-list-icon', innerHTML: game.icon }),
+                        create('span', { className: 'game-list-text', textContent: game.title })
+                    ]);
+                    gamesList.appendChild(listItem);
+                    // Highlight active game in list
+                    if (gameId === activeGameId) {
+                         listItem.classList.add('active');
+                    }
+                }
+            }
+
+             // Update active game highlight in sidebar
+            function updateActiveGameHighlight(gameId) {
+                activeGameId = gameId;
+                qsa('.game-list-item', gamesList).forEach(item => {
+                    item.classList.remove('active');
+                    // Find the item corresponding to the active game
+                    if (item.querySelector('.game-list-text').textContent === gamesRegistry[gameId]?.title) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+
             // Open a game
             function openGame(gameId) {
                 const game = gamesRegistry[gameId];
                 if (!game) return;
-                // Close any active game
                 if (activeGame) {
                     activeGame.destroy();
                     activeGame = null;
                 }
-                // Update UI
                 currentGameTitle.textContent = game.title;
                 gameContent.innerHTML = '';
                 gameView.classList.add('active');
-                // Initialize the game
                 activeGame = game.init(gameContent);
-                // Set focus to game content for accessibility
                 gameContent.setAttribute('tabindex', '-1');
                 gameContent.focus();
                 SoundManager.play('click');
+                updateActiveGameHighlight(gameId); // Highlight in sidebar
+                // Hide sidebar on mobile after selection
+                if (window.innerWidth <= 768) {
+                    gameSidebar.classList.add('hidden');
+                }
             }
+
             // Close the current game
             function closeGame() {
                 if (activeGame) {
@@ -2464,28 +2929,35 @@
                     activeGame = null;
                 }
                 gameView.classList.remove('active');
-                // Set focus back to the game grid
                 gamesGrid.setAttribute('tabindex', '-1');
                 gamesGrid.focus();
                 gamesGrid.removeAttribute('tabindex');
                 SoundManager.play('click');
+                updateActiveGameHighlight(null); // Remove highlight
             }
+
+            // Toggle sidebar visibility (mobile)
+            function toggleSidebarVisibility() {
+                 gameSidebar.classList.toggle('hidden');
+            }
+
             // Initialize the application
             function init() {
-                // Initialize systems
                 SoundManager.init();
                 loadData();
-                applySettings(); // Apply theme and other settings on load
-                // Register games and render UI
+                applySettings();
                 registerGames();
                 renderGameTiles();
-                // Add ripple effects to buttons
+                renderGameList(); // Render sidebar list
                 qsa('button').forEach(button => {
-                    if (!button.classList.contains('tictactoe-cell') && !button.classList.contains('memory-card') && !button.classList.contains('whack-doodle')) { // Avoid adding to game elements
+                    if (!button.classList.contains('tictactoe-cell') &&
+                        !button.classList.contains('memory-card') &&
+                        !button.classList.contains('whack-doodle')) {
                          addRippleEffect(button);
                     }
                 });
-                // Set up event listeners
+
+                // Event Listeners
                 backButton.addEventListener('click', closeGame);
                 soundToggle.addEventListener('click', () => {
                     settings.soundOn = !settings.soundOn;
@@ -2506,12 +2978,10 @@
                 profileButton.addEventListener('click', () => {
                     profileModal.classList.add('active');
                     SoundManager.play('click');
-                    // Populate achievements and scores
                     const achievementsList = qs('#achievementsList');
                     const highScoresList = qs('#highScoresList');
                     achievementsList.innerHTML = '';
                     highScoresList.innerHTML = '';
-                    // Display achievements
                     let hasAchievements = false;
                     for (const [id, achievement] of Object.entries(achievements)) {
                         if (achievement.unlocked) {
@@ -2534,8 +3004,6 @@
                     if (!hasAchievements) {
                         achievementsList.innerHTML = '<p>No achievements yet. Start playing!</p>';
                     }
-
-                    // Display high scores
                     let hasScores = false;
                     for (const [gameId, gameScores] of Object.entries(scores)) {
                         hasScores = true;
@@ -2553,13 +3021,13 @@
                     }
                 });
                 gamePause.addEventListener('click', () => {
-                    if (activeGame) {
+                    if (activeGame && activeGame.pause) {
                         activeGame.pause();
                         SoundManager.play('click');
                     }
                 });
                 gameRestart.addEventListener('click', () => {
-                    if (activeGame) {
+                    if (activeGame && activeGame.restart) {
                         activeGame.restart();
                         SoundManager.play('click');
                     }
@@ -2611,14 +3079,19 @@
                     tiles.forEach(tile => {
                         const title = tile.querySelector('.game-title').textContent.toLowerCase();
                         const description = tile.querySelector('.game-description').textContent.toLowerCase();
-                        if (title.includes(searchTerm) || description.includes(searchTerm)) {
-                            tile.style.display = 'flex';
-                        } else {
-                            tile.style.display = 'none';
-                        }
+                        tile.style.display = title.includes(searchTerm) || description.includes(searchTerm) ? 'flex' : 'none';
                     });
+                    // Also filter sidebar list
+                     const listItems = qsa('.game-list-item');
+                     listItems.forEach(item => {
+                         const title = item.querySelector('.game-list-text').textContent.toLowerCase();
+                         item.style.display = title.includes(searchTerm) ? 'flex' : 'none';
+                     });
                 });
-                // Handle visibility change to pause games
+
+                // Sidebar toggle (mobile)
+                toggleSidebar.addEventListener('click', toggleSidebarVisibility);
+
                 document.addEventListener('visibilitychange', () => {
                     if (document.hidden && activeGame && activeGame.pause) {
                         activeGame.pause();
@@ -2626,18 +3099,18 @@
                          activeGame.resume();
                     }
                 });
-                // Check for reduced motion preference
+
                 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                 if (reducedMotion) {
                     document.documentElement.style.setProperty('--transition-fast', '0.01s');
                     document.documentElement.style.setProperty('--transition-normal', '0.01s');
                     document.documentElement.style.setProperty('--transition-slow', '0.01s');
                 }
-                // Check onboarding
+
                 checkOnboarding();
-                // Self-test
                 selfTest();
             }
+
             // Self-test function
             function selfTest() {
                 const tests = {
@@ -2671,6 +3144,7 @@
                     Toast.show('Some features may not work correctly in your browser', 'error', 5000);
                 }
             }
+
             // Development check for game modules
             function devCheck() {
                 console.log('Checking game modules...');
@@ -2691,9 +3165,8 @@
                     console.groupEnd();
                 }
             }
-            // Start the application
+
             init();
-            // Run development check
             devCheck();
         })();
     </script>
