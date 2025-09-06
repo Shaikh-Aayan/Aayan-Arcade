@@ -1,2223 +1,2701 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shaikh's Arcade</title>
-  <style>
-    /* ====== STYLE ====== */
-    :root {
-      /* Light Theme Colors */
-      --color-background: #FFECD2;
-      --color-surface: #FFFFFF;
-      --color-primary: #F7D379;
-      --color-secondary: #C4D6E7;
-      --color-accent: #F9B288;
-      --color-text: #333333;
-      --color-text-secondary: #666666;
-      --color-border: #DCEAF7;
-      
-      /* Spacing & Sizes */
-      --spacing-xs: 4px;
-      --spacing-sm: 8px;
-      --spacing-md: 16px;
-      --spacing-lg: 24px;
-      --spacing-xl: 32px;
-      --border-radius-sm: 4px;
-      --border-radius-md: 8px;
-      --border-radius-lg: 16px;
-      --border-radius-circle: 50%;
-      
-      /* Shadows */
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-      --shadow-md: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-      --shadow-lg: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-      --shadow-focus: 0 0 0 3px rgba(66, 133, 244, 0.4);
-      
-      /* Transitions */
-      --transition-fast: 0.1s ease;
-      --transition-normal: 0.3s ease;
-      --transition-slow: 0.5s ease;
-      
-      /* Z-Index */
-      --z-modal: 1000;
-      --z-toast: 1100;
-    }
-
-    .theme-dark {
-      --color-background: #1a1a2e;
-      --color-surface: #16213e;
-      --color-primary: #0f3460;
-      --color-secondary: #e94560;
-      --color-accent: #533483;
-      --color-text: #f1f1f1;
-      --color-text-secondary: #cccccc;
-      --color-border: #0f3460;
-    }
-
-    .theme-neon {
-      --color-background: #0d0d1a;
-      --color-surface: #1a1a2e;
-      --color-primary: #00ffff; /* Cyan */
-      --color-secondary: #ff00ff; /* Magenta */
-      --color-accent: #ffff00; /* Yellow */
-      --color-text: #ffffff;
-      --color-text-secondary: #cccccc;
-      --color-border: #33334d;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--color-background);
-      color: var(--color-text);
-      line-height: 1.5;
-      overflow-x: hidden;
-      transition: background-color var(--transition-normal);
-      position: relative;
-      min-height: 100vh;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 30%);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .theme-neon body::before {
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 0, 0.03) 0%, transparent 30%);
-    }
-
-    button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
-      color: inherit;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .app {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: var(--spacing-md);
-    }
-
-    .app-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--spacing-md) 0;
-      margin-bottom: var(--spacing-lg);
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    .logo-icon {
-      font-size: 2rem;
-      animation: bounce 2s infinite;
-    }
-
-    .logo h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: hueShift 5s infinite linear;
-    }
-
-    .controls {
-      display: flex;
-      gap: var(--spacing-sm);
-    }
-
-    .icon-button {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--border-radius-circle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--color-surface);
-      box-shadow: var(--shadow-sm);
-      transition: all var(--transition-fast);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .icon-button::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
-      opacity: 0;
-      transition: opacity 0.3s;
-      z-index: -1;
-    }
-
-    .icon-button:hover::before,
-    .icon-button:focus::before {
-      opacity: 0.2;
-    }
-
-    .icon-button:hover, 
-    .icon-button:focus {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .icon-button:focus {
-      outline: none;
-      box-shadow: var(--shadow-focus);
-    }
-
-    .search-container {
-      margin: var(--spacing-lg) auto;
-      max-width: 500px;
-      width: 100%;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: var(--spacing-md);
-      border-radius: var(--border-radius-lg);
-      border: 2px solid var(--color-border);
-      background-color: var(--color-surface);
-      color: var(--color-text);
-      font-size: 1rem;
-      box-shadow: var(--shadow-sm);
-      transition: all var(--transition-fast);
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      box-shadow: var(--shadow-focus);
-    }
-
-    .games-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: var(--spacing-lg);
-      margin-bottom: var(--spacing-xl);
-    }
-
-    .game-tile {
-      background-color: var(--color-surface);
-      border-radius: var(--border-radius-lg);
-      padding: var(--spacing-lg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--spacing-md);
-      box-shadow: var(--shadow-sm);
-      transition: all var(--transition-normal);
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      border: 2px solid transparent;
-    }
-
-    .game-tile:hover,
-    .game-tile:focus {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-lg);
-      border-color: var(--color-primary);
-    }
-
-    .game-tile::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
-      opacity: 0;
-      transition: opacity 0.3s;
-      z-index: -1;
-    }
-
-    .game-tile:hover::before,
-    .game-tile:focus::before {
-      opacity: 0.1;
-    }
-
-    .game-icon {
-      font-size: 3rem;
-      width: 80px;
-      height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--border-radius-md);
-      background-color: var(--color-primary);
-      color: white;
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.3s ease;
-    }
-
-    .game-tile:hover .game-icon {
-      transform: scale(1.1) rotate(5deg);
-    }
-
-    .game-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    .game-description {
-      font-size: 0.9rem;
-      color: var(--color-text-secondary);
-      text-align: center;
-    }
-
-    .game-view {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: var(--color-background);
-      z-index: var(--z-modal);
-      display: flex;
-      flex-direction: column;
-      transform: translateY(100%);
-      transition: transform var(--transition-normal);
-      overflow: hidden;
-    }
-
-    .game-view.active {
-      transform: translateY(0);
-    }
-
-    .game-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--spacing-md);
-      background-color: var(--color-surface);
-      box-shadow: var(--shadow-sm);
-      position: relative;
-      z-index: 1;
-    }
-
-    .game-title-bar {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    .game-title-bar h2 {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    .game-actions {
-      display: flex;
-      gap: var(--spacing-sm);
-    }
-
-    .game-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: var(--spacing-lg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Game Specific Styles */
-    .snake-canvas {
-      background-color: var(--color-surface);
-      border-radius: var(--border-radius-md);
-      box-shadow: var(--shadow-md);
-    }
-
-    .tictactoe-board {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-gap: var(--spacing-sm);
-      width: 300px;
-      height: 300px;
-      margin: 0 auto;
-    }
-
-    .tictactoe-cell {
-      background-color: var(--color-surface);
-      border-radius: var(--border-radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.5rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .tictactoe-cell:hover {
-      background-color: var(--color-primary);
-      transform: scale(1.05);
-    }
-
-    .memory-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--spacing-sm);
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    .memory-card {
-      width: 80px;
-      height: 80px;
-      perspective: 1000px;
-      cursor: pointer;
-    }
-
-    .memory-card-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-    }
-
-    .memory-card.flipped .memory-card-inner {
-      transform: rotateY(180deg);
-    }
-
-    .memory-card-front, .memory-card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      border-radius: var(--border-radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .memory-card-front {
-      background-color: var(--color-primary);
-      color: white;
-    }
-
-    .memory-card-back {
-      background-color: var(--color-surface);
-      color: var(--color-text);
-      transform: rotateY(180deg);
-    }
-
-    .reaction-box {
-      width: 300px;
-      height: 300px;
-      border-radius: var(--border-radius-lg);
-      background-color: var(--color-accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.5rem;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: var(--shadow-md);
-      transition: background-color 0.2s;
-    }
-
-    .reaction-box.waiting {
-      background-color: #FF9800;
-    }
-
-    .reaction-box.ready {
-      background-color: #4CAF50;
-      animation: pulse 1s infinite;
-    }
-
-    .reaction-history {
-      display: flex;
-      gap: var(--spacing-xs);
-      height: 40px;
-      align-items: flex-end;
-      margin-top: var(--spacing-md);
-    }
-
-    .reaction-bar {
-      width: 8px;
-      background-color: var(--color-primary);
-      border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
-    }
-
-    .whack-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      gap: 16px;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    .whack-hole {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background-color: #555;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .whack-mole {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      background-color: var(--color-accent);
-      border-radius: 50%;
-      bottom: -60px;
-      left: 10px;
-      transition: bottom 0.3s;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-    }
-
-    .whack-mole.up {
-      bottom: 0;
-    }
-
-    /* Modal Styles */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: var(--z-modal);
-      opacity: 0;
-      visibility: hidden;
-      transition: all var(--transition-normal);
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal {
-      background-color: var(--color-surface);
-      border-radius: var(--border-radius-lg);
-      box-shadow: var(--shadow-lg);
-      width: 90%;
-      max-width: 500px;
-      max-height: 90vh;
-      overflow: auto;
-      transform: scale(0.9) translateY(20px);
-      transition: transform var(--transition-normal);
-    }
-
-    .modal-overlay.active .modal {
-      transform: scale(1) translateY(0);
-    }
-
-    .modal-header {
-      padding: var(--spacing-md);
-      border-bottom: 1px solid var(--color-border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
-
-    .modal-close {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--border-radius-circle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: transparent;
-      transition: background-color var(--transition-fast);
-    }
-
-    .modal-close:hover {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
-
-    .modal-body {
-      padding: var(--spacing-md);
-    }
-
-    .modal-footer {
-      padding: var(--spacing-md);
-      border-top: 1px solid var(--color-border);
-      display: flex;
-      justify-content: flex-end;
-      gap: var(--spacing-sm);
-    }
-
-    /* Form Elements */
-    .form-group {
-      margin-bottom: var(--spacing-md);
-    }
-
-    .form-label {
-      display: block;
-      margin-bottom: var(--spacing-xs);
-      font-weight: 500;
-    }
-
-    .form-control {
-      width: 100%;
-    }
-
-    select, input[type="range"] {
-      width: 100%;
-      padding: var(--spacing-sm);
-      border-radius: var(--border-radius-md);
-      border: 1px solid var(--color-border);
-      background-color: var(--color-surface);
-      color: var(--color-text);
-      font-size: 1rem;
-    }
-
-    input[type="checkbox"] {
-      margin-right: var(--spacing-sm);
-    }
-
-    /* Buttons */
-    .btn {
-      padding: var(--spacing-sm) var(--spacing-md);
-      border-radius: var(--border-radius-md);
-      font-weight: 500;
-      transition: all var(--transition-fast);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-xs);
-    }
-
-    .btn:focus {
-      outline: none;
-      box-shadow: var(--shadow-focus);
-    }
-
-    .btn-primary {
-      background-color: var(--color-primary);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background-color: #e6c260;
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      background-color: var(--color-surface);
-      color: var(--color-text);
-      border: 1px solid var(--color-border);
-    }
-
-    .btn-secondary:hover {
-      background-color: rgba(0, 0, 0, 0.05);
-      transform: translateY(-2px);
-    }
-
-    /* Toast */
-    .toast-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: var(--z-toast);
-    }
-
-    .toast {
-      background-color: var(--color-surface);
-      color: var(--color-text);
-      padding: var(--spacing-md);
-      border-radius: var(--border-radius-md);
-      box-shadow: var(--shadow-lg);
-      margin-bottom: var(--spacing-sm);
-      transform: translateX(100%);
-      transition: transform 0.3s ease;
-      max-width: 300px;
-    }
-
-    .toast.show {
-      transform: translateX(0);
-    }
-
-    .toast-success {
-      border-left: 4px solid #4CAF50;
-    }
-
-    /* Animations */
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-      }
-      40% {
-        transform: translateY(-10px);
-      }
-      60% {
-        transform: translateY(-5px);
-      }
-    }
-
-    @keyframes hueShift {
-      0% {
-        filter: hue-rotate(0deg);
-      }
-      100% {
-        filter: hue-rotate(360deg);
-      }
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    @keyframes wiggle {
-      0%, 100% {
-        transform: rotate(-3deg);
-      }
-      50% {
-        transform: rotate(3deg);
-      }
-    }
-
-    .game-tile:hover {
-      animation: wiggle 0.5s ease;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .games-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      }
-      
-      .tictactoe-board {
-        width: 250px;
-        height: 250px;
-      }
-      
-      .memory-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      
-      .memory-card {
-        width: 70px;
-        height: 70px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .app-header {
-        flex-direction: column;
-        gap: var(--spacing-md);
-      }
-      
-      .games-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .tictactoe-board {
-        width: 200px;
-        height: 200px;
-      }
-      
-      .memory-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      
-      .memory-card {
-        width: 60px;
-        height: 60px;
-      }
-      
-      .reaction-box {
-        width: 200px;
-        height: 200px;
-      }
-    }
-
-    /* Confetti */
-    .confetti {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      background-color: #f00;
-      opacity: 0.8;
-      z-index: 9999;
-    }
-
-    /* Doodle Background Elements */
-    .doodle-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
-      overflow: hidden;
-    }
-
-    .doodle-element {
-      position: absolute;
-      opacity: 0.1;
-      animation: float 15s infinite ease-in-out;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translate(0, 0) rotate(0deg);
-      }
-      25% {
-        transform: translate(10px, 15px) rotate(5deg);
-      }
-      50% {
-        transform: translate(20px, 5px) rotate(-5deg);
-      }
-      75% {
-        transform: translate(5px, 20px) rotate(3deg);
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaikh's Arcade</title>
+    <style>
+        /* ====== STYLE ====== */
+        :root {
+            /* Light Theme Colors - Refined */
+            --color-primary-light: #4A6FA5;       /* Deep Blue */
+            --color-secondary-light: #FFA726;     /* Vibrant Orange */
+            --color-accent-light: #66BB6A;        /* Fresh Green */
+            --color-warning-light: #EF5350;       /* Soft Red */
+            --color-background-light: #F8F9FA;    /* Off-white */
+            --color-surface-light: #FFFFFF;       /* Pure White */
+            --color-text-light: #212529;          /* Dark Gray */
+            --color-text-secondary-light: #6C757D; /* Medium Gray */
+            --color-border-light: #DEE2E6;        /* Light Gray */
+
+            /* Dark Theme Colors (Neon) */
+            --color-background-dark: #121212;
+            --color-surface-dark: #1E1E1E;
+            --color-text-dark: #E0E0E0;
+            --color-text-secondary-dark: #B0B0B0;
+            --color-border-dark: #333333;
+
+            /* Neon Accents for Dark Mode */
+            --neon-pink: #ff2d95;
+            --neon-blue: #00c2ff;
+            --neon-yellow: #fff000;
+            --neon-green: #00ff66;
+
+            /* Active Theme Variables (will be set by JS) */
+            --color-primary: var(--color-primary-light);
+            --color-secondary: var(--color-secondary-light);
+            --color-accent: var(--color-accent-light);
+            --color-warning: var(--color-warning-light);
+            --color-background: var(--color-background-light);
+            --color-surface: var(--color-surface-light);
+            --color-text: var(--color-text-light);
+            --color-text-secondary: var(--color-text-secondary-light);
+            --color-border: var(--color-border-light);
+
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-xxl: 3rem;
+
+            /* Border radius */
+            --border-radius-sm: 6px;
+            --border-radius-md: 10px;
+            --border-radius-lg: 14px;
+            --border-radius-xl: 20px;
+            --border-radius-circle: 50%;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-focus: 0 0 0 3px rgba(74, 111, 165, 0.3); /* Primary light with opacity */
+
+            /* Animation */
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+
+            /* Z-index */
+            --z-dropdown: 100;
+            --z-sticky: 200;
+            --z-modal: 300;
+            --z-toast: 400;
+        }
+
+        /* Dark Theme Overrides */
+        .theme-dark {
+            --color-background: var(--color-background-dark);
+            --color-surface: var(--color-surface-dark);
+            --color-text: var(--color-text-dark);
+            --color-text-secondary: var(--color-text-secondary-dark);
+            --color-border: var(--color-border-dark);
+            /* Neon accents for dark mode */
+            --color-primary: var(--neon-blue);
+            --color-secondary: var(--neon-yellow);
+            --color-accent: var(--neon-pink);
+            --color-warning: var(--neon-green);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+            --shadow-focus: 0 0 0 3px rgba(0, 194, 255, 0.4); /* Neon blue with opacity */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color var(--transition-normal), color var(--transition-normal);
+            position: relative;
+        }
+
+        /* Doodle background elements - Now active in both themes */
+        .doodle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .doodle {
+            position: absolute;
+            opacity: 0.08; /* Subtle in light mode */
+        }
+
+        .doodle.circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px dashed var(--color-primary);
+            animation: float 20s infinite linear;
+        }
+
+        .doodle.square {
+            width: 60px;
+            height: 60px;
+            border: 2px dotted var(--color-accent);
+            animation: rotate 30s infinite linear;
+        }
+
+        .doodle.triangle {
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 70px solid var(--color-secondary);
+            opacity: 0.05;
+            animation: float 25s infinite linear reverse;
+        }
+
+        .doodle.zigzag {
+            width: 100px;
+            height: 20px;
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 10px,
+                var(--color-accent) 10px,
+                var(--color-accent) 20px
+            );
+            animation: moveRight 40s infinite linear;
+        }
+
+        /* Enhance doodles in dark mode */
+        .theme-dark .doodle {
+            opacity: 0.15;
+        }
+
+        .theme-dark .doodle.circle {
+            border: 3px dashed var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .theme-dark .doodle.square {
+            border: 2px dotted var(--neon-pink);
+            box-shadow: 0 0 8px var(--neon-pink);
+        }
+
+        .theme-dark .doodle.triangle {
+            border-bottom: 70px solid var(--neon-yellow);
+            filter: drop-shadow(0 0 5px var(--neon-yellow));
+            opacity: 0.1;
+        }
+
+        .theme-dark .doodle.zigzag {
+             background: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 10px,
+                var(--neon-green) 10px,
+                var(--neon-green) 20px
+            );
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, 15px) rotate(5deg); }
+            50% { transform: translate(0, 30px) rotate(0deg); }
+            75% { transform: translate(-10px, 15px) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes moveRight {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(calc(100vw + 100px)); }
+        }
+
+        button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            color: inherit;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* App Layout */
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: var(--spacing-md);
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            position: relative;
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+            font-size: 1.5rem;
+        }
+
+        .theme-dark .logo-icon {
+            box-shadow: 0 0 10px var(--color-primary);
+        }
+
+        .controls {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .icon-button {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--border-radius-circle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+        }
+
+        .icon-button:hover, .icon-button:focus {
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            border-color: var(--color-primary);
+        }
+
+        .icon-button:focus {
+            outline: none;
+            box-shadow: var(--shadow-focus);
+        }
+
+        .icon-button:active {
+            transform: translateY(0);
+        }
+
+        .theme-dark .icon-button {
+            border: 1px solid var(--color-border);
+        }
+
+        .theme-dark .icon-button:hover {
+            box-shadow: 0 0 12px var(--color-primary);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .search-container {
+            margin: var(--spacing-lg) auto;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-xl);
+            padding-left: 48px;
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--color-border);
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            font-size: 1rem;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: var(--shadow-focus);
+            border-color: var(--color-primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-secondary);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .game-tile {
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+        }
+
+        .game-tile:hover, .game-tile:focus {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-primary);
+        }
+
+        .game-tile:focus {
+            outline: none;
+            box-shadow: var(--shadow-focus);
+        }
+
+        .theme-dark .game-tile:hover {
+            box-shadow: 0 0 15px var(--color-primary);
+        }
+
+        .game-tile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg,
+                var(--color-primary) 0%,
+                var(--color-accent) 50%,
+                var(--color-secondary) 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--transition-normal);
+        }
+
+        .game-tile:hover::before {
+            transform: scaleX(1);
+        }
+
+        .game-icon {
+            width: 70px;
+            height: 70px;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border-radius: var(--border-radius-md);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            transition: transform var(--transition-normal);
+            position: relative;
+            box-shadow: var(--shadow-md);
+        }
+
+        .theme-dark .game-icon {
+            box-shadow: 0 0 15px var(--color-primary);
+        }
+
+        .game-tile:hover .game-icon {
+            animation: wiggle 0.6s ease;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        .game-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+            color: var(--color-text);
+        }
+
+        .game-description {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            transform: translateY(0);
+            transition: transform var(--transition-normal);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .game-tile:hover .game-description {
+            transform: translateY(-4px);
+        }
+
+        .game-preview {
+            width: 100%;
+            height: 60px;
+            margin-top: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            background-color: rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--color-border);
+        }
+
+        .theme-dark .game-preview {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--color-border);
+        }
+
+        /* Game View */
+        .game-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-background);
+            z-index: var(--z-modal);
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform var(--transition-normal);
+            overflow: hidden;
+        }
+
+        .game-view.active {
+            transform: translateY(0);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            z-index: 1;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .game-title-bar {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .game-content {
+            flex: 1;
+            padding: var(--spacing-md);
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: var(--z-modal);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: auto;
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
+            transition: all var(--transition-normal);
+            border: 1px solid var(--color-border);
+        }
+
+        .theme-dark .modal {
+            border: 1px solid var(--color-primary);
+            box-shadow: 0 0 20px rgba(0, 194, 255, 0.3);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius-circle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            transition: background-color var(--transition-fast);
+            color: var(--color-text);
+        }
+
+        .modal-close:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-dark .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+
+        .modal-body {
+            padding: var(--spacing-md);
+        }
+
+        .modal-footer {
+            padding: var(--spacing-md);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-sm);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: var(--shadow-focus);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .theme-dark .btn-primary {
+            box-shadow: 0 0 8px var(--color-primary);
+        }
+
+        .theme-dark .btn-primary:hover {
+            box-shadow: 0 0 12px var(--color-primary);
+        }
+
+        .theme-dark .btn-secondary {
+             border: 1px solid var(--color-border);
+        }
+
+        .theme-dark .btn-secondary:hover {
+             background-color: rgba(255, 255, 255, 0.05);
+        }
+
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            border: 1px solid var(--color-border);
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            font-family: inherit;
+            font-size: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2); /* Primary light with opacity */
+        }
+
+        .theme-dark .form-control:focus {
+             box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.3); /* Neon blue with opacity */
+        }
+
+
+        /* Toasts */
+        .toast-container {
+            position: fixed;
+            bottom: var(--spacing-md);
+            right: var(--spacing-md);
+            z-index: var(--z-toast);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .toast {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            max-width: 300px;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all var(--transition-normal);
+            border-left: 4px solid var(--color-primary);
+            border: 1px solid var(--color-border);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast-success {
+            border-left-color: var(--color-accent);
+        }
+
+        .toast-error {
+            border-left-color: var(--color-warning);
+        }
+
+        .toast-info {
+            border-left-color: var(--color-primary);
+        }
+
+        .theme-dark .toast {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Game-specific styles */
+        .snake-game, .tictactoe-game, .memory-game, .reaction-game, .whack-game, .dice-game, .runner-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+            width: 100%;
+        }
+
+        .snake-canvas, .tictactoe-board, .memory-board, .reaction-display, .whack-board, .dice-display, .runner-canvas {
+            border: 2px solid var(--color-border);
+            border-radius: var(--border-radius-md);
+            background-color: var(--color-surface);
+            max-width: 100%;
+            touch-action: none;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+
+        /* Tic Tac Toe Specific */
+        .tictactoe-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 5px;
+            width: 300px;
+            height: 300px;
+            background-color: var(--color-border);
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .tictactoe-cell {
+            background-color: var(--color-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .tictactoe-cell:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .theme-dark .tictactoe-cell:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .tictactoe-cell.win {
+             background-color: rgba(102, 187, 106, 0.3); /* Accent light with opacity */
+        }
+
+        .theme-dark .tictactoe-cell.win {
+             background-color: rgba(0, 255, 102, 0.2); /* Neon green with opacity */
+        }
+
+
+        /* Memory Game Specific */
+        .memory-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .memory-card {
+            aspect-ratio: 1 / 1;
+            background-color: var(--color-primary);
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            box-shadow: var(--shadow-sm);
+            color: white;
+        }
+
+        .memory-card.flipped {
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            transform: rotateY(180deg);
+        }
+
+         .memory-card.matched {
+            background-color: var(--color-accent);
+            color: white;
+            cursor: default;
+        }
+
+        /* Reaction Tester Specific */
+        .reaction-display {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+
+        .reaction-ready {
+            background-color: var(--color-secondary);
+            color: white;
+        }
+
+        .reaction-wait {
+            background-color: var(--color-warning);
+            color: white;
+        }
+
+        .reaction-go {
+            background-color: var(--color-accent);
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .reaction-result {
+            margin-top: var(--spacing-md);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Whack-a-Doodle Specific */
+        .whack-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 10px;
+            width: 300px;
+            height: 300px;
+            padding: 10px;
+            background-color: var(--color-border);
+            border-radius: var(--border-radius-md);
+        }
+
+        .whack-hole {
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .whack-doodle {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            background-color: var(--color-secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: transform 0.1s;
+            transform: translateY(100%);
+        }
+
+        .whack-doodle.up {
+            transform: translateY(0);
+        }
+
+        .whack-score {
+            margin-top: var(--spacing-md);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Dice Game Specific */
+        .dice-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-lg);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .dice-rolls {
+            display: flex;
+            gap: var(--spacing-sm);
+            font-size: 2rem;
+        }
+
+        .dice-guess-input {
+            width: 100px;
+            text-align: center;
+        }
+
+        .dice-result {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .doodle-bg {
+                display: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            .app-header {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+        }
+        @media (max-width: 480px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- ====== TEMPLATE ====== -->
-  <div class="doodle-bg" id="doodleBg"></div>
-  
-  <div class="app">
-    <header class="app-header">
-      <div class="logo">
-        <div class="logo-icon" id="logoIcon">🎮</div>
-        <h1>Shaikh's Arcade</h1>
-      </div>
-      <div class="controls">
-        <button class="icon-button" id="soundToggle" aria-label="Toggle sound">
-          <span class="sound-icon">🔊</span>
-        </button>
-        <button class="icon-button" id="themeToggle" aria-label="Toggle theme">
-          <span class="theme-icon">🌙</span>
-        </button>
-        <button class="icon-button" id="settingsButton" aria-label="Open settings">
-          <span class="settings-icon">⚙️</span>
-        </button>
-        <button class="icon-button" id="profileButton" aria-label="Open profile">
-          <span class="profile-icon">👤</span>
-        </button>
-      </div>
-    </header>
-
-    <div class="search-container">
-      <input type="text" class="search-input" id="gameSearch" placeholder="Search games...">
+    <!-- ====== TEMPLATE ====== -->
+    <div class="doodle-bg">
+        <div class="doodle circle" style="top: 10%; left: 5%;"></div>
+        <div class="doodle square" style="top: 20%; right: 7%;"></div>
+        <div class="doodle triangle" style="top: 60%; left: 8%;"></div>
+        <div class="doodle zigzag" style="top: 40%; left: 15%;"></div>
+        <div class="doodle circle" style="top: 70%; right: 10%; width: 60px; height: 60px;"></div>
+        <div class="doodle square" style="top: 30%; left: 20%; width: 40px; height: 40px;"></div>
+        <div class="doodle triangle" style="bottom: 15%; right: 20%;"></div>
+        <div class="doodle zigzag" style="bottom: 30%; left: 5%;"></div>
     </div>
-
-    <div class="games-grid" id="gamesGrid"></div>
-  </div>
-
-  <!-- Game View -->
-  <div class="game-view" id="gameView">
-    <div class="game-header">
-      <div class="game-title-bar">
-        <button class="icon-button" id="backButton" aria-label="Back to menu">
-          <span>←</span>
-        </button>
-        <h2 id="currentGameTitle">Game Title</h2>
-      </div>
-      <div class="game-actions">
-        <button class="icon-button" id="gameInfo" aria-label="Game info">
-          <span>ℹ️</span>
-        </button>
-        <button class="icon-button" id="gameRestart" aria-label="Restart game">
-          <span>🔄</span>
-        </button>
-        <button class="icon-button" id="gamePause" aria-label="Pause game">
-          <span>⏸️</span>
-        </button>
-      </div>
-    </div>
-    <div class="game-content" id="gameContent"></div>
-  </div>
-
-  <!-- Settings Modal -->
-  <div class="modal-overlay" id="settingsModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Settings</h3>
-        <button class="modal-close" id="closeSettings">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="form-label" for="soundToggleSetting">Sound</label>
-          <div class="form-control">
-            <label>
-              <input type="checkbox" id="soundToggleSetting"> Enable sound
-            </label>
-          </div>
+    <div class="app">
+        <header class="app-header">
+            <div class="logo">
+                <div class="logo-icon">🎮</div>
+                <h1>Shaikh's Arcade</h1>
+            </div>
+            <div class="controls">
+                <button class="icon-button" id="soundToggle" aria-label="Toggle sound">
+                    <span class="sound-icon">🔊</span>
+                </button>
+                <button class="icon-button" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="icon-button" id="settingsButton" aria-label="Open settings">
+                    <span class="settings-icon">⚙️</span>
+                </button>
+                <button class="icon-button" id="profileButton" aria-label="Open profile">
+                    <span class="profile-icon">👤</span>
+                </button>
+            </div>
+        </header>
+        <div class="search-container">
+            <div class="search-icon">🔍</div>
+            <input type="text" class="search-input" id="gameSearch" placeholder="Search games..." aria-label="Search games">
         </div>
-        <div class="form-group">
-          <label class="form-label" for="volumeSlider">Volume</label>
-          <input type="range" id="volumeSlider" min="0" max="1" step="0.1" class="form-control">
+        <div class="games-grid" id="gamesGrid">
+            <!-- Game tiles will be populated by JavaScript -->
         </div>
-        <div class="form-group">
-          <label class="form-label" for="themeSelect">Theme</label>
-          <select id="themeSelect" class="form-control">
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-            <option value="neon">Neon</option>
-            <option value="auto">Auto (system)</option>
-          </select>
+        <div class="game-view" id="gameView">
+            <div class="game-header">
+                <div class="game-title-bar">
+                    <button class="btn btn-secondary" id="backButton">
+                        ← Back
+                    </button>
+                    <h2 class="game-title" id="currentGameTitle">Game Title</h2>
+                </div>
+                <div class="game-controls">
+                    <button class="icon-button" id="gameInfo" aria-label="Game information">
+                        ℹ️
+                    </button>
+                    <button class="icon-button" id="gameRestart" aria-label="Restart game">
+                        🔄
+                    </button>
+                    <button class="icon-button" id="gamePause" aria-label="Pause game">
+                        ⏸️
+                    </button>
+                </div>
+            </div>
+            <div class="game-content" id="gameContent">
+                <!-- Game content will be populated by JavaScript -->
+            </div>
         </div>
-        <div class="form-group">
-          <label class="form-label" for="onboardingToggle">Show onboarding</label>
-          <div class="form-control">
-            <label>
-              <input type="checkbox" id="onboardingToggle"> Show onboarding on startup
-            </label>
-          </div>
+    </div>
+    <!-- Modals -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+                <button class="modal-close" id="closeSettings">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="soundToggleSetting">Sound</label>
+                    <div class="form-control">
+                        <label>
+                            <input type="checkbox" id="soundToggleSetting">
+                            Enable sound
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="volumeSlider">Volume</label>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.1" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="themeSelect">Theme</label>
+                    <select id="themeSelect" class="form-control">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark (Neon)</option>
+                        <option value="auto">Auto (system)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="onboardingToggle">Show onboarding</label>
+                    <div class="form-control">
+                        <label>
+                            <input type="checkbox" id="onboardingToggle">
+                            Show onboarding on startup
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="resetProgress">
+                    Reset Progress
+                </button>
+                <button class="btn btn-primary" id="saveSettings">
+                    Save
+                </button>
+            </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" id="resetProgress">Reset Progress</button>
-        <button class="btn btn-primary" id="saveSettings">Save</button>
-      </div>
     </div>
-  </div>
-
-  <!-- Profile Modal -->
-  <div class="modal-overlay" id="profileModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Profile</h3>
-        <button class="modal-close" id="closeProfile">✕</button>
-      </div>
-      <div class="modal-body">
-        <h4>Achievements</h4>
-        <div id="achievementsList">No achievements yet</div>
-        <h4 style="margin-top: 20px;">High Scores</h4>
-        <div id="scoresList">No scores yet</div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" id="closeProfileBtn">Close</button>
-      </div>
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Your Profile</h3>
+                <button class="modal-close" id="closeProfile">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <h4>Achievements</h4>
+                    <div id="achievementsList">
+                        <!-- Achievements will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h4>High Scores</h4>
+                    <div id="highScoresList">
+                        <!-- High scores will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <!-- Onboarding Modal -->
-  <div class="modal-overlay" id="onboardingModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Welcome to Shaikh's Arcade!</h3>
-        <button class="modal-close" id="closeOnboarding">✕</button>
-      </div>
-      <div class="modal-body">
-        <p>Explore a collection of fun mini-games. Test your skills and earn achievements!</p>
-        <p>Use the settings to customize your experience.</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" id="startPlaying">Start Playing</button>
-      </div>
+    <div class="modal-overlay" id="onboardingModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Welcome to Shaikh's Arcade!</h3>
+                <button class="modal-close" id="closeOnboarding">✕</button>
+            </div>
+            <div class="modal-body">
+                <p>🎮 Play a collection of fun mini-games</p>
+                <p>🏆 Earn achievements and track high scores</p>
+                <p>⚙️ Customize your experience in settings</p>
+                <p>🌙 Try the cool neon dark mode!</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="startPlaying">
+                    Start Playing
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <!-- Toast Container -->
-  <div class="toast-container" id="toastContainer"></div>
-
-  <script>
-    /* ====== SCRIPTS ====== */
-    (function() {
-      // DOM Helpers
-      const qs = (selector) => document.querySelector(selector);
-      const qsa = (selector) => document.querySelectorAll(selector);
-      const create = (tag, props = {}, children = []) => {
-        const el = document.createElement(tag);
-        Object.assign(el, props);
-        if (props.className) el.className = props.className;
-        if (props.style) el.style = props.style;
-        children.forEach(child => {
-          if (typeof child === 'string') {
-            el.innerHTML += child;
-          } else {
-            el.appendChild(child);
-          }
-        });
-        return el;
-      };
-
-      // App state
-      let activeGame = null;
-      let gamesRegistry = {};
-      let settings = {
-        soundOn: true,
-        volume: 0.5,
-        theme: 'light',
-        showOnboarding: true
-      };
-      let scores = {};
-      let achievements = {};
-
-      // DOM elements
-      const gamesGrid = qs('#gamesGrid');
-      const gameView = qs('#gameView');
-      const gameContent = qs('#gameContent');
-      const currentGameTitle = qs('#currentGameTitle');
-      const gameSearch = qs('#gameSearch');
-      const backButton = qs('#backButton');
-      const soundToggle = qs('#soundToggle');
-      const themeToggle = qs('#themeToggle');
-      const settingsButton = qs('#settingsButton');
-      const profileButton = qs('#profileButton');
-      const gamePause = qs('#gamePause');
-      const gameRestart = qs('#gameRestart');
-      const gameInfo = qs('#gameInfo');
-      const logoIcon = qs('#logoIcon');
-
-      // Modals
-      const settingsModal = qs('#settingsModal');
-      const profileModal = qs('#profileModal');
-      const onboardingModal = qs('#onboardingModal');
-      const closeSettings = qs('#closeSettings');
-      const closeProfile = qs('#closeProfile');
-      const closeOnboarding = qs('#closeOnboarding');
-      const soundToggleSetting = qs('#soundToggleSetting');
-      const volumeSlider = qs('#volumeSlider');
-      const themeSelect = qs('#themeSelect');
-      const onboardingToggle = qs('#onboardingToggle');
-      const resetProgressBtn = qs('#resetProgress');
-      const saveSettingsBtn = qs('#saveSettings');
-      const startPlayingBtn = qs('#startPlaying');
-      const closeProfileBtn = qs('#closeProfileBtn');
-
-      // Toast container
-      const toastContainer = qs('#toastContainer');
-      const doodleBg = qs('#doodleBg');
-
-      // Sound Manager
-      const SoundManager = {
-        audioContext: null,
-        enabled: false,
-        init() {
-          try {
-            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            this.enabled = true;
-          } catch (e) {
-            console.warn('Web Audio API is not supported in this browser');
-            this.enabled = false;
-          }
-        },
-        setVolume(volume) {
-          // In a real implementation, we would use a gain node
-        },
-        play(kind) {
-          if (!this.enabled || !this.audioContext || !settings.soundOn) return;
-          
-          const oscillator = this.audioContext.createOscillator();
-          const gainNode = this.audioContext.createGain();
-          
-          oscillator.connect(gainNode);
-          gainNode.connect(this.audioContext.destination);
-          
-          let frequency = 440;
-          let duration = 0.1;
-          
-          switch (kind) {
-            case 'click':
-              frequency = 523.25;
-              break;
-            case 'success':
-              frequency = 783.99;
-              break;
-            case 'error':
-              frequency = 349.23;
-              break;
-          }
-          
-          oscillator.frequency.value = frequency;
-          gainNode.gain.value = settings.volume;
-          
-          oscillator.start();
-          setTimeout(() => {
-            oscillator.stop();
-          }, duration * 1000);
-        },
-        toggle() {
-          this.enabled = !this.enabled;
-          return this.enabled;
-        }
-      };
-
-      // Toast system
-      const Toast = {
-        container: toastContainer,
-        show(message, type = 'info', duration = 3000) {
-          const toast = create('div', {
-            className: `toast toast-${type}`,
-            innerHTML: `<span>${message}</span>`
-          });
-          
-          this.container.appendChild(toast);
-          
-          // Trigger reflow
-          toast.offsetHeight;
-          toast.classList.add('show');
-          
-          setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => {
-              if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-              }
-            }, 300);
-          }, duration);
-        }
-      };
-
-      // Confetti effect
-      const Confetti = {
-        create(x, y, color) {
-          const confetti = create('div', {
-            className: 'confetti',
-            style: `background-color: ${color}; left: ${x}px; top: ${y}px;`
-          });
-          
-          document.body.appendChild(confetti);
-          
-          const angle = Math.random() * Math.PI * 2;
-          const velocity = 2 + Math.random() * 2;
-          const spin = Math.random() * 10 - 5;
-          let posX = x;
-          let posY = y;
-          let rotation = 0;
-          
-          const animate = () => {
-            posX += Math.cos(angle) * velocity;
-            posY += Math.sin(angle) * velocity + 0.1; // gravity
-            rotation += spin;
-            
-            confetti.style.left = `${posX}px`;
-            confetti.style.top = `${posY}px`;
-            confetti.style.transform = `rotate(${rotation}deg)`;
-            
-            if (posY < window.innerHeight) {
-              requestAnimationFrame(animate);
-            } else {
-              confetti.parentNode.removeChild(confetti);
-            }
-          };
-          
-          animate();
-        },
-        burst(x, y, count = 20) {
-          const colors = ['#4285F4', '#34A853', '#EA4335', '#FBBC05', '#9C27B0', '#FF9800'];
-          
-          for (let i = 0; i < count; i++) {
-            setTimeout(() => {
-              this.create(x, y, colors[Math.floor(Math.random() * colors.length)]);
-            }, i * 30);
-          }
-        }
-      };
-
-      // Ripple effect
-      const addRippleEffect = (element) => {
-        element.addEventListener('click', function(e) {
-          const rect = this.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          
-          const ripple = create('span', {
-            className: 'ripple',
-            style: `top: ${y}px; left: ${x}px;`
-          });
-          
-          this.appendChild(ripple);
-          
-          setTimeout(() => {
-            ripple.remove();
-          }, 600);
-        });
-      };
-
-      // LocalStorage management
-      const Storage = {
-        get(key) {
-          try {
-            const item = localStorage.getItem(`shaikhArcade.${key}`);
-            return item ? JSON.parse(item) : null;
-          } catch (e) {
-            console.error('Error reading from localStorage', e);
-            return null;
-          }
-        },
-        set(key, value) {
-          try {
-            localStorage.setItem(`shaikhArcade.${key}`, JSON.stringify(value));
-          } catch (e) {
-            console.error('Error writing to localStorage', e);
-          }
-        },
-        remove(key) {
-          try {
-            localStorage.removeItem(`shaikhArcade.${key}`);
-          } catch (e) {
-            console.error('Error removing from localStorage', e);
-          }
-        }
-      };
-
-      // Load data
-      function loadData() {
-        const savedSettings = Storage.get('settings');
-        if (savedSettings) {
-          settings = { ...settings, ...savedSettings };
-        }
-        
-        const savedScores = Storage.get('scores');
-        if (savedScores) {
-          scores = savedScores;
-        }
-        
-        const savedAchievements = Storage.get('achievements');
-        if (savedAchievements) {
-          achievements = savedAchievements;
-        }
-      }
-
-      // Save data
-      function saveData() {
-        Storage.set('settings', settings);
-        Storage.set('scores', scores);
-        Storage.set('achievements', achievements);
-      }
-
-      // Apply settings to UI
-      function applySettings() {
-        // Apply theme
-        document.body.className = '';
-        if (settings.theme === 'dark') {
-          document.body.classList.add('theme-dark');
-          themeToggle.querySelector('.theme-icon').textContent = '☀️';
-        } else if (settings.theme === 'neon') {
-          document.body.classList.add('theme-neon');
-          themeToggle.querySelector('.theme-icon').textContent = '☀️';
-        } else if (settings.theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.body.classList.add('theme-dark');
-          themeToggle.querySelector('.theme-icon').textContent = '☀️';
-        } else {
-          themeToggle.querySelector('.theme-icon').textContent = '🌙';
-        }
-        
-        // Apply sound settings
-        soundToggle.querySelector('.sound-icon').textContent = settings.soundOn ? '🔊' : '🔇';
-        SoundManager.setVolume(settings.volume);
-        
-        // Update settings modal
-        soundToggleSetting.checked = settings.soundOn;
-        volumeSlider.value = settings.volume;
-        themeSelect.value = settings.theme;
-        onboardingToggle.checked = settings.showOnboarding;
-      }
-
-      // Show onboarding if needed
-      function checkOnboarding() {
-        if (settings.showOnboarding) {
-          onboardingModal.classList.add('active');
-        }
-      }
-
-      // Create doodle background elements
-      function createDoodleBackground() {
-        doodleBg.innerHTML = '';
-        const doodles = ['🎮', '🕹️', '👾', '🎯', '🎲', '🎪', '🎨', '🎭', '🎪', '🎨'];
-        
-        for (let i = 0; i < 20; i++) {
-          const doodle = create('div', {
-            className: 'doodle-element',
-            innerHTML: doodles[Math.floor(Math.random() * doodles.length)],
-            style: `
-              left: ${Math.random() * 100}%;
-              top: ${Math.random() * 100}%;
-              font-size: ${20 + Math.random() * 30}px;
-              animation-delay: ${Math.random() * 5}s;
-              animation-duration: ${10 + Math.random() * 20}s;
-            `
-          });
-          
-          doodleBg.appendChild(doodle);
-        }
-      }
-
-      // Game modules
-      const GameModules = {
-        // Smooth Snake game
-        snake: {
-          id: 'snake',
-          title: 'Smooth Snake',
-          description: 'Guide the snake to eat food and grow longer',
-          icon: '🐍',
-          init(container) {
-            const canvas = create('canvas', {
-              className: 'snake-canvas',
-              width: 400,
-              height: 400
-            });
-            
-            const ctx = canvas.getContext('2d');
-            
-            const gameState = {
-              snake: [{x: 10, y: 10}],
-              food: {x: 5, y: 5},
-              direction: 'right',
-              score: 0,
-              gameSpeed: 150,
-              gameRunning: true,
-              lastRenderTime: 0
-            };
-            
-            function placeFood() {
-              let newFood;
-              let overlapping;
-              
-              do {
-                newFood = {
-                  x: Math.floor(Math.random() * (canvas.width / 20)),
-                  y: Math.floor(Math.random() * (canvas.height / 20))
-                };
-                
-                overlapping = false;
-                for (const segment of gameState.snake) {
-                  if (segment.x === newFood.x && segment.y === newFood.y) {
-                    overlapping = true;
-                    break;
-                  }
-                }
-              } while (overlapping);
-              
-              gameState.food = newFood;
-            }
-            
-            function draw() {
-              // Clear canvas
-              ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-background');
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-              
-              // Draw snake
-              gameState.snake.forEach((segment, index) => {
-                ctx.fillStyle = index === 0 ? '#4CAF50' : '#8BC34A';
-                ctx.fillRect(segment.x * 20, segment.y * 20, 20, 20);
-                
-                // Add rounded corners
-                ctx.strokeStyle = '#388E3C';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(segment.x * 20, segment.y * 20, 20, 20);
-              });
-              
-              // Draw food
-              ctx.fillStyle = '#F44336';
-              ctx.beginPath();
-              ctx.arc(
-                gameState.food.x * 20 + 10,
-                gameState.food.y * 20 + 10,
-                10,
-                0,
-                Math.PI * 2
-              );
-              ctx.fill();
-            }
-            
-            function update() {
-              if (!gameState.gameRunning) return;
-              
-              // Move snake
-              const head = {x: gameState.snake[0].x, y: gameState.snake[0].y};
-              
-              switch (gameState.direction) {
-                case 'up':
-                  head.y -= 1;
-                  break;
-                case 'down':
-                  head.y += 1;
-                  break;
-                case 'left':
-                  head.x -= 1;
-                  break;
-                case 'right':
-                  head.x += 1;
-                  break;
-              }
-              
-              // Check collision with walls
-              if (
-                head.x < 0 || 
-                head.y < 0 || 
-                head.x >= canvas.width / 20 || 
-                head.y >= canvas.height / 20
-              ) {
-                gameState.gameRunning = false;
-                Toast.show('Game Over! Snake hit the wall.', 'error');
-                return;
-              }
-              
-              // Check collision with self
-              for (let i = 0; i < gameState.snake.length; i++) {
-                if (gameState.snake[i].x === head.x && gameState.snake[i].y === head.y) {
-                  gameState.gameRunning = false;
-                  Toast.show('Game Over! Snake hit itself.', 'error');
-                  return;
-                }
-              }
-              
-              gameState.snake.unshift(head);
-              
-              // Check if food is eaten
-              if (head.x === gameState.food.x && head.y === gameState.food.y) {
-                gameState.score += 10;
-                placeFood();
-                
-                // Increase speed slightly
-                if (gameState.gameSpeed > 50) {
-                  gameState.gameSpeed -= 2;
-                }
-                
-                // Show confetti for every 50 points
-                if (gameState.score % 50 === 0) {
-                  Confetti.burst(canvas.width/2, canvas.height/2);
-                }
-              } else {
-                gameState.snake.pop();
-              }
-              
-              draw();
-            }
-            
-            function gameLoop(timestamp) {
-              if (!gameState.gameRunning) return;
-              
-              const secondsSinceLastRender = (timestamp - gameState.lastRenderTime) / 1000;
-              if (secondsSinceLastRender < 1 / (1000 / gameState.gameSpeed)) {
-                requestAnimationFrame(gameLoop);
-                return;
-              }
-              
-              gameState.lastRenderTime = timestamp;
-              update();
-              requestAnimationFrame(gameLoop);
-            }
-            
-            // Handle keyboard input
-            function handleKeydown(e) {
-              switch (e.key) {
-                case 'ArrowUp':
-                  if (gameState.direction !== 'down') gameState.direction = 'up';
-                  break;
-                case 'ArrowDown':
-                  if (gameState.direction !== 'up') gameState.direction = 'down';
-                  break;
-                case 'ArrowLeft':
-                  if (gameState.direction !== 'right') gameState.direction = 'left';
-                  break;
-                case 'ArrowRight':
-                  if (gameState.direction !== 'left') gameState.direction = 'right';
-                  break;
-              }
-            }
-            
-            // Initialize game
-            placeFood();
-            draw();
-            requestAnimationFrame(gameLoop);
-            document.addEventListener('keydown', handleKeydown);
-            
-            container.appendChild(canvas);
-            
-            // Return game API
-            return {
-              destroy() {
-                document.removeEventListener('keydown', handleKeydown);
-                container.innerHTML = '';
-              },
-              pause() {
-                gameState.gameRunning = false;
-              },
-              resume() {
-                if (!gameState.gameRunning) {
-                  gameState.gameRunning = true;
-                  requestAnimationFrame(gameLoop);
-                }
-              },
-              restart() {
-                gameState.snake = [{x: 10, y: 10}];
-                gameState.direction = 'right';
-                gameState.score = 0;
-                gameState.gameSpeed = 150;
-                gameState.gameRunning = true;
-                placeFood();
-                draw();
-                requestAnimationFrame(gameLoop);
-              }
-            };
-          }
-        },
-        
-        // Tic-Tac-Toe game
-        tictactoe: {
-          id: 'tictactoe',
-          title: 'Tic-Tac-Toe',
-          description: 'Classic game of X\'s and O\'s',
-          icon: '❌',
-          init(container) {
-            const gameState = {
-              board: Array(9).fill(null),
-              currentPlayer: 'X',
-              gameActive: true,
-              mode: 'pvp' // pvp or ai
-            };
-            
-            const boardElement = create('div', { className: 'tictactoe-board' });
-            
-            function checkWinner() {
-              const winPatterns = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-                [0, 4, 8], [2, 4, 6]             // diagonals
-              ];
-              
-              for (const pattern of winPatterns) {
-                const [a, b, c] = pattern;
-                if (gameState.board[a] && 
-                    gameState.board[a] === gameState.board[b] && 
-                    gameState.board[a] === gameState.board[c]) {
-                  return gameState.board[a];
-                }
-              }
-              
-              return gameState.board.includes(null) ? null : 'T'; // Tie
-            }
-            
-            function makeMove(index) {
-              if (!gameState.gameActive || gameState.board[index]) return;
-              
-              gameState.board[index] = gameState.currentPlayer;
-              updateBoard();
-              
-              const winner = checkWinner();
-              if (winner) {
-                gameState.gameActive = false;
-                if (winner === 'T') {
-                  Toast.show("It's a tie!", 'info');
-                } else {
-                  Toast.show(`Player ${winner} wins!`, 'success');
-                  if (winner === 'X') {
-                    unlockAchievement('tic_master');
-                  }
-                }
-                return;
-              }
-              
-              // Switch player
-              gameState.currentPlayer = gameState.currentPlayer === 'X' ? 'O' : 'X';
-            }
-            
-            function updateBoard() {
-              boardElement.innerHTML = '';
-              gameState.board.forEach((cell, index) => {
-                const cellElement = create('div', {
-                  className: 'tictactoe-cell',
-                  innerHTML: cell || '',
-                  onclick: () => makeMove(index)
+    <div class="toast-container" id="toastContainer">
+        <!-- Toasts will be added here by JavaScript -->
+    </div>
+    <script>
+        /* ====== SCRIPTS ====== */
+        (function() {
+            'use strict';
+            // Utility functions
+            const qs = (selector, root = document) => root.querySelector(selector);
+            const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+            const create = (tag, props = {}, children = []) => {
+                const el = document.createElement(tag);
+                Object.keys(props).forEach(key => {
+                    el[key] = props[key];
                 });
-                boardElement.appendChild(cellElement);
-              });
-            }
-            
-            function restartGame() {
-              gameState.board = Array(9).fill(null);
-              gameState.currentPlayer = 'X';
-              gameState.gameActive = true;
-              updateBoard();
-            }
-            
-            // Initialize game
-            updateBoard();
-            container.appendChild(boardElement);
-            
-            // Return game API
-            return {
-              destroy() {
-                container.innerHTML = '';
-              },
-              pause() {
-                // Not pausable
-              },
-              resume() {
-                // Not pausable
-              },
-              restart() {
-                restartGame();
-              }
-            };
-          }
-        },
-        
-        // Memory Match game
-        memory: {
-          id: 'memory',
-          title: 'Memory Match',
-          description: 'Find matching pairs of cards',
-          icon: '🧠',
-          init(container) {
-            const gameState = {
-              cards: [],
-              flippedCards: [],
-              matchedPairs: 0,
-              moves: 0,
-              gameActive: true
-            };
-            
-            const symbols = ['🍎', '🍌', '🍇', '🍊', '🍓', '🍒', '🍑', '🍍'];
-            const cardValues = [...symbols, ...symbols];
-            
-            function shuffleArray(array) {
-              for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-              }
-              return array;
-            }
-            
-            function createCards() {
-              const shuffledCards = shuffleArray([...cardValues]);
-              gameState.cards = shuffledCards.map((value, index) => ({
-                id: index,
-                value: value,
-                flipped: false,
-                matched: false
-              }));
-            }
-            
-            function flipCard(card) {
-              if (!gameState.gameActive || card.flipped || card.matched || gameState.flippedCards.length === 2) {
-                return;
-              }
-              
-              card.flipped = true;
-              gameState.flippedCards.push(card);
-              renderBoard();
-              
-              if (gameState.flippedCards.length === 2) {
-                gameState.moves++;
-                setTimeout(checkMatch, 500);
-              }
-            }
-            
-            function checkMatch() {
-              const [card1, card2] = gameState.flippedCards;
-              
-              if (card1.value === card2.value) {
-                card1.matched = true;
-                card2.matched = true;
-                gameState.matchedPairs++;
-                
-                if (gameState.matchedPairs === symbols.length) {
-                  gameState.gameActive = false;
-                  Toast.show(`You won in ${gameState.moves} moves!`, 'success');
-                  unlockAchievement('memory_champ');
-                }
-              } else {
-                card1.flipped = false;
-                card2.flipped = false;
-              }
-              
-              gameState.flippedCards = [];
-              renderBoard();
-            }
-            
-            function renderBoard() {
-              boardElement.innerHTML = '';
-              gameState.cards.forEach(card => {
-                const cardElement = create('div', {
-                  className: `memory-card ${card.flipped || card.matched ? 'flipped' : ''}`,
-                  onclick: () => flipCard(card)
-                });
-                
-                const cardInner = create('div', { className: 'memory-card-inner' });
-                const cardFront = create('div', { 
-                  className: 'memory-card-front',
-                  innerHTML: '?'
-                });
-                const cardBack = create('div', { 
-                  className: 'memory-card-back',
-                  innerHTML: card.value
-                });
-                
-                cardInner.appendChild(cardFront);
-                cardInner.appendChild(cardBack);
-                cardElement.appendChild(cardInner);
-                boardElement.appendChild(cardElement);
-              });
-            }
-            
-            function restartGame() {
-              gameState.flippedCards = [];
-              gameState.matchedPairs = 0;
-              gameState.moves = 0;
-              gameState.gameActive = true;
-              createCards();
-              renderBoard();
-            }
-            
-            // Create board
-            const boardElement = create('div', { className: 'memory-grid' });
-            createCards();
-            renderBoard();
-            container.appendChild(boardElement);
-            
-            // Return game API
-            return {
-              destroy() {
-                container.innerHTML = '';
-              },
-              pause() {
-                // Not pausable
-              },
-              resume() {
-                // Not pausable
-              },
-              restart() {
-                restartGame();
-              }
-            };
-          }
-        },
-        
-        // Reaction Tester game
-        reaction: {
-          id: 'reaction',
-          title: 'Reaction Tester',
-          description: 'Test your reaction speed',
-          icon: '⏱️',
-          init(container) {
-            const gameState = {
-              gameState: 'waiting', // waiting, ready, clicked
-              startTime: 0,
-              reactionTimes: [],
-              gameActive: true
-            };
-            
-            const reactionBox = create('div', {
-              className: 'reaction-box waiting',
-              innerHTML: 'Wait for green...',
-              onclick: handleClick
-            });
-            
-            const historyElement = create('div', { className: 'reaction-history' });
-            
-            function handleClick() {
-              if (gameState.gameState === 'waiting') {
-                // Too early
-                reactionBox.textContent = 'Too early! Wait for green.';
-                reactionBox.className = 'reaction-box waiting';
-                setTimeout(() => {
-                  if (gameState.gameActive) {
-                    setWaitingState();
-                  }
-                }, 1000);
-              } else if (gameState.gameState === 'ready') {
-                // Calculate reaction time
-                const reactionTime = Date.now() - gameState.startTime;
-                gameState.reactionTimes.push(reactionTime);
-                
-                reactionBox.textContent = `${reactionTime} ms`;
-                reactionBox.className = 'reaction-box';
-                
-                // Update history
-                updateHistory();
-                
-                // Show achievement for fast reaction
-                if (reactionTime < 300) {
-                  unlockAchievement('speed_demon');
-                }
-                
-                // Reset after delay
-                setTimeout(() => {
-                  if (gameState.gameActive) {
-                    setWaitingState();
-                  }
-                }, 2000);
-              }
-            }
-            
-            function setWaitingState() {
-              reactionBox.textContent = 'Wait for green...';
-              reactionBox.className = 'reaction-box waiting';
-              gameState.gameState = 'waiting';
-              
-              // Random delay before ready state
-              const delay = 2000 + Math.random() * 3000;
-              setTimeout(() => {
-                if (gameState.gameActive && gameState.gameState === 'waiting') {
-                  reactionBox.textContent = 'CLICK NOW!';
-                  reactionBox.className = 'reaction-box ready';
-                  gameState.gameState = 'ready';
-                  gameState.startTime = Date.now();
-                }
-              }, delay);
-            }
-            
-            function updateHistory() {
-              historyElement.innerHTML = '';
-              const recentTimes = gameState.reactionTimes.slice(-10);
-              
-              recentTimes.forEach(time => {
-                const bar = create('div', {
-                  className: 'reaction-bar',
-                  style: `height: ${Math.min(time / 10, 40)}px;`
-                });
-                historyElement.appendChild(bar);
-              });
-            }
-            
-            function restartGame() {
-              gameState.reactionTimes = [];
-              gameState.gameActive = true;
-              updateHistory();
-              setWaitingState();
-            }
-            
-            // Initialize game
-            container.appendChild(reactionBox);
-            container.appendChild(historyElement);
-            setWaitingState();
-            
-            // Return game API
-            return {
-              destroy() {
-                gameState.gameActive = false;
-                container.innerHTML = '';
-              },
-              pause() {
-                gameState.gameActive = false;
-              },
-              resume() {
-                gameState.gameActive = true;
-                setWaitingState();
-              },
-              restart() {
-                restartGame();
-              }
-            };
-          }
-        },
-        
-        // Whack-a-Doodle game
-        whack: {
-          id: 'whack',
-          title: 'Whack-a-Doodle',
-          description: 'Whack the doodles as they appear',
-          icon: '🔨',
-          init(container) {
-            const gameState = {
-              score: 0,
-              timeLeft: 30,
-              gameActive: false,
-              timer: null
-            };
-            
-            const scoreElement = create('div', {
-              style: 'font-size: 1.5rem; margin-bottom: 20px;',
-              innerHTML: `Score: <span id="whackScore">0</span> | Time: <span id="whackTime">30</span>s`
-            });
-            
-            const gameContainer = create('div', { className: 'whack-container' });
-            
-            // Create holes
-            for (let i = 0; i < 9; i++) {
-              const hole = create('div', { className: 'whack-hole' });
-              const mole = create('div', {
-                className: 'whack-mole',
-                innerHTML: '👾',
-                onclick: () => whackMole(mole)
-              });
-              
-              hole.appendChild(mole);
-              gameContainer.appendChild(hole);
-            }
-            
-            function whackMole(mole) {
-              if (!gameState.gameActive || !mole.classList.contains('up')) return;
-              
-              mole.classList.remove('up');
-              gameState.score++;
-              updateScore();
-              SoundManager.play('success');
-            }
-            
-            function popMole() {
-              if (!gameState.gameActive) return;
-              
-              const moles = qsa('.whack-mole');
-              const randomMole = moles[Math.floor(Math.random() * moles.length)];
-              
-              randomMole.classList.add('up');
-              
-              setTimeout(() => {
-                if (randomMole.classList.contains('up')) {
-                  randomMole.classList.remove('up');
-                }
-              }, 1000);
-            }
-            
-            function updateScore() {
-              qs('#whackScore').textContent = gameState.score;
-            }
-            
-            function updateTime() {
-              qs('#whackTime').textContent = gameState.timeLeft;
-            }
-            
-            function startGame() {
-              gameState.score = 0;
-              gameState.timeLeft = 30;
-              gameState.gameActive = true;
-              updateScore();
-              updateTime();
-              
-              gameState.timer = setInterval(() => {
-                if (gameState.timeLeft <= 0) {
-                  endGame();
-                  return;
-                }
-                
-                gameState.timeLeft--;
-                updateTime();
-                popMole();
-              }, 1000);
-              
-              // Pop first mole immediately
-              setTimeout(popMole, 500);
-            }
-            
-            function endGame() {
-              gameState.gameActive = false;
-              clearInterval(gameState.timer);
-              Toast.show(`Game over! Final score: ${gameState.score}`, 'info');
-              
-              // Unlock achievement for high score
-              if (gameState.score >= 20) {
-                unlockAchievement('whack_streak');
-              }
-            }
-            
-            function restartGame() {
-              if (gameState.timer) {
-                clearInterval(gameState.timer);
-              }
-              startGame();
-            }
-            
-            // Initialize game
-            container.appendChild(scoreElement);
-            container.appendChild(gameContainer);
-            startGame();
-            
-            // Return game API
-            return {
-              destroy() {
-                if (gameState.timer) {
-                  clearInterval(gameState.timer);
-                }
-                container.innerHTML = '';
-              },
-              pause() {
-                gameState.gameActive = false;
-                clearInterval(gameState.timer);
-              },
-              resume() {
-                if (!gameState.gameActive) {
-                  gameState.gameActive = true;
-                  gameState.timer = setInterval(() => {
-                    if (gameState.timeLeft <= 0) {
-                      endGame();
-                      return;
+                children.forEach(child => {
+                    if (typeof child === 'string') {
+                        el.appendChild(document.createTextNode(child));
+                    } else {
+                        el.appendChild(child);
                     }
-                    
-                    gameState.timeLeft--;
-                    updateTime();
-                    popMole();
-                  }, 1000);
-                }
-              },
-              restart() {
-                restartGame();
-              }
+                });
+                return el;
             };
-          }
-        }
-      };
-
-      // Register games
-      function registerGames() {
-        for (const gameId in GameModules) {
-          gamesRegistry[gameId] = GameModules[gameId];
-        }
-      }
-
-      // Render game tiles
-      function renderGameTiles() {
-        gamesGrid.innerHTML = '';
-        
-        for (const gameId in gamesRegistry) {
-          const game = gamesRegistry[gameId];
-          
-          const tile = create('div', {
-            className: 'game-tile',
-            tabIndex: 0,
-            onclick: () => openGame(gameId),
-            onkeydown: (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                openGame(gameId);
-              }
+            // App state
+            let activeGame = null;
+            let gamesRegistry = {};
+            let settings = {
+                soundOn: true,
+                volume: 0.5,
+                theme: 'light', // Default to light
+                showOnboarding: true
+            };
+            let scores = {};
+            let achievements = {};
+            // DOM elements
+            const gamesGrid = qs('#gamesGrid');
+            const gameView = qs('#gameView');
+            const gameContent = qs('#gameContent');
+            const currentGameTitle = qs('#currentGameTitle');
+            const gameSearch = qs('#gameSearch');
+            const backButton = qs('#backButton');
+            const soundToggle = qs('#soundToggle');
+            const themeToggle = qs('#themeToggle');
+            const settingsButton = qs('#settingsButton');
+            const profileButton = qs('#profileButton');
+            const gamePause = qs('#gamePause');
+            const gameRestart = qs('#gameRestart');
+            const gameInfo = qs('#gameInfo');
+            // Modals
+            const settingsModal = qs('#settingsModal');
+            const profileModal = qs('#profileModal');
+            const onboardingModal = qs('#onboardingModal');
+            const closeSettings = qs('#closeSettings');
+            const closeProfile = qs('#closeProfile');
+            const closeOnboarding = qs('#closeOnboarding');
+            const soundToggleSetting = qs('#soundToggleSetting');
+            const volumeSlider = qs('#volumeSlider');
+            const themeSelect = qs('#themeSelect');
+            const onboardingToggle = qs('#onboardingToggle');
+            const resetProgress = qs('#resetProgress');
+            const saveSettings = qs('#saveSettings');
+            const startPlaying = qs('#startPlaying');
+            // Sound Manager
+            const SoundManager = {
+                audioContext: null,
+                enabled: true,
+                volume: 0.5,
+                init() {
+                    try {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        this.enabled = true;
+                    } catch (e) {
+                        console.warn('Web Audio API is not supported in this browser');
+                        this.enabled = false;
+                    }
+                },
+                play(kind) {
+                    if (!this.enabled || !this.audioContext || !settings.soundOn) return;
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    let frequency = 440;
+                    let duration = 0.1;
+                    switch (kind) {
+                        case 'click':
+                            frequency = 523.25;
+                            break;
+                        case 'success':
+                            frequency = 783.99;
+                            break;
+                        case 'error':
+                            frequency = 349.23;
+                            break;
+                        case 'eat':
+                            frequency = 659.25;
+                            duration = 0.05;
+                            break;
+                        case 'hit':
+                            frequency = 392;
+                            duration = 0.08;
+                            break;
+                    }
+                    gainNode.gain.value = this.volume;
+                    oscillator.frequency.value = frequency;
+                    oscillator.type = 'sine';
+                    oscillator.start();
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+                    oscillator.stop(this.audioContext.currentTime + duration);
+                },
+                setVolume(volume) {
+                    this.volume = volume;
+                },
+                toggle() {
+                    this.enabled = !this.enabled;
+                    return this.enabled;
+                }
+            };
+            // Toast system
+            const Toast = {
+                container: qs('#toastContainer'),
+                show(message, type = 'info', duration = 3000) {
+                    const toast = create('div', {
+                        className: `toast toast-${type}`,
+                        innerHTML: `<span>${message}</span>`
+                    });
+                    this.container.appendChild(toast);
+                    // Trigger reflow
+                    toast.offsetHeight;
+                    toast.classList.add('show');
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                        setTimeout(() => {
+                            if (toast.parentNode) {
+                                toast.parentNode.removeChild(toast);
+                            }
+                        }, 300);
+                    }, duration);
+                }
+            };
+            // Ripple effect
+            const addRippleEffect = (element) => {
+                element.addEventListener('click', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const ripple = create('span', {
+                        className: 'ripple',
+                        style: `top: ${y}px; left: ${x}px;`
+                    });
+                    this.appendChild(ripple);
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            };
+            // LocalStorage management
+            const Storage = {
+                get(key) {
+                    try {
+                        const item = localStorage.getItem(`shaikhArcade.${key}`);
+                        return item ? JSON.parse(item) : null;
+                    } catch (e) {
+                        console.error('Error reading from localStorage', e);
+                        return null;
+                    }
+                },
+                set(key, value) {
+                    try {
+                        localStorage.setItem(`shaikhArcade.${key}`, JSON.stringify(value));
+                    } catch (e) {
+                        console.error('Error writing to localStorage', e);
+                    }
+                },
+                remove(key) {
+                    try {
+                        localStorage.removeItem(`shaikhArcade.${key}`);
+                    } catch (e) {
+                        console.error('Error removing from localStorage', e);
+                    }
+                }
+            };
+            // Load saved data
+            function loadData() {
+                const savedSettings = Storage.get('settings');
+                if (savedSettings) {
+                    settings = { ...settings, ...savedSettings };
+                }
+                const savedScores = Storage.get('scores');
+                if (savedScores) {
+                    scores = savedScores;
+                }
+                const savedAchievements = Storage.get('achievements');
+                if (savedAchievements) {
+                    achievements = savedAchievements;
+                }
             }
-          }, [
-            create('div', { className: 'game-icon', innerHTML: game.icon }),
-            create('h3', { className: 'game-title', innerHTML: game.title }),
-            create('p', { className: 'game-description', innerHTML: game.description })
-          ]);
-          
-          gamesGrid.appendChild(tile);
-        }
-      }
+            // Save data
+            function saveData() {
+                Storage.set('settings', settings);
+                Storage.set('scores', scores);
+                Storage.set('achievements', achievements);
+            }
+            // Apply settings to UI and CSS variables
+            function applySettings() {
+                 // Determine actual theme
+                let actualTheme = settings.theme;
+                if (settings.theme === 'auto') {
+                    actualTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                }
 
-      // Open game
-      function openGame(gameId) {
-        const game = gamesRegistry[gameId];
-        if (!game) return;
-        
-        currentGameTitle.textContent = game.title;
-        gameView.classList.add('active');
-        
-        // Destroy previous game if exists
-        if (activeGame && activeGame.destroy) {
-          activeGame.destroy();
-        }
-        
-        // Initialize new game
-        activeGame = game.init(gameContent);
-      }
+                // Apply theme class to body
+                document.body.classList.toggle('theme-dark', actualTheme === 'dark');
 
-      // Close game
-      function closeGame() {
-        if (activeGame && activeGame.destroy) {
-          activeGame.destroy();
-        }
-        gameView.classList.remove('active');
-        activeGame = null;
-      }
+                // Update theme toggle icon
+                themeToggle.querySelector('.theme-icon').textContent = actualTheme === 'dark' ? '☀️' : '🌙';
 
-      // Unlock achievement
-      function unlockAchievement(achievementId) {
-        if (achievements[achievementId]) return; // Already unlocked
-        
-        achievements[achievementId] = true;
-        saveData();
-        
-        let message = '';
-        switch (achievementId) {
-          case 'tic_master':
-            message = 'Achievement Unlocked: Tic-Tac-Toe Master!';
-            break;
-          case 'memory_champ':
-            message = 'Achievement Unlocked: Memory Champion!';
-            break;
-          case 'speed_demon':
-            message = 'Achievement Unlocked: Speed Demon!';
-            break;
-          case 'whack_streak':
-            message = 'Achievement Unlocked: Whack-a-Doodle Streak!';
-            break;
-        }
-        
-        if (message) {
-          Toast.show(message, 'success');
-          // Show confetti for major achievements
-          if (['tic_master', 'memory_champ', 'speed_demon', 'whack_streak'].includes(achievementId)) {
-            Confetti.burst(window.innerWidth/2, window.innerHeight/2, 50);
-          }
-        }
-      }
+                // Apply sound settings
+                soundToggle.querySelector('.sound-icon').textContent = settings.soundOn ? '🔊' : '🔇';
+                SoundManager.setVolume(settings.volume);
 
-      // Event Listeners
-      backButton.addEventListener('click', closeGame);
-      
-      soundToggle.addEventListener('click', () => {
-        settings.soundOn = !settings.soundOn;
-        applySettings();
-        saveData();
-        SoundManager.play('click');
-      });
-      
-      themeToggle.addEventListener('click', () => {
-        if (settings.theme === 'light') {
-          settings.theme = 'dark';
-        } else if (settings.theme === 'dark') {
-          settings.theme = 'neon';
-        } else {
-          settings.theme = 'light';
-        }
-        applySettings();
-        saveData();
-        SoundManager.play('click');
-      });
-      
-      settingsButton.addEventListener('click', () => {
-        settingsModal.classList.add('active');
-        SoundManager.play('click');
-      });
-      
-      profileButton.addEventListener('click', () => {
-        profileModal.classList.add('active');
-        SoundManager.play('click');
-      });
-      
-      closeSettings.addEventListener('click', () => {
-        settingsModal.classList.remove('active');
-      });
-      
-      closeProfile.addEventListener('click', () => {
-        profileModal.classList.remove('active');
-      });
-      
-      closeProfileBtn.addEventListener('click', () => {
-        profileModal.classList.remove('active');
-      });
-      
-      closeOnboarding.addEventListener('click', () => {
-        onboardingModal.classList.remove('active');
-      });
-      
-      saveSettingsBtn.addEventListener('click', () => {
-        settings.soundOn = soundToggleSetting.checked;
-        settings.volume = parseFloat(volumeSlider.value);
-        settings.theme = themeSelect.value;
-        settings.showOnboarding = onboardingToggle.checked;
-        
-        applySettings();
-        saveData();
-        settingsModal.classList.remove('active');
-        Toast.show('Settings saved!', 'success');
-        SoundManager.play('success');
-      });
-      
-      resetProgressBtn.addEventListener('click', () => {
-        if (confirm('Are you sure you want to reset all progress?')) {
-          scores = {};
-          achievements = {};
-          saveData();
-          Toast.show('Progress reset!', 'info');
-          SoundManager.play('click');
-        }
-      });
-      
-      startPlayingBtn.addEventListener('click', () => {
-        onboardingModal.classList.remove('active');
-      });
-      
-      gameRestart.addEventListener('click', () => {
-        if (activeGame && activeGame.restart) {
-          activeGame.restart();
-          Toast.show('Game restarted!', 'info');
-          SoundManager.play('click');
-        }
-      });
-      
-      gamePause.addEventListener('click', () => {
-        if (activeGame) {
-          if (activeGame.pause) {
-            activeGame.pause();
-            Toast.show('Game paused', 'info');
-          } else if (activeGame.resume) {
-            activeGame.resume();
-            Toast.show('Game resumed', 'info');
-          }
-          SoundManager.play('click');
-        }
-      });
+                // Update settings modal
+                soundToggleSetting.checked = settings.soundOn;
+                volumeSlider.value = settings.volume;
+                themeSelect.value = settings.theme; // Keep the select value as the user's choice
+                onboardingToggle.checked = settings.showOnboarding;
+            }
+            // Show onboarding if needed
+            function checkOnboarding() {
+                if (settings.showOnboarding) {
+                    onboardingModal.classList.add('active');
+                }
+            }
+            // Check and unlock achievements
+            function checkAchievement(achievementId, condition, payload = null) {
+                if (condition && !achievements[achievementId]) {
+                    achievements[achievementId] = {
+                        unlocked: true,
+                        timestamp: Date.now(),
+                        payload: payload
+                    };
+                    Storage.set('achievements', achievements);
+                    let message = '';
+                    switch (achievementId) {
+                        case 'first_win':
+                            message = 'Achievement Unlocked: First Win!';
+                            break;
+                        case 'snake_master':
+                            message = 'Achievement Unlocked: Snake Master!';
+                            break;
+                        case 'tic_master':
+                            message = 'Achievement Unlocked: Tic-Tac-Toe Master!';
+                            break;
+                        case 'memory_champ':
+                            message = 'Achievement Unlocked: Memory Champion!';
+                            break;
+                        case 'speed_demon':
+                            message = 'Achievement Unlocked: Speed Demon!';
+                            break;
+                        case 'whack_streak':
+                            message = 'Achievement Unlocked: Whack-a-Doodle Streak!';
+                            break;
+                        case 'lucky_roller':
+                            message = 'Achievement Unlocked: Lucky Roller!';
+                            break;
+                        case 'runner_pro':
+                            message = 'Achievement Unlocked: Runner Pro!';
+                            break;
+                    }
+                    if (message) {
+                        Toast.show(message, 'success');
+                    }
+                }
+            }
+            // Update scores in storage
+            function updateScores(gameId, scoreData) {
+                if (!scores[gameId]) {
+                    scores[gameId] = {};
+                }
+                // Handle different score formats
+                if (typeof scoreData === 'number') {
+                    // For games like Snake that just have a high score
+                    if (!scores[gameId].highScore || scoreData > scores[gameId].highScore) {
+                        scores[gameId].highScore = scoreData;
+                        Storage.set('scores', scores);
+                    }
+                } else if (typeof scoreData === 'object') {
+                    // For games with multiple score types
+                    Object.keys(scoreData).forEach(key => {
+                        if (!scores[gameId][key] || scoreData[key] > scores[gameId][key]) {
+                            scores[gameId][key] = scoreData[key];
+                        }
+                    });
+                    Storage.set('scores', scores);
+                }
+            }
 
-      // Initialize app
-      function initApp() {
-        SoundManager.init();
-        loadData();
-        applySettings();
-        registerGames();
-        renderGameTiles();
-        createDoodleBackground();
-        checkOnboarding();
-      }
+            // Game modules
+            const GameModules = {
+                // Smooth Snake game
+                snake: {
+                    id: 'snake',
+                    title: 'Smooth Snake',
+                    description: 'Guide the snake to eat food and grow longer',
+                    icon: '🐍',
+                    init(container) {
+                        const canvas = create('canvas', {
+                            className: 'snake-canvas',
+                            width: 400,
+                            height: 400,
+                            role: 'application',
+                            'aria-label': 'Snake game canvas'
+                        });
+                        const ctx = canvas.getContext('2d');
+                        const gameState = {
+                            snake: [{x: 10, y: 10}],
+                            food: {x: 5, y: 5},
+                            direction: 'right',
+                            nextDirection: 'right',
+                            score: 0,
+                            highScore: scores.snake?.highScore || 0,
+                            gameOver: false,
+                            paused: false,
+                            gridSize: 20,
+                            speed: 150,
+                            lastUpdate: 0,
+                            interpolation: 0,
+                            touchStart: null
+                        };
+                        const scoreAnnouncer = create('div', {
+                            className: 'sr-only',
+                            'aria-live': 'polite'
+                        });
+                        container.appendChild(canvas);
+                        container.appendChild(scoreAnnouncer);
+                        // Game logic
+                        function update(currentTime) {
+                            if (gameState.paused || gameState.gameOver) return;
+                            if (!gameState.lastUpdate) gameState.lastUpdate = currentTime;
+                            const deltaTime = currentTime - gameState.lastUpdate;
+                            gameState.interpolation = Math.min(1, deltaTime / gameState.speed);
+                            if (deltaTime > gameState.speed) {
+                                gameState.lastUpdate = currentTime;
+                                gameState.interpolation = 0;
+                                // Update direction
+                                gameState.direction = gameState.nextDirection;
+                                // Move snake
+                                const head = {...gameState.snake[0]};
+                                switch (gameState.direction) {
+                                    case 'up': head.y--; break;
+                                    case 'down': head.y++; break;
+                                    case 'left': head.x--; break;
+                                    case 'right': head.x++; break;
+                                }
+                                // Check wall collision
+                                if (head.x < 0 || head.x >= canvas.width / gameState.gridSize ||
+                                    head.y < 0 || head.y >= canvas.height / gameState.gridSize) {
+                                    gameState.gameOver = true;
+                                    SoundManager.play('error');
+                                    checkAchievement('snake_master', gameState.score >= 500, { score: gameState.score });
+                                    updateScores('snake', gameState.score);
+                                    return;
+                                }
+                                // Check self collision
+                                for (let i = 0; i < gameState.snake.length; i++) {
+                                    if (gameState.snake[i].x === head.x && gameState.snake[i].y === head.y) {
+                                        gameState.gameOver = true;
+                                        SoundManager.play('error');
+                                        checkAchievement('snake_master', gameState.score >= 500, { score: gameState.score });
+                                        updateScores('snake', gameState.score);
+                                        return;
+                                    }
+                                }
+                                // Add new head
+                                gameState.snake.unshift(head);
+                                // Check food collision
+                                if (head.x === gameState.food.x && head.y === gameState.food.y) {
+                                    gameState.score += 10;
+                                    SoundManager.play('eat');
+                                    scoreAnnouncer.textContent = `Score: ${gameState.score}`;
+                                    placeFood();
+                                    // Increase speed every 5 foods
+                                    if (gameState.score % 50 === 0 && gameState.speed > 50) {
+                                        gameState.speed -= 10;
+                                    }
+                                } else {
+                                    // Remove tail if no food eaten
+                                    gameState.snake.pop();
+                                }
+                            }
+                            requestAnimationFrame(update);
+                        }
+                        function placeFood() {
+                            let newFood;
+                            let overlapping;
+                            do {
+                                newFood = {
+                                    x: Math.floor(Math.random() * (canvas.width / gameState.gridSize)),
+                                    y: Math.floor(Math.random() * (canvas.height / gameState.gridSize))
+                                };
+                                overlapping = false;
+                                for (const segment of gameState.snake) {
+                                    if (segment.x === newFood.x && segment.y === newFood.y) {
+                                        overlapping = true;
+                                        break;
+                                    }
+                                }
+                            } while (overlapping);
+                            gameState.food = newFood;
+                        }
+                        function draw() {
+                            // Clear canvas
+                            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-background');
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                            // Draw food
+                            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-accent');
+                            ctx.fillRect(
+                                gameState.food.x * gameState.gridSize,
+                                gameState.food.y * gameState.gridSize,
+                                gameState.gridSize,
+                                gameState.gridSize
+                            );
+                            // Draw snake with interpolation for smooth movement
+                            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-secondary');
+                            for (let i = 0; i < gameState.snake.length; i++) {
+                                const segment = gameState.snake[i];
+                                let x = segment.x * gameState.gridSize;
+                                let y = segment.y * gameState.gridSize;
+                                // Interpolate head position
+                                if (i === 0 && gameState.interpolation > 0) {
+                                    const nextX = segment.x;
+                                    const nextY = segment.y;
+                                    switch (gameState.direction) {
+                                        case 'left': x = (nextX + gameState.interpolation) * gameState.gridSize; break;
+                                        case 'right': x = (nextX - gameState.interpolation) * gameState.gridSize; break;
+                                        case 'up': y = (nextY + gameState.interpolation) * gameState.gridSize; break;
+                                        case 'down': y = (nextY - gameState.interpolation) * gameState.gridSize; break;
+                                    }
+                                }
+                                ctx.fillRect(x, y, gameState.gridSize, gameState.gridSize);
+                            }
+                            // Draw score
+                            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-text');
+                            ctx.font = '16px sans-serif';
+                            ctx.fillText(`Score: ${gameState.score}`, 10, 20);
+                            ctx.fillText(`High Score: ${gameState.highScore}`, 10, 40);
+                            if (gameState.gameOver) {
+                                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                ctx.fillStyle = 'white';
+                                ctx.font = '24px sans-serif';
+                                ctx.textAlign = 'center';
+                                ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 20);
+                                ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 20);
+                                ctx.textAlign = 'left';
+                            } else if (gameState.paused) {
+                                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                ctx.fillStyle = 'white';
+                                ctx.font = '24px sans-serif';
+                                ctx.textAlign = 'center';
+                                ctx.fillText('Paused', canvas.width / 2, canvas.height / 2);
+                                ctx.textAlign = 'left';
+                            }
+                        }
+                        function gameLoop() {
+                            draw();
+                            requestAnimationFrame(gameLoop);
+                        }
+                        // Input handling
+                        function handleKeyDown(e) {
+                            switch (e.key) {
+                                case 'ArrowUp':
+                                case 'w':
+                                case 'W':
+                                    if (gameState.direction !== 'down') gameState.nextDirection = 'up';
+                                    break;
+                                case 'ArrowDown':
+                                case 's':
+                                case 'S':
+                                    if (gameState.direction !== 'up') gameState.nextDirection = 'down';
+                                    break;
+                                case 'ArrowLeft':
+                                case 'a':
+                                case 'A':
+                                    if (gameState.direction !== 'right') gameState.nextDirection = 'left';
+                                    break;
+                                case 'ArrowRight':
+                                case 'd':
+                                case 'D':
+                                    if (gameState.direction !== 'left') gameState.nextDirection = 'right';
+                                    break;
+                                case ' ':
+                                    gameState.paused = !gameState.paused;
+                                    break;
+                            }
+                        }
+                        // Initialize game
+                        placeFood();
+                        requestAnimationFrame(update);
+                        requestAnimationFrame(gameLoop);
+                        document.addEventListener('keydown', handleKeyDown);
+                        // Return game API
+                        return {
+                            destroy() {
+                                document.removeEventListener('keydown', handleKeyDown);
+                                container.innerHTML = '';
+                            },
+                            pause() {
+                                gameState.paused = true;
+                            },
+                            resume() {
+                                gameState.paused = false;
+                                gameState.lastUpdate = 0;
+                            },
+                            restart() {
+                                gameState.snake = [{x: 10, y: 10}];
+                                gameState.direction = 'right';
+                                gameState.nextDirection = 'right';
+                                gameState.score = 0;
+                                gameState.gameOver = false;
+                                gameState.paused = false;
+                                gameState.speed = 150;
+                                gameState.lastUpdate = 0;
+                                gameState.interpolation = 0;
+                                placeFood();
+                                scoreAnnouncer.textContent = 'Game restarted';
+                            }
+                        };
+                    }
+                },
+                // Tic-Tac-Toe Game
+                tictactoe: {
+                    id: 'tictactoe',
+                    title: 'Tic-Tac-Toe',
+                    description: 'Classic X and O game with AI opponents',
+                    icon: '⭕',
+                    init(container) {
+                        let currentPlayer = 'X';
+                        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+                        let gameActive = true;
+                        let playerScore = scores.tictactoe?.playerWins || 0;
+                        let aiScore = scores.tictactoe?.aiWins || 0;
+                        let draws = scores.tictactoe?.draws || 0;
 
-      // Start the app
-      initApp();
-    })();
-  </script>
+                        const gameElement = create('div', { className: 'tictactoe-game' });
+                        const boardElement = create('div', { className: 'tictactoe-board' });
+                        const statusElement = create('div', { className: 'game-status', textContent: `Player ${currentPlayer}'s turn` });
+                        const scoreElement = create('div', { className: 'game-score', textContent: `You: ${playerScore} | AI: ${aiScore} | Draws: ${draws}` });
+
+                        // Create cells
+                        const cells = [];
+                        for (let i = 0; i < 9; i++) {
+                            const cell = create('div', {
+                                className: 'tictactoe-cell',
+                                dataset: { index: i },
+                                onclick: () => handleCellClick(i)
+                            });
+                            cells.push(cell);
+                            boardElement.appendChild(cell);
+                        }
+
+                        gameElement.append(boardElement, statusElement, scoreElement);
+                        container.appendChild(gameElement);
+
+                        function handleCellClick(index) {
+                            if (!gameActive || gameBoard[index] !== '') return;
+
+                            makeMove(index, currentPlayer);
+                            if (gameActive && currentPlayer === 'O') {
+                                // Simple AI: pick a random empty spot
+                                setTimeout(() => {
+                                    const emptyIndices = gameBoard.map((val, idx) => val === '' ? idx : null).filter(val => val !== null);
+                                    if (emptyIndices.length > 0) {
+                                        const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+                                        makeMove(randomIndex, 'O');
+                                    }
+                                }, 300); // Slight delay for AI move
+                            }
+                        }
+
+                        function makeMove(index, player) {
+                            gameBoard[index] = player;
+                            cells[index].textContent = player;
+                            if (checkWin()) {
+                                gameActive = false;
+                                statusElement.textContent = player === 'X' ? 'You win!' : 'AI wins!';
+                                if (player === 'X') {
+                                    playerScore++;
+                                    checkAchievement('tic_master', playerScore >= 5, { wins: playerScore });
+                                } else {
+                                    aiScore++;
+                                }
+                                updateScores('tictactoe', { playerWins: playerScore, aiWins: aiScore, draws: draws });
+                                scoreElement.textContent = `You: ${playerScore} | AI: ${aiScore} | Draws: ${draws}`;
+                                highlightWinningCells();
+                                SoundManager.play(player === 'X' ? 'success' : 'error');
+                            } else if (checkDraw()) {
+                                gameActive = false;
+                                statusElement.textContent = "It's a draw!";
+                                draws++;
+                                updateScores('tictactoe', { playerWins: playerScore, aiWins: aiScore, draws: draws });
+                                scoreElement.textContent = `You: ${playerScore} | AI: ${aiScore} | Draws: ${draws}`;
+                                SoundManager.play('click');
+                            } else {
+                                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                                statusElement.textContent = `Player ${currentPlayer}'s turn`;
+                                SoundManager.play('click');
+                            }
+                        }
+
+                        function checkWin() {
+                            const winPatterns = [
+                                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+                                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+                                [0, 4, 8], [2, 4, 6]             // diagonals
+                            ];
+                            for (const pattern of winPatterns) {
+                                const [a, b, c] = pattern;
+                                if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                                    return { pattern };
+                                }
+                            }
+                            return null;
+                        }
+
+                        function checkDraw() {
+                            return !gameBoard.includes('');
+                        }
+
+                        function highlightWinningCells() {
+                            const winResult = checkWin();
+                            if (winResult) {
+                                winResult.pattern.forEach(index => {
+                                    cells[index].classList.add('win');
+                                });
+                            }
+                        }
+
+                        return {
+                            destroy() {
+                                container.innerHTML = '';
+                            },
+                            pause() {
+                                // Pause logic if needed
+                            },
+                            resume() {
+                                // Resume logic if needed
+                            },
+                            restart() {
+                                gameBoard = ['', '', '', '', '', '', '', '', ''];
+                                currentPlayer = 'X';
+                                gameActive = true;
+                                statusElement.textContent = `Player ${currentPlayer}'s turn`;
+                                cells.forEach(cell => {
+                                    cell.textContent = '';
+                                    cell.classList.remove('win');
+                                });
+                                SoundManager.play('click');
+                            }
+                        };
+                    }
+                },
+                // Memory Match Game
+                memory: {
+                    id: 'memory',
+                    title: 'Memory Match',
+                    description: 'Find matching pairs of cards',
+                    icon: '🎴',
+                    init(container) {
+                        const emojis = ['😀', '😎', '🥳', '🤖', '👾', '🐱', '🐶', '🦊'];
+                        let gameCards = [...emojis, ...emojis];
+                        gameCards = gameCards.sort(() => 0.5 - Math.random());
+                        let flippedCards = [];
+                        let matchedPairs = 0;
+                        let moves = 0;
+                        let gameStarted = false;
+                        let timerInterval = null;
+                        let seconds = 0;
+                        const bestTime = scores.memory?.bestTime || null;
+
+                        const gameElement = create('div', { className: 'memory-game' });
+                        const boardElement = create('div', { className: 'memory-board' });
+                        const movesElement = create('div', { className: 'game-moves', textContent: `Moves: ${moves}` });
+                        const timerElement = create('div', { className: 'game-timer', textContent: `Time: ${seconds}s` });
+                        const bestTimeElement = create('div', { className: 'game-best-time', textContent: bestTime ? `Best: ${bestTime}s` : 'Best: --' });
+                        const restartButton = create('button', { className: 'btn btn-secondary', textContent: 'Restart' });
+                        restartButton.addEventListener('click', restartGame);
+
+                        const cards = gameCards.map((emoji, index) => {
+                            const card = create('div', {
+                                className: 'memory-card',
+                                textContent: '?', // Back of card
+                                onclick: () => flipCard(card, index)
+                            });
+                            card.dataset.emoji = emoji;
+                            card.dataset.index = index;
+                            return card;
+                        });
+
+                        boardElement.append(...cards);
+                        gameElement.append(boardElement, movesElement, timerElement, bestTimeElement, restartButton);
+                        container.appendChild(gameElement);
+
+                        function startTimer() {
+                            if (!gameStarted) {
+                                gameStarted = true;
+                                timerInterval = setInterval(() => {
+                                    seconds++;
+                                    timerElement.textContent = `Time: ${seconds}s`;
+                                }, 1000);
+                            }
+                        }
+
+                        function flipCard(card, index) {
+                            if (flippedCards.length === 2 || card.classList.contains('flipped') || card.classList.contains('matched')) {
+                                return;
+                            }
+
+                            startTimer();
+                            card.classList.add('flipped');
+                            card.textContent = card.dataset.emoji;
+                            flippedCards.push({ card, index });
+
+                            if (flippedCards.length === 2) {
+                                moves++;
+                                movesElement.textContent = `Moves: ${moves}`;
+                                const card1 = flippedCards[0];
+                                const card2 = flippedCards[1];
+
+                                if (gameCards[card1.index] === gameCards[card2.index]) {
+                                    // Match
+                                    card1.card.classList.add('matched');
+                                    card2.card.classList.add('matched');
+                                    flippedCards = [];
+                                    matchedPairs++;
+                                    SoundManager.play('success');
+
+                                    if (matchedPairs === emojis.length) {
+                                        clearInterval(timerInterval);
+                                        checkAchievement('memory_champ', moves <= 20, { moves, time: seconds });
+                                        if (!bestTime || seconds < bestTime) {
+                                            updateScores('memory', { bestTime: seconds });
+                                            bestTimeElement.textContent = `Best: ${seconds}s`;
+                                            Toast.show(`New Best Time: ${seconds}s!`, 'success');
+                                        }
+                                        setTimeout(() => {
+                                            alert(`Congratulations! You finished in ${moves} moves and ${seconds} seconds.`);
+                                        }, 500);
+                                    }
+                                } else {
+                                    // No match
+                                    setTimeout(() => {
+                                        card1.card.classList.remove('flipped');
+                                        card2.card.classList.remove('flipped');
+                                        card1.card.textContent = '?';
+                                        card2.card.textContent = '?';
+                                        flippedCards = [];
+                                    }, 1000);
+                                    SoundManager.play('error');
+                                }
+                            }
+                        }
+
+                        function restartGame() {
+                            clearInterval(timerInterval);
+                            gameCards = [...emojis, ...emojis].sort(() => 0.5 - Math.random());
+                            flippedCards = [];
+                            matchedPairs = 0;
+                            moves = 0;
+                            gameStarted = false;
+                            seconds = 0;
+                            movesElement.textContent = `Moves: ${moves}`;
+                            timerElement.textContent = `Time: ${seconds}s`;
+
+                            cards.forEach((card, index) => {
+                                card.classList.remove('flipped', 'matched');
+                                card.textContent = '?';
+                                card.dataset.emoji = gameCards[index];
+                            });
+                            SoundManager.play('click');
+                        }
+
+                        return {
+                            destroy() {
+                                clearInterval(timerInterval);
+                                container.innerHTML = '';
+                            },
+                            pause() {
+                                if (timerInterval) clearInterval(timerInterval);
+                            },
+                            resume() {
+                                if (gameStarted && matchedPairs < emojis.length) {
+                                     timerInterval = setInterval(() => {
+                                        seconds++;
+                                        timerElement.textContent = `Time: ${seconds}s`;
+                                    }, 1000);
+                                }
+                            },
+                            restart: restartGame
+                        };
+                    }
+                },
+                // Reaction Tester Game
+                reaction: {
+                    id: 'reaction',
+                    title: 'Reaction Tester',
+                    description: 'Test your reaction speed',
+                    icon: '⏱️',
+                    init(container) {
+                        let state = 'ready'; // 'ready', 'wait', 'go', 'result'
+                        let startTime, endTime;
+                        let bestTime = scores.reaction?.bestTime !== undefined ? scores.reaction.bestTime : null;
+                        let attempts = scores.reaction?.attempts || 0;
+
+                        const gameElement = create('div', { className: 'reaction-game' });
+                        const displayElement = create('div', {
+                            className: 'reaction-display reaction-ready',
+                            textContent: 'Click to Start'
+                        });
+                        const resultElement = create('div', { className: 'reaction-result', textContent: bestTime ? `Best: ${bestTime.toFixed(3)}s` : 'Best: --' });
+                        const attemptsElement = create('div', { className: 'reaction-attempts', textContent: `Attempts: ${attempts}` });
+
+                        displayElement.addEventListener('click', handleClick);
+
+                        gameElement.append(displayElement, resultElement, attemptsElement);
+                        container.appendChild(gameElement);
+
+                        function handleClick() {
+                            if (state === 'ready') {
+                                state = 'wait';
+                                displayElement.className = 'reaction-display reaction-wait';
+                                displayElement.textContent = 'Wait...';
+                                // Random delay between 1 and 4 seconds
+                                const delay = Math.random() * 3000 + 1000;
+                                setTimeout(() => {
+                                    if (state === 'wait') { // Only proceed if not clicked early
+                                        state = 'go';
+                                        startTime = Date.now();
+                                        displayElement.className = 'reaction-display reaction-go';
+                                        displayElement.textContent = 'CLICK NOW!';
+                                    }
+                                }, delay);
+                                SoundManager.play('click');
+                            } else if (state === 'wait') {
+                                // Clicked too early
+                                state = 'ready';
+                                displayElement.className = 'reaction-display reaction-ready';
+                                displayElement.textContent = 'Too Early! Click to Restart';
+                                SoundManager.play('error');
+                            } else if (state === 'go') {
+                                endTime = Date.now();
+                                const reactionTime = (endTime - startTime) / 1000;
+                                state = 'result';
+                                displayElement.className = 'reaction-display reaction-ready';
+                                displayElement.textContent = 'Click to Restart';
+                                resultElement.textContent = `Reaction Time: ${reactionTime.toFixed(3)}s`;
+                                attempts++;
+                                attemptsElement.textContent = `Attempts: ${attempts}`;
+
+                                if (bestTime === null || reactionTime < bestTime) {
+                                    bestTime = reactionTime;
+                                    updateScores('reaction', { bestTime: bestTime, attempts: attempts });
+                                    resultElement.textContent += ' (New Best!)';
+                                    checkAchievement('speed_demon', bestTime < 0.2, { time: bestTime });
+                                } else {
+                                    updateScores('reaction', { attempts: attempts }); // Update attempts even if not best
+                                }
+                                SoundManager.play('success');
+                            } else if (state === 'result') {
+                                // Restart
+                                state = 'ready';
+                                displayElement.className = 'reaction-display reaction-ready';
+                                displayElement.textContent = 'Click to Start';
+                                resultElement.textContent = bestTime ? `Best: ${bestTime.toFixed(3)}s` : 'Best: --';
+                                SoundManager.play('click');
+                            }
+                        }
+
+                        return {
+                            destroy() {
+                                container.innerHTML = '';
+                            },
+                            pause() {
+                                // Pause logic if needed
+                            },
+                            resume() {
+                                // Resume logic if needed
+                            },
+                            restart() {
+                                state = 'ready';
+                                displayElement.className = 'reaction-display reaction-ready';
+                                displayElement.textContent = 'Click to Start';
+                                resultElement.textContent = bestTime ? `Best: ${bestTime.toFixed(3)}s` : 'Best: --';
+                                SoundManager.play('click');
+                            }
+                        };
+                    }
+                },
+                 // Whack-a-Doodle Game
+                whack: {
+                    id: 'whack',
+                    title: 'Whack-a-Doodle',
+                    description: 'Whack the doodles as they appear',
+                    icon: '🔨',
+                    init(container) {
+                        let score = 0;
+                        let timeLeft = 30; // 30 seconds game
+                        let gameActive = false;
+                        let timerInterval = null;
+                        let popInterval = null;
+                        const highScore = scores.whack?.highScore || 0;
+
+                        const gameElement = create('div', { className: 'whack-game' });
+                        const boardElement = create('div', { className: 'whack-board' });
+                        const scoreElement = create('div', { className: 'whack-score', textContent: `Score: ${score}` });
+                        const timeElement = create('div', { className: 'whack-time', textContent: `Time: ${timeLeft}s` });
+                        const highScoreElement = create('div', { className: 'whack-high-score', textContent: `High Score: ${highScore}` });
+                        const startButton = create('button', { className: 'btn btn-primary', textContent: 'Start Game' });
+
+                        const holes = [];
+                        for (let i = 0; i < 9; i++) {
+                            const hole = create('div', { className: 'whack-hole' });
+                            const doodle = create('div', { className: 'whack-doodle', textContent: '🤪' });
+                            doodle.addEventListener('click', () => whackDoodle(doodle));
+                            hole.appendChild(doodle);
+                            holes.push(hole);
+                            boardElement.appendChild(hole);
+                        }
+
+                        startButton.addEventListener('click', startGame);
+                        gameElement.append(boardElement, scoreElement, timeElement, highScoreElement, startButton);
+                        container.appendChild(gameElement);
+
+                        function startGame() {
+                            if (gameActive) return;
+                            gameActive = true;
+                            score = 0;
+                            timeLeft = 30;
+                            scoreElement.textContent = `Score: ${score}`;
+                            timeElement.textContent = `Time: ${timeLeft}s`;
+                            startButton.disabled = true;
+                            startButton.textContent = 'Game On!';
+
+                            timerInterval = setInterval(() => {
+                                timeLeft--;
+                                timeElement.textContent = `Time: ${timeLeft}s`;
+                                if (timeLeft <= 0) {
+                                    endGame();
+                                }
+                            }, 1000);
+
+                            popInterval = setInterval(popDoodle, 800); // Pop a doodle every 0.8s
+                            SoundManager.play('click');
+                        }
+
+                        function popDoodle() {
+                            if (!gameActive) return;
+                            // Hide all doodles first
+                            holes.forEach(hole => {
+                                const doodle = hole.querySelector('.whack-doodle');
+                                doodle.classList.remove('up');
+                            });
+                            // Pick a random hole
+                            const randomHole = holes[Math.floor(Math.random() * holes.length)];
+                            const doodle = randomHole.querySelector('.whack-doodle');
+                            doodle.classList.add('up');
+
+                            // Hide it after a short time
+                            setTimeout(() => {
+                                if (gameActive) {
+                                    doodle.classList.remove('up');
+                                }
+                            }, 600); // Doodle stays up for 0.6s
+                        }
+
+                        function whackDoodle(doodle) {
+                            if (!gameActive || !doodle.classList.contains('up')) return;
+                            score++;
+                            scoreElement.textContent = `Score: ${score}`;
+                            doodle.classList.remove('up');
+                            SoundManager.play('success');
+                            checkAchievement('whack_streak', score >= 30, { score });
+                        }
+
+                        function endGame() {
+                            gameActive = false;
+                            clearInterval(timerInterval);
+                            clearInterval(popInterval);
+                            startButton.disabled = false;
+                            startButton.textContent = 'Start Game';
+
+                            // Hide any visible doodles
+                            holes.forEach(hole => {
+                                const doodle = hole.querySelector('.whack-doodle');
+                                doodle.classList.remove('up');
+                            });
+
+                            if (score > highScore) {
+                                updateScores('whack', score);
+                                highScoreElement.textContent = `High Score: ${score}`;
+                                Toast.show(`New High Score: ${score}!`, 'success');
+                            }
+                            SoundManager.play('click');
+                        }
+
+                        return {
+                            destroy() {
+                                clearInterval(timerInterval);
+                                clearInterval(popInterval);
+                                container.innerHTML = '';
+                            },
+                            pause() {
+                                if (gameActive) {
+                                    clearInterval(timerInterval);
+                                    clearInterval(popInterval);
+                                }
+                            },
+                            resume() {
+                                if (gameActive) {
+                                    timerInterval = setInterval(() => {
+                                        timeLeft--;
+                                        timeElement.textContent = `Time: ${timeLeft}s`;
+                                        if (timeLeft <= 0) {
+                                            endGame();
+                                        }
+                                    }, 1000);
+                                    popInterval = setInterval(popDoodle, 800);
+                                }
+                            },
+                            restart() {
+                                if (gameActive) {
+                                    endGame(); // Properly end the current game
+                                }
+                                // Then start a new one after a short delay to allow state reset
+                                setTimeout(startGame, 100);
+                            }
+                        };
+                    }
+                },
+                // Dice Game
+                 dice: {
+                    id: 'dice',
+                    title: 'Guess & Dice',
+                    description: 'Guess numbers and roll dice',
+                    icon: '🎲',
+                    init(container) {
+                        let totalScore = scores.dice?.totalScore || 0;
+                        let rolls = scores.dice?.rolls || 0;
+                        let correctGuesses = scores.dice?.correctGuesses || 0;
+
+                        const gameElement = create('div', { className: 'dice-game' });
+                        const displayElement = create('div', { className: 'dice-display' });
+                        const guessLabel = create('label', { className: 'form-label', textContent: 'Guess (1-6):' });
+                        const guessInput = create('input', { className: 'form-control dice-guess-input', type: 'number', min: '1', max: '6', value: '1' });
+                        const rollButton = create('button', { className: 'btn btn-primary', textContent: 'Roll Dice' });
+                        const resultElement = create('div', { className: 'dice-result', textContent: 'Roll the dice!' });
+                        const statsElement = create('div', { className: 'dice-stats', textContent: `Total Score: ${totalScore} | Rolls: ${rolls} | Correct: ${correctGuesses}` });
+
+                        const diceContainer = create('div', { className: 'dice-rolls' });
+                        const dice1 = create('div', { className: 'dice', textContent: '?' });
+                        const dice2 = create('div', { className: 'dice', textContent: '?' });
+                        diceContainer.append(dice1, dice2);
+
+                        rollButton.addEventListener('click', rollDice);
+                        displayElement.append(guessLabel, guessInput, diceContainer, rollButton, resultElement, statsElement);
+                        gameElement.appendChild(displayElement);
+                        container.appendChild(gameElement);
+
+                        function rollDice() {
+                            const userGuess = parseInt(guessInput.value);
+                            if (isNaN(userGuess) || userGuess < 1 || userGuess > 6) {
+                                resultElement.textContent = 'Please enter a valid guess (1-6).';
+                                return;
+                            }
+
+                            const roll1 = Math.floor(Math.random() * 6) + 1;
+                            const roll2 = Math.floor(Math.random() * 6) + 1;
+                            const sum = roll1 + roll2;
+
+                            dice1.textContent = roll1;
+                            dice2.textContent = roll2;
+
+                            rolls++;
+                            let roundScore = 0;
+                            let message = `You rolled ${sum}. `;
+
+                            if (userGuess === roll1 || userGuess === roll2) {
+                                roundScore += 10;
+                                correctGuesses++;
+                                message += 'Correct guess! +10 points. ';
+                                checkAchievement('lucky_roller', correctGuesses >= 10, { correct: correctGuesses });
+                                SoundManager.play('success');
+                            } else {
+                                message += 'No match. ';
+                                SoundManager.play('click');
+                            }
+
+                            if (sum === 7) {
+                                roundScore += 5;
+                                message += 'Lucky 7! +5 points.';
+                                SoundManager.play('success');
+                            }
+
+                            totalScore += roundScore;
+                            resultElement.textContent = message;
+                            statsElement.textContent = `Total Score: ${totalScore} | Rolls: ${rolls} | Correct: ${correctGuesses}`;
+
+                            updateScores('dice', { totalScore, rolls, correctGuesses });
+                        }
+
+                        return {
+                            destroy() {
+                                container.innerHTML = '';
+                            },
+                            pause() {
+                                // Pause logic if needed
+                            },
+                            resume() {
+                                // Resume logic if needed
+                            },
+                            restart() {
+                                guessInput.value = '1';
+                                dice1.textContent = '?';
+                                dice2.textContent = '?';
+                                resultElement.textContent = 'Roll the dice!';
+                                SoundManager.play('click');
+                            }
+                        };
+                    }
+                },
+                // Placeholder for Runner (can be expanded)
+                runner: {
+                    id: 'runner',
+                    title: 'Shaikh\'s Runner',
+                    description: 'Endless runner game',
+                    icon: '🏃',
+                    init(container) {
+                        const gameElement = create('div', { className: 'runner-game' });
+                        const canvas = create('canvas', {
+                            className: 'runner-canvas',
+                            width: 600,
+                            height: 200
+                        });
+                        const ctx = canvas.getContext('2d');
+                        const startButton = create('button', { className: 'btn btn-primary', textContent: 'Start Runner' });
+                        startButton.addEventListener('click', () => {
+                             // Simple animation demo
+                            let x = 0;
+                            function animate() {
+                                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-text');
+                                ctx.font = '20px sans-serif';
+                                ctx.fillText('🏃 Runner Game Placeholder', 10, 50);
+                                ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-secondary');
+                                ctx.fillRect(x, 150, 50, 50); // Simple moving block
+                                x = (x + 2) % canvas.width;
+                                requestAnimationFrame(animate);
+                            }
+                            animate();
+                            startButton.disabled = true;
+                            startButton.textContent = 'Running...';
+                        });
+                        gameElement.append(canvas, startButton);
+                        container.appendChild(gameElement);
+                        return {
+                            destroy() {
+                                container.innerHTML = '';
+                            },
+                            pause() {
+                                // Pause logic
+                            },
+                            resume() {
+                                // Resume logic
+                            },
+                            restart() {
+                                // Restart logic
+                            }
+                        };
+                    }
+                }
+            };
+            // Register games
+            function registerGames() {
+                for (const gameId in GameModules) {
+                    gamesRegistry[gameId] = GameModules[gameId];
+                }
+            }
+            // Create game preview
+            function createGamePreview(gameId) {
+                const preview = create('div', { className: 'game-preview' });
+                switch (gameId) {
+                    case 'snake':
+                        preview.innerHTML = '<p>🐍 Moving snake preview</p>';
+                        break;
+                    case 'tictactoe':
+                        preview.innerHTML = '<p>⭕ XO animation</p>';
+                        break;
+                    case 'memory':
+                        preview.innerHTML = '<p>🎴 Flipping cards</p>';
+                        break;
+                    case 'reaction':
+                        preview.innerHTML = '<p>⏱️ Pulsing circle</p>';
+                        break;
+                    case 'whack':
+                        preview.innerHTML = '<p>🔨 Popping shapes</p>';
+                        break;
+                    case 'dice':
+                        preview.innerHTML = '<p>🎲 Rolling dice</p>';
+                        break;
+                    case 'runner':
+                        preview.innerHTML = '<p>🏃 Running character</p>';
+                        break;
+                }
+                return preview;
+            }
+            // Render game tiles
+            function renderGameTiles() {
+                gamesGrid.innerHTML = '';
+                for (const gameId in gamesRegistry) {
+                    const game = gamesRegistry[gameId];
+                    const tile = create('div', {
+                        className: 'game-tile',
+                        tabIndex: 0,
+                        onclick: () => openGame(gameId),
+                        onkeydown: (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                openGame(gameId);
+                            }
+                        }
+                    }, [
+                        create('div', {
+                            className: 'game-icon',
+                            innerHTML: game.icon
+                        }),
+                        create('h3', { className: 'game-title', textContent: game.title }),
+                        create('p', { className: 'game-description', textContent: game.description }),
+                        createGamePreview(gameId)
+                    ]);
+                    gamesGrid.appendChild(tile);
+                    addRippleEffect(tile);
+                }
+            }
+            // Open a game
+            function openGame(gameId) {
+                const game = gamesRegistry[gameId];
+                if (!game) return;
+                // Close any active game
+                if (activeGame) {
+                    activeGame.destroy();
+                    activeGame = null;
+                }
+                // Update UI
+                currentGameTitle.textContent = game.title;
+                gameContent.innerHTML = '';
+                gameView.classList.add('active');
+                // Initialize the game
+                activeGame = game.init(gameContent);
+                // Set focus to game content for accessibility
+                gameContent.setAttribute('tabindex', '-1');
+                gameContent.focus();
+                SoundManager.play('click');
+            }
+            // Close the current game
+            function closeGame() {
+                if (activeGame) {
+                    activeGame.destroy();
+                    activeGame = null;
+                }
+                gameView.classList.remove('active');
+                // Set focus back to the game grid
+                gamesGrid.setAttribute('tabindex', '-1');
+                gamesGrid.focus();
+                gamesGrid.removeAttribute('tabindex');
+                SoundManager.play('click');
+            }
+            // Initialize the application
+            function init() {
+                // Initialize systems
+                SoundManager.init();
+                loadData();
+                applySettings(); // Apply theme and other settings on load
+                // Register games and render UI
+                registerGames();
+                renderGameTiles();
+                // Add ripple effects to buttons
+                qsa('button').forEach(button => {
+                    if (!button.classList.contains('tictactoe-cell') && !button.classList.contains('memory-card') && !button.classList.contains('whack-doodle')) { // Avoid adding to game elements
+                         addRippleEffect(button);
+                    }
+                });
+                // Set up event listeners
+                backButton.addEventListener('click', closeGame);
+                soundToggle.addEventListener('click', () => {
+                    settings.soundOn = !settings.soundOn;
+                    applySettings();
+                    saveData();
+                    SoundManager.play('click');
+                });
+                themeToggle.addEventListener('click', () => {
+                    settings.theme = settings.theme === 'light' ? 'dark' : 'light';
+                    applySettings();
+                    saveData();
+                    SoundManager.play('click');
+                });
+                settingsButton.addEventListener('click', () => {
+                    settingsModal.classList.add('active');
+                    SoundManager.play('click');
+                });
+                profileButton.addEventListener('click', () => {
+                    profileModal.classList.add('active');
+                    SoundManager.play('click');
+                    // Populate achievements and scores
+                    const achievementsList = qs('#achievementsList');
+                    const highScoresList = qs('#highScoresList');
+                    achievementsList.innerHTML = '';
+                    highScoresList.innerHTML = '';
+                    // Display achievements
+                    let hasAchievements = false;
+                    for (const [id, achievement] of Object.entries(achievements)) {
+                        if (achievement.unlocked) {
+                            hasAchievements = true;
+                            const achievementEl = create('div', {
+                                className: 'achievement-item',
+                                innerHTML: `
+                                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                        <span style="font-size: 24px; margin-right: 10px;">🏆</span>
+                                        <div>
+                                            <strong>${id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</strong>
+                                            <p>Unlocked on ${new Date(achievement.timestamp).toLocaleDateString()}</p>
+                                        </div>
+                                    </div>
+                                `
+                            });
+                            achievementsList.appendChild(achievementEl);
+                        }
+                    }
+                    if (!hasAchievements) {
+                        achievementsList.innerHTML = '<p>No achievements yet. Start playing!</p>';
+                    }
+
+                    // Display high scores
+                    let hasScores = false;
+                    for (const [gameId, gameScores] of Object.entries(scores)) {
+                        hasScores = true;
+                        const scoreEl = create('div', {
+                            className: 'score-item',
+                            innerHTML: `
+                                <h5>${gameId.replace(/\b\w/g, l => l.toUpperCase())}</h5>
+                                <pre style="white-space: pre-wrap;">${JSON.stringify(gameScores, null, 2)}</pre>
+                            `
+                        });
+                        highScoresList.appendChild(scoreEl);
+                    }
+                     if (!hasScores) {
+                        highScoresList.innerHTML = '<p>No scores recorded yet.</p>';
+                    }
+                });
+                gamePause.addEventListener('click', () => {
+                    if (activeGame) {
+                        activeGame.pause();
+                        SoundManager.play('click');
+                    }
+                });
+                gameRestart.addEventListener('click', () => {
+                    if (activeGame) {
+                        activeGame.restart();
+                        SoundManager.play('click');
+                    }
+                });
+                gameInfo.addEventListener('click', () => {
+                    Toast.show('Game information would appear here', 'info');
+                    SoundManager.play('click');
+                });
+                closeSettings.addEventListener('click', () => {
+                    settingsModal.classList.remove('active');
+                    SoundManager.play('click');
+                });
+                closeProfile.addEventListener('click', () => {
+                    profileModal.classList.remove('active');
+                    SoundManager.play('click');
+                });
+                closeOnboarding.addEventListener('click', () => {
+                    onboardingModal.classList.remove('active');
+                    SoundManager.play('click');
+                });
+                startPlaying.addEventListener('click', () => {
+                    onboardingModal.classList.remove('active');
+                    SoundManager.play('click');
+                });
+                saveSettings.addEventListener('click', () => {
+                    settings.soundOn = soundToggleSetting.checked;
+                    settings.volume = parseFloat(volumeSlider.value);
+                    settings.theme = themeSelect.value;
+                    settings.showOnboarding = onboardingToggle.checked;
+                    applySettings();
+                    saveData();
+                    settingsModal.classList.remove('active');
+                    Toast.show('Settings saved', 'success');
+                    SoundManager.play('success');
+                });
+                resetProgress.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                        Storage.remove('scores');
+                        Storage.remove('achievements');
+                        scores = {};
+                        achievements = {};
+                        Toast.show('Progress reset', 'info');
+                        SoundManager.play('success');
+                    }
+                });
+                gameSearch.addEventListener('input', () => {
+                    const searchTerm = gameSearch.value.toLowerCase();
+                    const tiles = qsa('.game-tile');
+                    tiles.forEach(tile => {
+                        const title = tile.querySelector('.game-title').textContent.toLowerCase();
+                        const description = tile.querySelector('.game-description').textContent.toLowerCase();
+                        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                            tile.style.display = 'flex';
+                        } else {
+                            tile.style.display = 'none';
+                        }
+                    });
+                });
+                // Handle visibility change to pause games
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && activeGame && activeGame.pause) {
+                        activeGame.pause();
+                    } else if (!document.hidden && activeGame && activeGame.resume) {
+                         activeGame.resume();
+                    }
+                });
+                // Check for reduced motion preference
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (reducedMotion) {
+                    document.documentElement.style.setProperty('--transition-fast', '0.01s');
+                    document.documentElement.style.setProperty('--transition-normal', '0.01s');
+                    document.documentElement.style.setProperty('--transition-slow', '0.01s');
+                }
+                // Check onboarding
+                checkOnboarding();
+                // Self-test
+                selfTest();
+            }
+            // Self-test function
+            function selfTest() {
+                const tests = {
+                    localStorage: () => {
+                        try {
+                            localStorage.setItem('test', 'test');
+                            localStorage.removeItem('test');
+                            return true;
+                        } catch (e) {
+                            return false;
+                        }
+                    },
+                    canvas: () => {
+                        return !!document.createElement('canvas').getContext;
+                    },
+                    webAudio: () => {
+                        return !!(window.AudioContext || window.webkitAudioContext);
+                    }
+                };
+                let allPassed = true;
+                const results = [];
+                for (const [name, test] of Object.entries(tests)) {
+                    const passed = test();
+                    allPassed = allPassed && passed;
+                    results.push(`${name}: ${passed ? 'PASS' : 'FAIL'}`);
+                    if (!passed) {
+                        console.warn(`Self-test failed: ${name}`);
+                    }
+                }
+                if (!allPassed) {
+                    Toast.show('Some features may not work correctly in your browser', 'error', 5000);
+                }
+            }
+            // Development check for game modules
+            function devCheck() {
+                console.log('Checking game modules...');
+                for (const [id, module] of Object.entries(GameModules)) {
+                    console.group(`Game: ${id}`);
+                    const requiredMethods = ['init', 'destroy', 'pause', 'resume', 'restart'];
+                    const missingMethods = [];
+                    for (const method of requiredMethods) {
+                        if (typeof module[method] !== 'function') {
+                            missingMethods.push(method);
+                        }
+                    }
+                    if (missingMethods.length > 0) {
+                        console.warn(`Missing methods: ${missingMethods.join(', ')}`);
+                    } else {
+                        console.log('✓ All required methods present');
+                    }
+                    console.groupEnd();
+                }
+            }
+            // Start the application
+            init();
+            // Run development check
+            devCheck();
+        })();
+    </script>
 </body>
 </html>
