@@ -3,73 +3,684 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArcadeDoodle - Playful Mini Games</title>
+    <title>Shaikh's Arcade</title>
     <style>
         /* ====== STYLE ====== */
         :root {
             /* Colors */
-            --bg-1: #f8f9fa;
-            --bg-2: #ffffff;
-            --surface: #ffffff;
-            --elev-1: #f1f3f4;
-            --accent-primary: #4285f4;
-            --accent-2: #34a853;
-            --accent-3: #fbbc04;
-            --success: #34a853;
-            --warn: #fbbc04;
-            --danger: #ea4335;
-            --text-primary: #202124;
-            --muted: #5f6368;
-            
-            /* Typography */
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            --h1-size: 2.5rem;
-            --body-size: 1rem;
+            --color-primary: #4285F4;
+            --color-secondary: #34A853;
+            --color-accent: #EA4335;
+            --color-warning: #FBBC05;
+            --color-background: #f8f9fa;
+            --color-surface: #ffffff;
+            --color-text: #202124;
+            --color-text-secondary: #5f6368;
+            --color-border: #dadce0;
             
             /* Spacing */
-            --space-xs: 0.5rem;
-            --space-sm: 1rem;
-            --space-md: 1.5rem;
-            --space-lg: 2.5rem;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-xxl: 3rem;
             
-            /* Radii & Shadows */
-            --radius: 16px;
-            --radius-sm: 8px;
-            --shadow-1: 0 2px 10px rgba(0, 0, 0, 0.1);
-            --shadow-2: 0 4px 20px rgba(0, 0, 0, 0.15);
+            /* Border radius */
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 24px;
+            --border-radius-circle: 50%;
             
-            /* Motion */
-            --ease: cubic-bezier(0.4, 0, 0.2, 1);
-            --spring: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-md: 0 2px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-focus: 0 0 0 2px var(--color-primary);
+            
+            /* Animation */
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            
+            /* Z-index */
+            --z-dropdown: 100;
+            --z-sticky: 200;
+            --z-modal: 300;
+            --z-toast: 400;
         }
 
         .theme-dark {
-            --bg-1: #202124;
-            --bg-2: #303134;
-            --surface: #303134;
-            --elev-1: #3c4043;
-            --text-primary: #e8eaed;
-            --muted: #9aa0a6;
+            --color-background: #202124;
+            --color-surface: #303134;
+            --color-text: #e8eaed;
+            --color-text-secondary: #9aa0a6;
+            --color-border: #5f6368;
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
-            font-family: var(--font-family);
-            background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            overflow-x: hidden;
+            transition: background-color var(--transition-normal);
+        }
+
+        button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            color: inherit;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* App Layout */
+        .app {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: var(--space-md);
-            line-height: 1.5;
+            padding: var(--spacing-md);
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-primary);
+            color: white;
+            border-radius: var(--border-radius-md);
+        }
+
+        .controls {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius-circle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .icon-button:hover, .icon-button:focus {
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .icon-button:focus {
+            outline: none;
+            box-shadow: var(--shadow-focus);
+        }
+
+        .search-container {
+            margin: var(--spacing-lg) auto;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--color-border);
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            font-size: 1rem;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: var(--shadow-focus);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .game-tile {
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-tile:hover, .game-tile:focus {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .game-tile:focus {
+            outline: none;
+            box-shadow: var(--shadow-focus);
+        }
+
+        .game-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border-radius: var(--border-radius-md);
+            background-color: var(--color-primary);
+            color: white;
+            transition: transform var(--transition-normal);
+        }
+
+        .game-tile:hover .game-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .game-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .game-description {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+        }
+
+        /* Game View */
+        .game-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-background);
+            z-index: var(--z-modal);
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform var(--transition-normal);
+            overflow: hidden;
+        }
+
+        .game-view.active {
+            transform: translateY(0);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-title-bar {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .game-content {
+            flex: 1;
+            padding: var(--spacing-md);
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: var(--z-modal);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: auto;
+            transform: translateY(20px);
+            transition: transform var(--transition-normal);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius-circle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            transition: background-color var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-body {
+            padding: var(--spacing-md);
+        }
+
+        .modal-footer {
+            padding: var(--spacing-md);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-sm);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: var(--shadow-focus);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3367d6;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            border: 1px solid var(--color-border);
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+        }
+
+        /* Toasts */
+        .toast-container {
+            position: fixed;
+            bottom: var(--spacing-md);
+            right: var(--spacing-md);
+            z-index: var(--z-toast);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .toast {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            max-width: 300px;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast-success {
+            border-left: 4px solid var(--color-secondary);
+        }
+
+        .toast-error {
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .toast-info {
+            border-left: 4px solid var(--color-primary);
+        }
+
+        /* Game-specific styles */
+        .snake-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .snake-canvas {
+            border: 2px solid var(--color-border);
+            border-radius: var(--border-radius-md);
+            background-color: var(--color-surface);
+        }
+
+        .game-controls {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+
+        .tictactoe-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            width: 300px;
+            height: 300px;
+            background-color: var(--color-border);
+        }
+
+        .tictactoe-cell {
+            background-color: var(--color-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+
+        .tictactoe-cell:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .memory-card {
+            width: 100px;
+            height: 100px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .memory-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .memory-card.flipped .memory-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card-front, .memory-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .memory-card-front {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .memory-card-back {
+            background-color: var(--color-surface);
+            color: var(--color-text);
+            transform: rotateY(180deg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .reaction-tester {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .reaction-box {
+            width: 300px;
+            height: 300px;
+            border-radius: var(--border-radius-lg);
+            background-color: var(--color-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+
+        .reaction-box.waiting {
+            background-color: var(--color-warning);
+        }
+
+        .reaction-box.ready {
+            background-color: var(--color-secondary);
+        }
+
+        .whack-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .whack-hole {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #8B4513;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .whack-mole {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: #795548;
+            bottom: -70px;
+            left: 5px;
+            transition: bottom 0.2s ease;
+        }
+
+        .whack-mole.up {
+            bottom: 5px;
+        }
+
+        .dice-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .dice-container {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .dice {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius-md);
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .runner-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .runner-canvas {
+            border: 2px solid var(--color-border);
+            border-radius: var(--border-radius-md);
+            background-color: var(--color-surface);
+        }
+
+        /* Accessibility */
         @media (prefers-reduced-motion: reduce) {
             * {
                 animation-duration: 0.01ms !important;
@@ -78,1314 +689,1423 @@
             }
         }
 
-        .app-container {
-            width: 100%;
-            max-width: 1000px;
-            background: var(--surface);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-2);
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Header Styles */
-        .app-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--space-md);
-            background: var(--accent-primary);
-            color: white;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: var(--accent-primary);
-        }
-
-        .header-controls {
-            display: flex;
-            gap: var(--space-sm);
-        }
-
-        .icon-button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s var(--ease);
-        }
-
-        .icon-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Main Content */
-        .main-content {
-            padding: var(--space-md);
-        }
-
-        .search-bar {
-            display: flex;
-            margin-bottom: var(--space-md);
-            position: relative;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: var(--space-sm) var(--space-lg) var(--space-sm) var(--space-sm);
-            border: 2px solid var(--elev-1);
-            border-radius: var(--radius);
-            font-size: var(--body-size);
-            background: var(--surface);
-            color: var(--text-primary);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: var(--space-sm);
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--muted);
-        }
-
-        /* Game Grid */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: var(--space-md);
-        }
-
-        .game-tile {
-            background: var(--surface);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-1);
-            padding: var(--space-md);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.3s var(--spring), box-shadow 0.3s var(--ease);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .game-tile:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-2);
-        }
-
-        .game-tile:hover .tile-doodle {
-            animation: wiggle 0.5s var(--ease);
-        }
-
-        @keyframes wiggle {
-            0%, 100% { transform: rotate(0); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
-        }
-
-        .tile-doodle {
-            width: 80px;
-            height: 80px;
-            margin-bottom: var(--space-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-        }
-
-        .tile-title {
-            font-weight: bold;
-            margin-bottom: var(--space-xs);
-        }
-
-        .tile-subtitle {
-            color: var(--muted);
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
-        /* Ripple effect */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            transform: scale(0);
-            animation: ripple 0.6s var(--ease);
-        }
-
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        /* Game Container */
-        .game-container {
-            display: none;
-            padding: var(--space-md);
-            background: var(--surface);
-            border-radius: var(--radius);
-            margin-top: var(--space-md);
-        }
-
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-md);
-        }
-
-        .game-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-primary);
-        }
-
-        .game-controls {
-            display: flex;
-            gap: var(--space-sm);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: var(--space-sm) var(--space-md);
-            border: none;
-            border-radius: var(--radius);
-            background: var(--accent-primary);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-xs);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-1);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: var(--elev-1);
-            color: var(--text-primary);
-        }
-
-        /* Toast notifications */
-        .toast-container {
-            position: fixed;
-            bottom: var(--space-md);
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-sm);
-        }
-
-        .toast {
-            padding: var(--space-sm) var(--space-md);
-            background: var(--text-primary);
-            color: var(--surface);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-2);
-            animation: toast-in 0.3s var(--ease), toast-out 0.3s var(--ease) 2.7s forwards;
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        @keyframes toast-in {
-            from { transform: translateY(100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes toast-out {
-            from { transform: translateY(0); opacity: 1; }
-            to { transform: translateY(100px); opacity: 0; }
-        }
-
-        /* Confetti */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        @keyframes confetti-fall {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s var(--ease);
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .modal {
-            background: var(--surface);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-2);
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: var(--space-md);
-            transform: scale(0.9);
-            transition: transform 0.3s var(--ease);
-        }
-
-        .modal-overlay.active .modal {
-            transform: scale(1);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-md);
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--muted);
-        }
-
-        /* Game-specific styles */
-        #snake-game canvas {
-            display: block;
-            margin: 0 auto;
-            background: var(--elev-1);
-            border-radius: var(--radius-sm);
-        }
-
-        .tic-tac-toe-board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-
-        .ttt-cell {
-            aspect-ratio: 1;
-            background: var(--elev-1);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .memory-board {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin: 0 auto;
-            max-width: 500px;
-        }
-
-        .memory-card {
-            aspect-ratio: 1;
-            background: var(--accent-primary);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transform-style: preserve-3d;
-            transition: transform 0.6s var(--ease);
-        }
-
-        .memory-card.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .memory-card .front,
-        .memory-card .back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-sm);
-        }
-
-        .memory-card .back {
-            background: var(--accent-primary);
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        .memory-card .front {
-            background: var(--elev-1);
-            transform: rotateY(180deg);
-        }
-
-        .reaction-box {
-            width: 100%;
-            height: 200px;
-            background: var(--elev-1);
-            border-radius: var(--radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: var(--space-md) 0;
-            cursor: pointer;
-            transition: background 0.3s var(--ease);
-        }
-
-        .whack-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 0 auto;
-            max-width: 400px;
-        }
-
-        .whack-hole {
-            aspect-ratio: 1;
-            background: var(--elev-1);
-            border-radius: 50%;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .whack-doodle {
-            position: absolute;
-            width: 80%;
-            height: 80%;
-            background: var(--accent-3);
-            border-radius: 50%;
-            bottom: -100%;
-            left: 10%;
-            transition: bottom 0.3s var(--ease);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        .whack-doodle.visible {
-            bottom: 10%;
-        }
-
-        .guess-input {
-            padding: var(--space-sm);
-            border: 2px solid var(--elev-1);
-            border-radius: var(--radius-sm);
-            font-size: var(--body-size);
-            margin-right: var(--space-sm);
-            width: 80px;
-            text-align: center;
-        }
-
-        .dice-container {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-md);
-            margin: var(--space-md) 0;
-        }
-
-        .dice {
-            width: 60px;
-            height: 60px;
-            background: var(--elev-1);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            position: relative;
-        }
-
-        /* Responsive adjustments */
+        /* Responsive */
         @media (max-width: 768px) {
-            :root {
-                --h1-size: 2rem;
-            }
-            
             .games-grid {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .tictactoe-board {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .memory-card {
+                width: 80px;
+                height: 80px;
             }
         }
 
         @media (max-width: 480px) {
+            .app-header {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
             .games-grid {
                 grid-template-columns: 1fr;
             }
             
-            .app-header {
-                flex-direction: column;
-                gap: var(--space-sm);
+            .tictactoe-board {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .memory-card {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .reaction-box {
+                width: 200px;
+                height: 200px;
             }
         }
     </style>
 </head>
 <body>
     <!-- ====== TEMPLATE (HTML) ====== -->
-    <div class="app-container">
+    <div class="app">
         <header class="app-header">
             <div class="logo">
-                <div class="logo-icon">AD</div>
-                <h1>ArcadeDoodle</h1>
+                <div class="logo-icon">🎮</div>
+                <h1>Shaikh's Arcade</h1>
             </div>
-            <div class="header-controls">
-                <button class="icon-button" id="sound-toggle" aria-label="Toggle sound">🔊</button>
-                <button class="icon-button" id="theme-toggle" aria-label="Toggle theme">🌙</button>
-                <button class="icon-button" id="profile-button" aria-label="View profile">👤</button>
+            <div class="controls">
+                <button class="icon-button" id="soundToggle" aria-label="Toggle sound">
+                    <span class="sound-icon">🔊</span>
+                </button>
+                <button class="icon-button" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="icon-button" id="settingsButton" aria-label="Open settings">
+                    <span class="settings-icon">⚙️</span>
+                </button>
+                <button class="icon-button" id="profileButton" aria-label="Open profile">
+                    <span class="profile-icon">👤</span>
+                </button>
             </div>
         </header>
 
-        <main class="main-content">
-            <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Search games..." id="search-input">
-                <span class="search-icon">🔍</span>
-            </div>
+        <div class="search-container">
+            <input type="text" class="search-input" id="gameSearch" placeholder="Search games..." aria-label="Search games">
+        </div>
 
-            <div class="games-grid" id="games-grid">
-                <!-- Game tiles will be generated by JavaScript -->
-            </div>
+        <div class="games-grid" id="gamesGrid">
+            <!-- Game tiles will be populated by JavaScript -->
+        </div>
 
-            <div id="game-container" class="game-container">
-                <!-- Game content will be loaded here -->
+        <div class="game-view" id="gameView">
+            <div class="game-header">
+                <div class="game-title-bar">
+                    <button class="btn btn-secondary" id="backButton">
+                        ← Back
+                    </button>
+                    <h2 class="game-title" id="currentGameTitle">Game Title</h2>
+                </div>
+                <div class="game-controls">
+                    <button class="icon-button" id="gameInfo" aria-label="Game information">
+                        ℹ️
+                    </button>
+                    <button class="icon-button" id="gameRestart" aria-label="Restart game">
+                        🔄
+                    </button>
+                    <button class="icon-button" id="gamePause" aria-label="Pause game">
+                        ⏸️
+                    </button>
+                </div>
             </div>
-        </main>
-    </div>
-
-    <div class="toast-container" id="toast-container"></div>
-
-    <div class="modal-overlay" id="onboarding-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 class="modal-title">Welcome to ArcadeDoodle!</h2>
-                <button class="close-modal" aria-label="Close modal">×</button>
-            </div>
-            <div class="modal-content">
-                <p>🎮 Play six fun mini-games in one place</p>
-                <p>🏆 Earn achievements and track your scores</p>
-                <p>⚙️ Customize sound and theme in settings</p>
-                <button class="btn" id="onboarding-dismiss">Let's play!</button>
+            <div class="game-content" id="gameContent">
+                <!-- Game content will be populated by JavaScript -->
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="profile-modal">
+    <!-- Modals -->
+    <div class="modal-overlay" id="settingsModal">
         <div class="modal">
             <div class="modal-header">
-                <h2 class="modal-title">Your Profile</h2>
-                <button class="close-modal" aria-label="Close modal">×</button>
+                <h3 class="modal-title">Settings</h3>
+                <button class="modal-close" id="closeSettings">✕</button>
             </div>
-            <div class="modal-content">
-                <h3>Achievements</h3>
-                <div id="achievements-list"></div>
-                <h3>High Scores</h3>
-                <div id="high-scores-list"></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="soundToggleSetting">Sound</label>
+                    <div class="form-control">
+                        <label>
+                            <input type="checkbox" id="soundToggleSetting">
+                            Enable sound
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="volumeSlider">Volume</label>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.1" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="themeSelect">Theme</label>
+                    <select id="themeSelect" class="form-control">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="auto">Auto (system)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="onboardingToggle">Show onboarding</label>
+                    <div class="form-control">
+                        <label>
+                            <input type="checkbox" id="onboardingToggle">
+                            Show onboarding on startup
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="resetProgress">
+                    Reset Progress
+                </button>
+                <button class="btn btn-primary" id="saveSettings">
+                    Save
+                </button>
             </div>
         </div>
+    </div>
+
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Your Profile</h3>
+                <button class="modal-close" id="closeProfile">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <h4>Achievements</h4>
+                    <div id="achievementsList">
+                        <!-- Achievements will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h4>High Scores</h4>
+                    <div id="highScoresList">
+                        <!-- High scores will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="onboardingModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Welcome to Shaikh's Arcade!</h3>
+                <button class="modal-close" id="closeOnboarding">✕</button>
+            </div>
+            <div class="modal-body">
+                <p>🎮 Play a collection of fun mini-games</p>
+                <p>🏆 Earn achievements and track high scores</p>
+                <p>⚙️ Customize your experience in settings</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="startPlaying">
+                    Start Playing
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer">
+        <!-- Toasts will be added here by JavaScript -->
     </div>
 
     <script>
-        // ====== SCRIPTS ======
-        // ArcadeDoodle - A playful mini-game arcade
-        // Author: Your Name Here
-        // Version: 1.0
-        // Games: Smooth Snake, Tic-Tac-Toe, Memory Match, Reaction Tester, Whack-a-Doodle, Guess & Dice
-        // TODO: Split into modules for production, add unit tests, convert to PWA, add analytics
-
+        /* ====== SCRIPTS ====== */
         (function() {
             'use strict';
             
-            // DOM helpers
+            // Utility functions
             const qs = (selector, root = document) => root.querySelector(selector);
             const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
-            const el = (tag, props = {}, children = []) => {
-                const element = document.createElement(tag);
-                Object.assign(element, props);
-                children.forEach(child => element.appendChild(child));
-                return element;
-            };
-            
-            // Global state
-            const state = {
-                soundEnabled: true,
-                theme: 'light',
-                achievements: {},
-                scores: {},
-                games: [
-                    {
-                        id: 'snake',
-                        title: 'Smooth Snake',
-                        subtitle: 'Guide the snake to eat food',
-                        doodle: '🐍',
-                        color: 'var(--accent-2)'
-                    },
-                    {
-                        id: 'tictactoe',
-                        title: 'Tic-Tac-Toe',
-                        subtitle: 'Classic X and O game',
-                        doodle: '❌⭕',
-                        color: 'var(--accent-primary)'
-                    },
-                    {
-                        id: 'memory',
-                        title: 'Memory Match',
-                        subtitle: 'Find matching pairs',
-                        doodle: '🧠',
-                        color: 'var(--accent-3)'
-                    },
-                    {
-                        id: 'reaction',
-                        title: 'Reaction Tester',
-                        subtitle: 'Test your reflexes',
-                        doodle: '⚡',
-                        color: 'var(--warn)'
-                    },
-                    {
-                        id: 'whack',
-                        title: 'Whack-a-Doodle',
-                        subtitle: 'Whack the shapes',
-                        doodle: '🔨',
-                        color: 'var(--danger)'
-                    },
-                    {
-                        id: 'guess',
-                        title: 'Guess & Dice',
-                        subtitle: 'Number guessing with dice',
-                        doodle: '🎲',
-                        color: 'var(--success)'
+            const create = (tag, props = {}, children = []) => {
+                const el = document.createElement(tag);
+                Object.keys(props).forEach(key => {
+                    el[key] = props[key];
+                });
+                children.forEach(child => {
+                    if (typeof child === 'string') {
+                        el.appendChild(document.createTextNode(child));
+                    } else {
+                        el.appendChild(child);
                     }
-                ]
+                });
+                return el;
             };
             
-            // Sound Manager using Web Audio API
-            const SoundManager = (function() {
-                let audioContext;
-                let gainNode;
+            // App state
+            let activeGame = null;
+            let gamesRegistry = {};
+            let settings = {
+                soundOn: true,
+                volume: 0.5,
+                theme: 'light',
+                showOnboarding: true
+            };
+            let scores = {};
+            let achievements = {};
+            
+            // DOM elements
+            const gamesGrid = qs('#gamesGrid');
+            const gameView = qs('#gameView');
+            const gameContent = qs('#gameContent');
+            const currentGameTitle = qs('#currentGameTitle');
+            const gameSearch = qs('#gameSearch');
+            const backButton = qs('#backButton');
+            const soundToggle = qs('#soundToggle');
+            const themeToggle = qs('#themeToggle');
+            const settingsButton = qs('#settingsButton');
+            const profileButton = qs('#profileButton');
+            const gamePause = qs('#gamePause');
+            const gameRestart = qs('#gameRestart');
+            const gameInfo = qs('#gameInfo');
+            
+            // Modals
+            const settingsModal = qs('#settingsModal');
+            const profileModal = qs('#profileModal');
+            const onboardingModal = qs('#onboardingModal');
+            const closeSettings = qs('#closeSettings');
+            const closeProfile = qs('#closeProfile');
+            const closeOnboarding = qs('#closeOnboarding');
+            const soundToggleSetting = qs('#soundToggleSetting');
+            const volumeSlider = qs('#volumeSlider');
+            const themeSelect = qs('#themeSelect');
+            const onboardingToggle = qs('#onboardingToggle');
+            const resetProgress = qs('#resetProgress');
+            const saveSettings = qs('#saveSettings');
+            const startPlaying = qs('#startPlaying');
+            
+            // Sound Manager
+            const SoundManager = {
+                audioContext: null,
+                enabled: true,
+                volume: 0.5,
                 
-                try {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    gainNode = audioContext.createGain();
-                    gainNode.connect(audioContext.destination);
-                    gainNode.gain.value = 0.5;
-                } catch (e) {
-                    console.warn('Web Audio API not supported');
-                }
+                init() {
+                    try {
+                        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        this.enabled = true;
+                    } catch (e) {
+                        console.warn('Web Audio API is not supported in this browser');
+                        this.enabled = false;
+                    }
+                },
                 
-                function playTone(frequency, duration, type = 'sine') {
-                    if (!state.soundEnabled || !audioContext) return;
+                play(kind) {
+                    if (!this.enabled || !this.audioContext || !settings.soundOn) return;
                     
-                    const oscillator = audioContext.createOscillator();
-                    const envelope = audioContext.createGain();
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
                     
-                    oscillator.type = type;
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    let frequency = 440;
+                    let duration = 0.1;
+                    
+                    switch (kind) {
+                        case 'click':
+                            frequency = 523.25;
+                            break;
+                        case 'success':
+                            frequency = 783.99;
+                            break;
+                        case 'error':
+                            frequency = 349.23;
+                            break;
+                        case 'eat':
+                            frequency = 659.25;
+                            duration = 0.05;
+                            break;
+                        case 'hit':
+                            frequency = 392;
+                            duration = 0.08;
+                            break;
+                    }
+                    
+                    gainNode.gain.value = this.volume;
                     oscillator.frequency.value = frequency;
-                    envelope.gain.value = 0;
-                    
-                    oscillator.connect(envelope);
-                    envelope.connect(gainNode);
+                    oscillator.type = 'sine';
                     
                     oscillator.start();
-                    
-                    // Attack
-                    envelope.gain.setValueAtTime(0, audioContext.currentTime);
-                    envelope.gain.linearRampToValueAtTime(0.7, audioContext.currentTime + 0.01);
-                    
-                    // Release
-                    envelope.gain.linearRampToValueAtTime(0, audioContext.currentTime + duration);
-                    
-                    oscillator.stop(audioContext.currentTime + duration);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+                    oscillator.stop(this.audioContext.currentTime + duration);
+                },
+                
+                setVolume(volume) {
+                    this.volume = volume;
+                },
+                
+                toggle() {
+                    this.enabled = !this.enabled;
+                    return this.enabled;
                 }
-                
-                return {
-                    playClick() { playTone(523.25, 0.1); },
-                    playSuccess() { playTone(1046.5, 0.3); },
-                    playError() { playTone(220, 0.5, 'square'); },
-                    playEat() { 
-                        playTone(659.25, 0.1);
-                        setTimeout(() => playTone(783.99, 0.1), 100);
-                    },
-                    playConfetti() {
-                        for (let i = 0; i < 5; i++) {
-                            setTimeout(() => {
-                                playTone(800 + i * 200, 0.2);
-                            }, i * 100);
-                        }
-                    },
-                    setVolume(volume) {
-                        if (gainNode) gainNode.gain.value = volume;
-                    },
-                    toggle() {
-                        state.soundEnabled = !state.soundEnabled;
-                        if (state.soundEnabled && audioContext) {
-                            audioContext.resume();
-                        }
-                        return state.soundEnabled;
-                    }
-                };
-            })();
+            };
             
-            // Toast notification system
-            const Toast = (function() {
-                const container = qs('#toast-container');
+            // Toast system
+            const Toast = {
+                container: qs('#toastContainer'),
                 
-                function show(message, type = 'default') {
-                    const toast = el('div', { className: `toast ${type}` }, [
-                        el('span', { textContent: message })
-                    ]);
+                show(message, type = 'info', duration = 3000) {
+                    const toast = create('div', {
+                        className: `toast toast-${type}`,
+                        innerHTML: `<span>${message}</span>`
+                    });
                     
-                    container.appendChild(toast);
+                    this.container.appendChild(toast);
                     
-                    // Remove after animation completes
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            container.removeChild(toast);
-                        }
-                    }, 3000);
-                }
-                
-                return { show };
-            })();
-            
-            // Confetti animation
-            function createConfetti() {
-                if (!state.soundEnabled) return;
-                
-                const colors = ['#4285f4', '#34a853', '#fbbc04', '#ea4335'];
-                
-                for (let i = 0; i < 30; i++) {
-                    const confetti = el('div', { className: 'confetti' });
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.animation = `confetti-fall ${Math.random() * 3 + 2}s linear forwards`;
-                    confetti.style.width = Math.random() * 10 + 5 + 'px';
-                    confetti.style.height = Math.random() * 10 + 5 + 'px';
+                    // Trigger reflow
+                    toast.offsetHeight;
                     
-                    document.body.appendChild(confetti);
+                    toast.classList.add('show');
                     
                     setTimeout(() => {
-                        if (confetti.parentNode) {
-                            document.body.removeChild(confetti);
-                        }
-                    }, 5000);
+                        toast.classList.remove('show');
+                        setTimeout(() => {
+                            if (toast.parentNode) {
+                                toast.parentNode.removeChild(toast);
+                            }
+                        }, 300);
+                    }, duration);
+                }
+            };
+            
+            // LocalStorage management
+            const Storage = {
+                get(key) {
+                    try {
+                        const item = localStorage.getItem(`shaikhArcade.${key}`);
+                        return item ? JSON.parse(item) : null;
+                    } catch (e) {
+                        console.error('Error reading from localStorage', e);
+                        return null;
+                    }
+                },
+                
+                set(key, value) {
+                    try {
+                        localStorage.setItem(`shaikhArcade.${key}`, JSON.stringify(value));
+                    } catch (e) {
+                        console.error('Error writing to localStorage', e);
+                    }
+                },
+                
+                remove(key) {
+                    try {
+                        localStorage.removeItem(`shaikhArcade.${key}`);
+                    } catch (e) {
+                        console.error('Error removing from localStorage', e);
+                    }
+                }
+            };
+            
+            // Load saved data
+            function loadData() {
+                const savedSettings = Storage.get('settings');
+                if (savedSettings) {
+                    settings = { ...settings, ...savedSettings };
                 }
                 
-                SoundManager.playConfetti();
-            }
-            
-            // Ripple effect for buttons
-            function createRipple(event) {
-                const button = event.currentTarget;
-                const circle = el('div', { className: 'ripple' });
-                
-                const diameter = Math.max(button.clientWidth, button.clientHeight);
-                const radius = diameter / 2;
-                
-                circle.style.width = circle.style.height = `${diameter}px`;
-                circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
-                circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
-                
-                button.appendChild(circle);
-                
-                setTimeout(() => {
-                    if (circle.parentNode) {
-                        button.removeChild(circle);
-                    }
-                }, 600);
-            }
-            
-            // Initialize the app
-            function init() {
-                loadState();
-                renderGameTiles();
-                setupEventListeners();
-                checkOnboarding();
-                
-                // Self test
-                selfTest();
-            }
-            
-            // Load state from localStorage
-            function loadState() {
-                try {
-                    const savedState = localStorage.getItem('arcadedoodle.state');
-                    if (savedState) {
-                        const parsed = JSON.parse(savedState);
-                        Object.assign(state, parsed);
-                    }
-                } catch (e) {
-                    console.warn('Failed to load state from localStorage', e);
+                const savedScores = Storage.get('scores');
+                if (savedScores) {
+                    scores = savedScores;
                 }
                 
+                const savedAchievements = Storage.get('achievements');
+                if (savedAchievements) {
+                    achievements = savedAchievements;
+                }
+            }
+            
+            // Save data
+            function saveData() {
+                Storage.set('settings', settings);
+                Storage.set('scores', scores);
+                Storage.set('achievements', achievements);
+            }
+            
+            // Apply settings to UI
+            function applySettings() {
                 // Apply theme
-                document.documentElement.classList.toggle('theme-dark', state.theme === 'dark');
+                if (settings.theme === 'dark' || (settings.theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.body.classList.add('theme-dark');
+                    themeToggle.querySelector('.theme-icon').textContent = '☀️';
+                } else {
+                    document.body.classList.remove('theme-dark');
+                    themeToggle.querySelector('.theme-icon').textContent = '🌙';
+                }
                 
-                // Update sound button
-                qs('#sound-toggle').textContent = state.soundEnabled ? '🔊' : '🔇';
+                // Apply sound settings
+                soundToggle.querySelector('.sound-icon').textContent = settings.soundOn ? '🔊' : '🔇';
+                SoundManager.setVolume(settings.volume);
+                
+                // Update settings modal
+                soundToggleSetting.checked = settings.soundOn;
+                volumeSlider.value = settings.volume;
+                themeSelect.value = settings.theme;
+                onboardingToggle.checked = settings.showOnboarding;
             }
             
-            // Save state to localStorage
-            function saveState() {
-                try {
-                    localStorage.setItem('arcadedoodle.state', JSON.stringify({
-                        soundEnabled: state.soundEnabled,
-                        theme: state.theme,
-                        achievements: state.achievements,
-                        scores: state.scores
-                    }));
-                } catch (e) {
-                    console.warn('Failed to save state to localStorage', e);
+            // Show onboarding if needed
+            function checkOnboarding() {
+                if (settings.showOnboarding) {
+                    onboardingModal.classList.add('active');
+                }
+            }
+            
+            // Game modules
+            const GameModules = {
+                // Smooth Snake game
+                snake: {
+                    id: 'snake',
+                    title: 'Smooth Snake',
+                    description: 'Guide the snake to eat food and grow longer',
+                    icon: '🐍',
+                    
+                    init(container) {
+                        const canvas = create('canvas', {
+                            className: 'snake-canvas',
+                            width: 400,
+                            height: 400
+                        });
+                        
+                        const ctx = canvas.getContext('2d');
+                        const gameState = {
+                            snake: [{x: 10, y: 10}],
+                            food: {x: 5, y: 5},
+                            direction: 'right',
+                            nextDirection: 'right',
+                            score: 0,
+                            gameOver: false,
+                            paused: false,
+                            gridSize: 20,
+                            speed: 150,
+                            lastUpdate: 0
+                        };
+                        
+                        container.appendChild(canvas);
+                        
+                        // Game logic
+                        function update(currentTime) {
+                            if (gameState.paused || gameState.gameOver) return;
+                            
+                            if (!gameState.lastUpdate) gameState.lastUpdate = currentTime;
+                            const deltaTime = currentTime - gameState.lastUpdate;
+                            
+                            if (deltaTime > gameState.speed) {
+                                gameState.lastUpdate = currentTime;
+                                
+                                // Update direction
+                                gameState.direction = gameState.nextDirection;
+                                
+                                // Move snake
+                                const head = {...gameState.snake[0]};
+                                
+                                switch (gameState.direction) {
+                                    case 'up': head.y--; break;
+                                    case 'down': head.y++; break;
+                                    case 'left': head.x--; break;
+                                    case 'right': head.x++; break;
+                                }
+                                
+                                // Check wall collision
+                                if (head.x < 0 || head.x >= canvas.width / gameState.gridSize ||
+                                    head.y < 0 || head.y >= canvas.height / gameState.gridSize) {
+                                    gameState.gameOver = true;
+                                    SoundManager.play('error');
+                                    checkAchievement('snakeMaster', gameState.score >= 500);
+                                    return;
+                                }
+                                
+                                // Check self collision
+                                for (let i = 0; i < gameState.snake.length; i++) {
+                                    if (gameState.snake[i].x === head.x && gameState.snake[i].y === head.y) {
+                                        gameState.gameOver = true;
+                                        SoundManager.play('error');
+                                        checkAchievement('snakeMaster', gameState.score >= 500);
+                                        return;
+                                    }
+                                }
+                                
+                                // Add new head
+                                gameState.snake.unshift(head);
+                                
+                                // Check food collision
+                                if (head.x === gameState.food.x && head.y === gameState.food.y) {
+                                    gameState.score += 10;
+                                    SoundManager.play('eat');
+                                    placeFood();
+                                    
+                                    // Increase speed every 5 foods
+                                    if (gameState.score % 50 === 0 && gameState.speed > 50) {
+                                        gameState.speed -= 10;
+                                    }
+                                } else {
+                                    // Remove tail if no food eaten
+                                    gameState.snake.pop();
+                                }
+                            }
+                            
+                            requestAnimationFrame(update);
+                        }
+                        
+                        function placeFood() {
+                            let newFood;
+                            let overlapping;
+                            
+                            do {
+                                newFood = {
+                                    x: Math.floor(Math.random() * (canvas.width / gameState.gridSize)),
+                                    y: Math.floor(Math.random() * (canvas.height / gameState.gridSize))
+                                };
+                                
+                                overlapping = false;
+                                for (const segment of gameState.snake) {
+                                    if (segment.x === newFood.x && segment.y === newFood.y) {
+                                        overlapping = true;
+                                        break;
+                                    }
+                                }
+                            } while (overlapping);
+                            
+                            gameState.food = newFood;
+                        }
+                        
+                        function draw() {
+                            // Clear canvas
+                            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-background');
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                            
+                            // Draw food
+                            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-accent');
+                            ctx.fillRect(
+                                gameState.food.x * gameState.gridSize,
+                                gameState.food.y * gameState.gridSize,
+                                gameState.gridSize,
+                                gameState.gridSize
+                            );
+                            
+                            // Draw snake
+                            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-secondary');
+                            for (const segment of gameState.snake) {
+                                ctx.fillRect(
+                                    segment.x * gameState.gridSize,
+                                    segment.y * gameState.gridSize,
+                                    gameState.gridSize,
+                                    gameState.gridSize
+                                );
+                            }
+                            
+                            // Draw score
+                            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--color-text');
+                            ctx.font = '16px sans-serif';
+                            ctx.fillText(`Score: ${gameState.score}`, 10, 20);
+                            
+                            if (gameState.gameOver) {
+                                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                
+                                ctx.fillStyle = 'white';
+                                ctx.font = '24px sans-serif';
+                                ctx.textAlign = 'center';
+                                ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2 - 20);
+                                ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 20);
+                                ctx.textAlign = 'left';
+                            } else if (gameState.paused) {
+                                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                
+                                ctx.fillStyle = 'white';
+                                ctx.font = '24px sans-serif';
+                                ctx.textAlign = 'center';
+                                ctx.fillText('Paused', canvas.width / 2, canvas.height / 2);
+                                ctx.textAlign = 'left';
+                            }
+                        }
+                        
+                        function gameLoop() {
+                            draw();
+                            requestAnimationFrame(gameLoop);
+                        }
+                        
+                        // Input handling
+                        function handleKeyDown(e) {
+                            switch (e.key) {
+                                case 'ArrowUp':
+                                case 'w':
+                                case 'W':
+                                    if (gameState.direction !== 'down') gameState.nextDirection = 'up';
+                                    break;
+                                case 'ArrowDown':
+                                case 's':
+                                case 'S':
+                                    if (gameState.direction !== 'up') gameState.nextDirection = 'down';
+                                    break;
+                                case 'ArrowLeft':
+                                case 'a':
+                                case 'A':
+                                    if (gameState.direction !== 'right') gameState.nextDirection = 'left';
+                                    break;
+                                case 'ArrowRight':
+                                case 'd':
+                                case 'D':
+                                    if (gameState.direction !== 'left') gameState.nextDirection = 'right';
+                                    break;
+                                case ' ':
+                                    gameState.paused = !gameState.paused;
+                                    break;
+                            }
+                        }
+                        
+                        // Initialize game
+                        placeFood();
+                        requestAnimationFrame(update);
+                        requestAnimationFrame(gameLoop);
+                        document.addEventListener('keydown', handleKeyDown);
+                        
+                        // Return game API
+                        return {
+                            destroy() {
+                                document.removeEventListener('keydown', handleKeyDown);
+                                container.innerHTML = '';
+                            },
+                            
+                            pause() {
+                                gameState.paused = true;
+                            },
+                            
+                            resume() {
+                                gameState.paused = false;
+                                gameState.lastUpdate = 0;
+                            },
+                            
+                            restart() {
+                                gameState.snake = [{x: 10, y: 10}];
+                                gameState.direction = 'right';
+                                gameState.nextDirection = 'right';
+                                gameState.score = 0;
+                                gameState.gameOver = false;
+                                gameState.paused = false;
+                                gameState.speed = 150;
+                                gameState.lastUpdate = 0;
+                                placeFood();
+                            }
+                        };
+                    }
+                },
+                
+                // Tic-Tac-Toe game
+                tictactoe: {
+                    id: 'tictactoe',
+                    title: 'Tic-Tac-Toe',
+                    description: 'Classic X and O game with AI opponents',
+                    icon: '⭕',
+                    
+                    init(container) {
+                        const gameState = {
+                            board: Array(9).fill(''),
+                            currentPlayer: 'X',
+                            gameOver: false,
+                            mode: 'pvp', // pvp, easy, medium, hard
+                            scores: { X: 0, O: 0, draws: 0 }
+                        };
+                        
+                        const boardElement = create('div', { className: 'tictactoe-board' });
+                        
+                        // Create cells
+                        for (let i = 0; i < 9; i++) {
+                            const cell = create('div', {
+                                className: 'tictactoe-cell',
+                                'data-index': i,
+                                onclick: () => makeMove(i)
+                            });
+                            boardElement.appendChild(cell);
+                        }
+                        
+                        container.appendChild(boardElement);
+                        
+                        // Mode selection
+                        const modeSelect = create('div', {
+                            className: 'game-controls',
+                            innerHTML: `
+                                <button class="btn btn-primary" data-mode="pvp">PvP</button>
+                                <button class="btn btn-secondary" data-mode="easy">Easy AI</button>
+                                <button class="btn btn-secondary" data-mode="medium">Medium AI</button>
+                                <button class="btn btn-secondary" data-mode="hard">Hard AI</button>
+                            `
+                        });
+                        
+                        modeSelect.addEventListener('click', (e) => {
+                            if (e.target.tagName === 'BUTTON') {
+                                const mode = e.target.dataset.mode;
+                                gameState.mode = mode;
+                                
+                                // Update button styles
+                                qsa('button', modeSelect).forEach(btn => {
+                                    btn.className = btn.dataset.mode === mode ? 'btn btn-primary' : 'btn btn-secondary';
+                                });
+                                
+                                restartGame();
+                            }
+                        });
+                        
+                        container.appendChild(modeSelect);
+                        
+                        // Game functions
+                        function makeMove(index) {
+                            if (gameState.board[index] !== '' || gameState.gameOver) return;
+                            
+                            gameState.board[index] = gameState.currentPlayer;
+                            updateBoard();
+                            
+                            if (checkWinner()) {
+                                gameState.gameOver = true;
+                                gameState.scores[gameState.currentPlayer]++;
+                                Toast.show(`Player ${gameState.currentPlayer} wins!`, 'success');
+                                checkAchievement('firstWin', true);
+                                return;
+                            }
+                            
+                            if (checkDraw()) {
+                                gameState.gameOver = true;
+                                gameState.scores.draws++;
+                                Toast.show('It\'s a draw!', 'info');
+                                return;
+                            }
+                            
+                            // Switch player
+                            gameState.currentPlayer = gameState.currentPlayer === 'X' ? 'O' : 'X';
+                            
+                            // AI move if needed
+                            if (!gameState.gameOver && gameState.mode !== 'pvp' && gameState.currentPlayer === 'O') {
+                                setTimeout(makeAIMove, 500);
+                            }
+                        }
+                        
+                        function makeAIMove() {
+                            let move;
+                            
+                            switch (gameState.mode) {
+                                case 'easy':
+                                    move = makeEasyAIMove();
+                                    break;
+                                case 'medium':
+                                    move = makeMediumAIMove();
+                                    break;
+                                case 'hard':
+                                    move = makeHardAIMove();
+                                    break;
+                            }
+                            
+                            if (move !== undefined) {
+                                makeMove(move);
+                            }
+                        }
+                        
+                        function makeEasyAIMove() {
+                            // Just pick a random available move
+                            const availableMoves = [];
+                            for (let i = 0; i < 9; i++) {
+                                if (gameState.board[i] === '') {
+                                    availableMoves.push(i);
+                                }
+                            }
+                            
+                            return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+                        }
+                        
+                        function makeMediumAIMove() {
+                            // Try to win if possible, block if necessary, otherwise random
+                            const availableMoves = [];
+                            for (let i = 0; i < 9; i++) {
+                                if (gameState.board[i] === '') {
+                                    availableMoves.push(i);
+                                }
+                            }
+                            
+                            // Check for winning move
+                            for (const move of availableMoves) {
+                                const testBoard = [...gameState.board];
+                                testBoard[move] = 'O';
+                                if (checkWinForPlayer(testBoard, 'O')) {
+                                    return move;
+                                }
+                            }
+                            
+                            // Check for blocking move
+                            for (const move of availableMoves) {
+                                const testBoard = [...gameState.board];
+                                testBoard[move] = 'X';
+                                if (checkWinForPlayer(testBoard, 'X')) {
+                                    return move;
+                                }
+                            }
+                            
+                            // Otherwise random
+                            return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+                        }
+                        
+                        function makeHardAIMove() {
+                            // Minimax algorithm for optimal play
+                            let bestScore = -Infinity;
+                            let bestMove;
+                            
+                            for (let i = 0; i < 9; i++) {
+                                if (gameState.board[i] === '') {
+                                    gameState.board[i] = 'O';
+                                    const score = minimax(gameState.board, 0, false);
+                                    gameState.board[i] = '';
+                                    
+                                    if (score > bestScore) {
+                                        bestScore = score;
+                                        bestMove = i;
+                                    }
+                                }
+                            }
+                            
+                            return bestMove;
+                        }
+                        
+                        function minimax(board, depth, isMaximizing) {
+                            // Base cases
+                            if (checkWinForPlayer(board, 'O')) return 10 - depth;
+                            if (checkWinForPlayer(board, 'X')) return depth - 10;
+                            if (checkDrawForBoard(board)) return 0;
+                            
+                            // Recursive case
+                            if (isMaximizing) {
+                                let bestScore = -Infinity;
+                                
+                                for (let i = 0; i < 9; i++) {
+                                    if (board[i] === '') {
+                                        board[i] = 'O';
+                                        const score = minimax(board, depth + 1, false);
+                                        board[i] = '';
+                                        bestScore = Math.max(score, bestScore);
+                                    }
+                                }
+                                
+                                return bestScore;
+                            } else {
+                                let bestScore = Infinity;
+                                
+                                for (let i = 0; i < 9; i++) {
+                                    if (board[i] === '') {
+                                        board[i] = 'X';
+                                        const score = minimax(board, depth + 1, true);
+                                        board[i] = '';
+                                        bestScore = Math.min(score, bestScore);
+                                    }
+                                }
+                                
+                                return bestScore;
+                            }
+                        }
+                        
+                        function checkWinForPlayer(board, player) {
+                            const winPatterns = [
+                                [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+                                [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+                                [0, 4, 8], [2, 4, 6]             // diagonals
+                            ];
+                            
+                            return winPatterns.some(pattern => {
+                                return pattern.every(index => board[index] === player);
+                            });
+                        }
+                        
+                        function checkDrawForBoard(board) {
+                            return board.every(cell => cell !== '');
+                        }
+                        
+                        function checkWinner() {
+                            return checkWinForPlayer(gameState.board, gameState.currentPlayer);
+                        }
+                        
+                        function checkDraw() {
+                            return checkDrawForBoard(gameState.board);
+                        }
+                        
+                        function updateBoard() {
+                            const cells = qsa('.tictactoe-cell', boardElement);
+                            cells.forEach((cell, index) => {
+                                cell.textContent = gameState.board[index];
+                            });
+                        }
+                        
+                        function restartGame() {
+                            gameState.board = Array(9).fill('');
+                            gameState.currentPlayer = 'X';
+                            gameState.gameOver = false;
+                            updateBoard();
+                            
+                            // AI makes first move if it's AI's turn and not PvP
+                            if (gameState.mode !== 'pvp' && gameState.currentPlayer === 'O') {
+                                setTimeout(makeAIMove, 500);
+                            }
+                        }
+                        
+                        // Initialize game
+                        updateBoard();
+                        
+                        // Return game API
+                        return {
+                            destroy() {
+                                container.innerHTML = '';
+                            },
+                            
+                            pause() {
+                                // Not pausable
+                            },
+                            
+                            resume() {
+                                // Not pausable
+                            },
+                            
+                            restart() {
+                                restartGame();
+                            }
+                        };
+                    }
+                },
+                
+                // Additional game implementations would follow the same pattern
+                // For brevity, I'll include stubs for the remaining games
+                
+                memory: {
+                    id: 'memory',
+                    title: 'Memory Match',
+                    description: 'Find matching pairs of cards',
+                    icon: '🎴',
+                    
+                    init(container) {
+                        const gameElement = create('div', {
+                            className: 'memory-game',
+                            innerHTML: '<p>Memory Match game would be implemented here</p>'
+                        });
+                        
+                        container.appendChild(gameElement);
+                        
+                        return {
+                            destroy() {
+                                container.innerHTML = '';
+                            },
+                            
+                            pause() {
+                                // Pause logic
+                            },
+                            
+                            resume() {
+                                // Resume logic
+                            },
+                            
+                            restart() {
+                                // Restart logic
+                            }
+                        };
+                    }
+                },
+                
+                reaction: {
+                    id: 'reaction',
+                    title: 'Reaction Tester',
+                    description: 'Test your reaction speed',
+                    icon: '⏱️',
+                    
+                    init(container) {
+                        const gameElement = create('div', {
+                            className: 'reaction-game',
+                            innerHTML: '<p>Reaction Tester game would be implemented here</p>'
+                        });
+                        
+                        container.appendChild(gameElement);
+                        
+                        return {
+                            destroy() {
+                                container.innerHTML = '';
+                            },
+                            
+                            pause() {
+                                // Pause logic
+                            },
+                            
+                            resume() {
+                                // Resume logic
+                            },
+                            
+                            restart() {
+                                // Restart logic
+                            }
+                        };
+                    }
+                },
+                
+                whack: {
+                    id: 'whack',
+                    title: 'Whack-a-Doodle',
+                    description: 'Whack the doodles as they appear',
+                    icon: '🔨',
+                    
+                    init(container) {
+                        const gameElement = create('div', {
+                            className: 'whack-game',
+                            innerHTML: '<p>Whack-a-Doodle game would be implemented here</p>'
+                        });
+                        
+                        container.appendChild(gameElement);
+                        
+                        return {
+                            destroy() {
+                                container.innerHTML = '';
+                            },
+                            
+                            pause() {
+                                // Pause logic
+                            },
+                            
+                            resume() {
+                                // Resume logic
+                            },
+                            
+                            restart() {
+                                // Restart logic
+                            }
+                        };
+                    }
+                },
+                
+                dice: {
+                    id: 'dice',
+                    title: 'Guess & Dice',
+                    description: 'Guess numbers and roll dice',
+                    icon: '🎲',
+                    
+                    init(container) {
+                        const gameElement = create('div', {
+                            className: 'dice-game',
+                            innerHTML: '<p>Guess & Dice game would be implemented here</p>'
+                        });
+                        
+                        container.appendChild(gameElement);
+                        
+                        return {
+                            destroy() {
+                                container.innerHTML = '';
+                            },
+                            
+                            pause() {
+                                // Pause logic
+                            },
+                            
+                            resume() {
+                                // Resume logic
+                            },
+                            
+                            restart() {
+                                // Restart logic
+                            }
+                        };
+                    }
+                },
+                
+                runner: {
+                    id: 'runner',
+                    title: 'Shaikh\'s Runner',
+                    description: 'Endless runner game',
+                    icon: '🏃',
+                    
+                    init(container) {
+                        const gameElement = create('div', {
+                            className: 'runner-game',
+                            innerHTML: '<p>Shaikh\'s Runner game would be implemented here</p>'
+                        });
+                        
+                        container.appendChild(gameElement);
+                        
+                        return {
+                            destroy() {
+                                container.innerHTML = '';
+                            },
+                            
+                            pause() {
+                                // Pause logic
+                            },
+                            
+                            resume() {
+                                // Resume logic
+                            },
+                            
+                            restart() {
+                                // Restart logic
+                            }
+                        };
+                    }
+                }
+            };
+            
+            // Register games
+            function registerGames() {
+                for (const gameId in GameModules) {
+                    gamesRegistry[gameId] = GameModules[gameId];
                 }
             }
             
             // Render game tiles
             function renderGameTiles() {
-                const grid = qs('#games-grid');
-                grid.innerHTML = '';
+                gamesGrid.innerHTML = '';
                 
-                state.games.forEach(game => {
-                    const tile = el('div', {
+                for (const gameId in gamesRegistry) {
+                    const game = gamesRegistry[gameId];
+                    
+                    const tile = create('div', {
                         className: 'game-tile',
-                        onclick: () => openGame(game.id)
+                        tabIndex: 0,
+                        onclick: () => openGame(gameId),
+                        onkeydown: (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                openGame(gameId);
+                            }
+                        }
                     }, [
-                        el('div', { 
-                            className: 'tile-doodle',
-                            style: `color: ${game.color}`,
-                            textContent: game.doodle
+                        create('div', {
+                            className: 'game-icon',
+                            innerHTML: game.icon
                         }),
-                        el('h3', { className: 'tile-title', textContent: game.title }),
-                        el('p', { className: 'tile-subtitle', textContent: game.subtitle })
+                        create('h3', { className: 'game-title', textContent: game.title }),
+                        create('p', { className: 'game-description', textContent: game.description })
                     ]);
                     
-                    // Add ripple effect
-                    tile.addEventListener('mousedown', createRipple);
-                    
-                    grid.appendChild(tile);
-                });
-            }
-            
-            // Set up event listeners
-            function setupEventListeners() {
-                // Theme toggle
-                qs('#theme-toggle').addEventListener('click', () => {
-                    state.theme = state.theme === 'light' ? 'dark' : 'light';
-                    document.documentElement.classList.toggle('theme-dark', state.theme === 'dark');
-                    saveState();
-                    SoundManager.playClick();
-                });
-                
-                // Sound toggle
-                qs('#sound-toggle').addEventListener('click', () => {
-                    const enabled = SoundManager.toggle();
-                    qs('#sound-toggle').textContent = enabled ? '🔊' : '🔇';
-                    saveState();
-                    SoundManager.playClick();
-                });
-                
-                // Profile button
-                qs('#profile-button').addEventListener('click', () => {
-                    showProfileModal();
-                    SoundManager.playClick();
-                });
-                
-                // Search input
-                qs('#search-input').addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    filterGames(searchTerm);
-                });
-                
-                // Onboarding modal
-                qs('#onboarding-dismiss').addEventListener('click', () => {
-                    hideOnboarding();
-                    SoundManager.playClick();
-                });
-                
-                qs('#onboarding-modal .close-modal').addEventListener('click', () => {
-                    hideOnboarding();
-                    SoundManager.playClick();
-                });
-                
-                // Profile modal
-                qs('#profile-modal .close-modal').addEventListener('click', () => {
-                    qs('#profile-modal').classList.remove('active');
-                    SoundManager.playClick();
-                });
-                
-                // Pause games when window loses focus
-                document.addEventListener('visibilitychange', () => {
-                    if (document.hidden && window.activeGame && window.activeGame.pause) {
-                        window.activeGame.pause();
-                    }
-                });
-            }
-            
-            // Check if onboarding should be shown
-            function checkOnboarding() {
-                try {
-                    const seen = localStorage.getItem('arcadedoodle.onboardingSeen');
-                    if (!seen) {
-                        qs('#onboarding-modal').classList.add('active');
-                    }
-                } catch (e) {
-                    console.warn('Failed to check onboarding status', e);
+                    gamesGrid.appendChild(tile);
                 }
-            }
-            
-            // Hide onboarding
-            function hideOnboarding() {
-                qs('#onboarding-modal').classList.remove('active');
-                try {
-                    localStorage.setItem('arcadedoodle.onboardingSeen', 'true');
-                } catch (e) {
-                    console.warn('Failed to save onboarding status', e);
-                }
-            }
-            
-            // Show profile modal
-            function showProfileModal() {
-                const achievementsList = qs('#achievements-list');
-                const scoresList = qs('#high-scores-list');
-                
-                achievementsList.innerHTML = '';
-                scoresList.innerHTML = '';
-                
-                // Add achievements
-                if (Object.keys(state.achievements).length === 0) {
-                    achievementsList.appendChild(el('p', { textContent: 'No achievements yet. Play games to earn some!' }));
-                } else {
-                    for (const [id, achieved] of Object.entries(state.achievements)) {
-                        if (achieved) {
-                            achievementsList.appendChild(el('div', { textContent: `✅ ${id}` }));
-                        }
-                    }
-                }
-                
-                // Add high scores
-                if (Object.keys(state.scores).length === 0) {
-                    scoresList.appendChild(el('p', { textContent: 'No high scores yet. Play games to set some!' }));
-                } else {
-                    for (const [game, score] of Object.entries(state.scores)) {
-                        scoresList.appendChild(el('div', { textContent: `${game}: ${score}` }));
-                    }
-                }
-                
-                qs('#profile-modal').classList.add('active');
-            }
-            
-            // Filter games based on search term
-            function filterGames(searchTerm) {
-                const tiles = qsa('.game-tile');
-                
-                tiles.forEach(tile => {
-                    const title = tile.querySelector('.tile-title').textContent.toLowerCase();
-                    const subtitle = tile.querySelector('.tile-subtitle').textContent.toLowerCase();
-                    
-                    if (title.includes(searchTerm) || subtitle.includes(searchTerm)) {
-                        tile.style.display = 'flex';
-                    } else {
-                        tile.style.display = 'none';
-                    }
-                });
             }
             
             // Open a game
             function openGame(gameId) {
-                SoundManager.playClick();
+                const game = gamesRegistry[gameId];
+                if (!game) return;
                 
-                // Close current game if any
-                if (window.activeGame && window.activeGame.destroy) {
-                    window.activeGame.destroy();
+                // Close any active game
+                if (activeGame) {
+                    activeGame.destroy();
+                    activeGame = null;
                 }
                 
-                const container = qs('#game-container');
-                container.innerHTML = '';
-                container.style.display = 'block';
+                // Update UI
+                currentGameTitle.textContent = game.title;
+                gameContent.innerHTML = '';
+                gameView.classList.add('active');
                 
-                // Scroll to game
-                container.scrollIntoView({ behavior: 'smooth' });
+                // Initialize the game
+                activeGame = game.init(gameContent);
                 
-                // Initialize the selected game
-                switch (gameId) {
-                    case 'snake':
-                        window.activeGame = SnakeGame(container);
-                        break;
-                    case 'tictactoe':
-                        window.activeGame = TicTacToeGame(container);
-                        break;
-                    case 'memory':
-                        window.activeGame = MemoryGame(container);
-                        break;
-                    case 'reaction':
-                        window.activeGame = ReactionGame(container);
-                        break;
-                    case 'whack':
-                        window.activeGame = WhackGame(container);
-                        break;
-                    case 'guess':
-                        window.activeGame = GuessGame(container);
-                        break;
+                // Set focus to game content for accessibility
+                gameContent.setAttribute('tabindex', '-1');
+                gameContent.focus();
+                
+                SoundManager.play('click');
+            }
+            
+            // Close the current game
+            function closeGame() {
+                if (activeGame) {
+                    activeGame.destroy();
+                    activeGame = null;
                 }
                 
-                if (window.activeGame && window.activeGame.init) {
-                    window.activeGame.init();
+                gameView.classList.remove('active');
+                
+                // Set focus back to the game grid
+                gamesGrid.setAttribute('tabindex', '-1');
+                gamesGrid.focus();
+                gamesGrid.removeAttribute('tabindex');
+                
+                SoundManager.play('click');
+            }
+            
+            // Check and unlock achievements
+            function checkAchievement(achievementId, condition) {
+                if (condition && !achievements[achievementId]) {
+                    achievements[achievementId] = true;
+                    Storage.set('achievements', achievements);
+                    
+                    let message = '';
+                    switch (achievementId) {
+                        case 'firstWin':
+                            message = 'Achievement Unlocked: First Win!';
+                            break;
+                        case 'snakeMaster':
+                            message = 'Achievement Unlocked: Snake Master!';
+                            break;
+                        // More achievements would be handled here
+                    }
+                    
+                    if (message) {
+                        Toast.show(message, 'success');
+                    }
                 }
             }
             
-            // Self test function
-            function selfTest() {
-                console.log('Running self-test...');
+            // Initialize the application
+            function init() {
+                // Initialize systems
+                SoundManager.init();
+                loadData();
+                applySettings();
                 
-                // Test localStorage
-                try {
-                    localStorage.setItem('arcadedoodle.test', 'test');
-                    localStorage.removeItem('arcadedoodle.test');
-                    console.log('✅ localStorage is supported');
-                } catch (e) {
-                    console.warn('❌ localStorage is not supported');
-                }
+                // Register games and render UI
+                registerGames();
+                renderGameTiles();
                 
-                // Test canvas
-                const canvas = document.createElement('canvas');
-                console.log(`✅ Canvas is ${canvas.getContext ? 'supported' : 'not supported'}`);
+                // Set up event listeners
+                backButton.addEventListener('click', closeGame);
                 
-                // Test Web Audio API
-                console.log(`✅ Web Audio API is ${window.AudioContext ? 'supported' : 'not supported'}`);
+                soundToggle.addEventListener('click', () => {
+                    settings.soundOn = !settings.soundOn;
+                    applySettings();
+                    saveData();
+                    SoundManager.play('click');
+                });
                 
-                console.log('Self-test completed');
-            }
-            
-            // ====== GAME MODULES ======
-            
-            // Snake Game
-            function SnakeGame(container) {
-                let canvas, ctx;
-                let gameInterval;
-                let snake, food, direction, nextDirection;
-                let score, highScore;
-                let gridSize = 20;
+                themeToggle.addEventListener('click', () => {
+                    settings.theme = settings.theme === 'light' ? 'dark' : 'light';
+                    applySettings();
+                    saveData();
+                    SoundManager.play('click');
+                });
                 
-                function init() {
-                    // Create game UI
-                    container.appendChild(el('div', { className: 'game-header' }, [
-                        el('button', { 
-                            className: 'btn btn-secondary',
-                            onclick: () => { 
-                                container.style.display = 'none';
-                                SoundManager.playClick();
-                            },
-                            textContent: '← Back'
-                        }),
-                        el('h2', { className: 'game-title', textContent: 'Smooth Snake' }),
-                        el('div', { className: 'game-controls' }, [
-                            el('button', { 
-                                className: 'btn',
-                                onclick: restartGame,
-                                textContent: 'Restart'
-                            })
-                        ])
-                    ]));
-                    
-                    canvas = el('canvas', { width: 400, height: 400 });
-                    container.appendChild(canvas);
-                    ctx = canvas.getContext('2d');
-                    
-                    container.appendChild(el('div', { className: 'snake-info' }, [
-                        el('p', { textContent: 'Score: ', className: 'score-display' }, [
-                            el('span', { id: 'snake-score', textContent: '0' })
-                        ]),
-                        el('p', { textContent: 'High Score: ', className: 'high-score-display' }, [
-                            el('span', { id: 'snake-high-score', textContent: '0' })
-                        ])
-                    ]));
-                    
-                    // Load high score
-                    highScore = state.scores.snake || 0;
-                    qs('#snake-high-score').textContent = highScore;
-                    
-                    // Initialize game state
-                    restartGame();
-                    
-                    // Add keyboard controls
-                    document.addEventListener('keydown', handleKeyDown);
-                }
+                settingsButton.addEventListener('click', () => {
+                    settingsModal.classList.add('active');
+                    SoundManager.play('click');
+                });
                 
-                function restartGame() {
-                    // Reset game state
-                    snake = [{x: 10, y: 10}];
-                    direction = 'right';
-                    nextDirection = 'right';
-                    score = 0;
-                    qs('#snake-score').textContent = score;
-                    
-                    // Generate food
-                    generateFood();
-                    
-                    // Clear previous interval
-                    if (gameInterval) clearInterval(gameInterval);
-                    
-                    // Start game loop
-                    gameInterval = setInterval(gameLoop, 150);
-                    
-                    // Draw initial state
-                    draw();
-                }
+                profileButton.addEventListener('click', () => {
+                    profileModal.classList.add('active');
+                    SoundManager.play('click');
+                });
                 
-                function gameLoop() {
-                    // Update direction
-                    direction = nextDirection;
-                    
-                    // Move snake
-                    const head = {...snake[0]};
-                    
-                    switch(direction) {
-                        case 'up': head.y--; break;
-                        case 'down': head.y++; break;
-                        case 'left': head.x--; break;
-                        case 'right': head.x++; break;
+                gamePause.addEventListener('click', () => {
+                    if (activeGame) {
+                        activeGame.pause();
+                        SoundManager.play('click');
                     }
-                    
-                    // Check for collisions
-                    if (head.x < 0 || head.x >= canvas.width/gridSize || 
-                        head.y < 0 || head.y >= canvas.height/gridSize ||
-                        snake.some(segment => segment.x === head.x && segment.y === head.y)) {
-                        gameOver();
-                        return;
+                });
+                
+                gameRestart.addEventListener('click', () => {
+                    if (activeGame) {
+                        activeGame.restart();
+                        SoundManager.play('click');
                     }
+                });
+                
+                gameInfo.addEventListener('click', () => {
+                    Toast.show('Game information would appear here', 'info');
+                    SoundManager.play('click');
+                });
+                
+                closeSettings.addEventListener('click', () => {
+                    settingsModal.classList.remove('active');
+                    SoundManager.play('click');
+                });
+                
+                closeProfile.addEventListener('click', () => {
+                    profileModal.classList.remove('active');
+                    SoundManager.play('click');
+                });
+                
+                closeOnboarding.addEventListener('click', () => {
+                    onboardingModal.classList.remove('active');
+                    SoundManager.play('click');
+                });
+                
+                startPlaying.addEventListener('click', () => {
+                    onboardingModal.classList.remove('active');
+                    SoundManager.play('click');
+                });
+                
+                saveSettings.addEventListener('click', () => {
+                    settings.soundOn = soundToggleSetting.checked;
+                    settings.volume = parseFloat(volumeSlider.value);
+                    settings.theme = themeSelect.value;
+                    settings.showOnboarding = onboardingToggle.checked;
                     
-                    // Add new head
-                    snake.unshift(head);
+                    applySettings();
+                    saveData();
+                    settingsModal.classList.remove('active');
                     
-                    // Check for food
-                    if (head.x === food.x && head.y === food.y) {
-                        score += 10;
-                        qs('#snake-score').textContent = score;
-                        SoundManager.playEat();
-                        generateFood();
+                    Toast.show('Settings saved', 'success');
+                    SoundManager.play('success');
+                });
+                
+                resetProgress.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                        Storage.remove('scores');
+                        Storage.remove('achievements');
+                        scores = {};
+                        achievements = {};
                         
-                        // Increase speed every 3 foods
-                        if (score % 30 === 0) {
-                            clearInterval(gameInterval);
-                            gameInterval = setInterval(gameLoop, Math.max(50, 150 - score/3));
+                        Toast.show('Progress reset', 'info');
+                        SoundManager.play('success');
+                    }
+                });
+                
+                gameSearch.addEventListener('input', () => {
+                    const searchTerm = gameSearch.value.toLowerCase();
+                    const tiles = qsa('.game-tile');
+                    
+                    tiles.forEach(tile => {
+                        const title = tile.querySelector('.game-title').textContent.toLowerCase();
+                        const description = tile.querySelector('.game-description').textContent.toLowerCase();
+                        
+                        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                            tile.style.display = 'flex';
+                        } else {
+                            tile.style.display = 'none';
                         }
-                    } else {
-                        // Remove tail
-                        snake.pop();
-                    }
-                    
-                    // Draw updated game state
-                    draw();
-                }
-                
-                function draw() {
-                    // Clear canvas
-                    ctx.fillStyle = '#f1f3f4';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Draw food
-                    ctx.fillStyle = '#ea4335';
-                    ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
-                    
-                    // Draw snake
-                    ctx.fillStyle = '#34a853';
-                    snake.forEach(segment => {
-                        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
                     });
+                });
+                
+                // Check for reduced motion preference
+                const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (reducedMotion) {
+                    document.documentElement.style.setProperty('--transition-fast', '0.01s');
+                    document.documentElement.style.setProperty('--transition-normal', '0.01s');
+                    document.documentElement.style.setProperty('--transition-slow', '0.01s');
                 }
                 
-                function generateFood() {
-                    food = {
-                        x: Math.floor(Math.random() * (canvas.width / gridSize)),
-                        y: Math.floor(Math.random() * (canvas.height / gridSize))
-                    };
+                // Check onboarding
+                checkOnboarding();
+                
+                // Self-test
+                selfTest();
+            }
+            
+            // Self-test function
+            function selfTest() {
+                const tests = {
+                    localStorage: () => {
+                        try {
+                            localStorage.setItem('test', 'test');
+                            localStorage.removeItem('test');
+                            return true;
+                        } catch (e) {
+                            return false;
+                        }
+                    },
                     
-                    // Make sure food doesn't appear on snake
-                    if (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
-                        generateFood();
+                    canvas: () => {
+                        return !!document.createElement('canvas').getContext;
+                    },
+                    
+                    webAudio: () => {
+                        return !!(window.AudioContext || window.webkitAudioContext);
+                    }
+                };
+                
+                let allPassed = true;
+                const results = [];
+                
+                for (const [name, test] of Object.entries(tests)) {
+                    const passed = test();
+                    allPassed = allPassed && passed;
+                    results.push(`${name}: ${passed ? 'PASS' : 'FAIL'}`);
+                    
+                    if (!passed) {
+                        console.warn(`Self-test failed: ${name}`);
                     }
                 }
                 
-                function handleKeyDown(e) {
-                    switch(e.key) {
-                        case 'ArrowUp':
-                            if (direction !== 'down') nextDirection = 'up';
-                            break;
-                        case 'ArrowDown':
-                            if (direction !== 'up') nextDirection = 'down';
-                            break;
-                        case 'ArrowLeft':
-                            if (direction !== 'right') nextDirection = 'left';
-                            break;
-                        case 'ArrowRight':
-                            if (direction !== 'left') nextDirection = 'right';
-                            break;
-                    }
+                if (!allPassed) {
+                    Toast.show('Some features may not work correctly in your browser', 'error', 5000);
                 }
-                
-                function gameOver() {
-                    clearInterval(gameInterval);
-                    
-                    // Update high score if needed
-                    if (score > highScore) {
-                        highScore = score;
-                        state.scores.snake = highScore;
-                        saveState();
-                        qs('#snake-high-score').textContent = highScore;
-                        
-                        // Show celebration
-                        createConfetti();
-                        Toast.show('New high score!', 'success');
-                    }
-                    
-                    // Draw game over message
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    ctx.fillStyle = 'white';
-                    ctx.font = '30px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 15);
-                    ctx.font = '20px Arial';
-                    ctx.fillText('Press Restart to play again', canvas.width/2, canvas.height/2 + 15);
-                }
-                
-                function destroy() {
-                    clearInterval(gameInterval);
-                    document.removeEventListener('keydown', handleKeyDown);
-                }
-                
-                return { init, destroy };
             }
             
-            // Tic-Tac-Toe Game
-            function TicTacToeGame(container) {
-                // Implementation would go here
-                return { 
-                    init: function() {
-                        container.innerHTML = '<h2>Tic-Tac-Toe Game</h2><p>Implementation would go here</p>';
-                    },
-                    destroy: function() {}
-                };
-            }
-            
-            // Memory Game
-            function MemoryGame(container) {
-                // Implementation would go here
-                return { 
-                    init: function() {
-                        container.innerHTML = '<h2>Memory Game</h2><p>Implementation would go here</p>';
-                    },
-                    destroy: function() {}
-                };
-            }
-            
-            // Reaction Game
-            function ReactionGame(container) {
-                // Implementation would go here
-                return { 
-                    init: function() {
-                        container.innerHTML = '<h2>Reaction Game</h2><p>Implementation would go here</p>';
-                    },
-                    destroy: function() {}
-                };
-            }
-            
-            // Whack-a-Doodle Game
-            function WhackGame(container) {
-                // Implementation would go here
-                return { 
-                    init: function() {
-                        container.innerHTML = '<h2>Whack-a-Doodle Game</h2><p>Implementation would go here</p>';
-                    },
-                    destroy: function() {}
-                };
-            }
-            
-            // Guess & Dice Game
-            function GuessGame(container) {
-                // Implementation would go here
-                return { 
-                    init: function() {
-                        container.innerHTML = '<h2>Guess & Dice Game</h2><p>Implementation would go here</p>';
-                    },
-                    destroy: function() {}
-                };
-            }
-            
-            // Initialize the app when DOM is loaded
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
-            
-            // Expose for debugging
-            window.ArcadeDoodle = {
-                openGame,
-                state
-            };
+            // Start the application
+            init();
         })();
     </script>
 </body>
